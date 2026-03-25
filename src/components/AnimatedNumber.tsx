@@ -1,0 +1,52 @@
+import { useEffect, useState } from 'react';
+
+interface Props {
+  target: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  duration?: number;
+  isActive: boolean;
+}
+
+export function AnimatedNumber({
+  target,
+  prefix = '',
+  suffix = '',
+  decimals = 0,
+  duration = 1400,
+  isActive,
+}: Props) {
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (!isActive) {
+      setValue(0);
+      return;
+    }
+    let startTime: number | null = null;
+    const tick = (ts: number) => {
+      if (!startTime) startTime = ts;
+      const p = Math.min((ts - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setValue(target * eased);
+      if (p < 1) requestAnimationFrame(tick);
+      else setValue(target);
+    };
+    const id = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(id);
+  }, [target, duration, isActive]);
+
+  const display =
+    decimals > 0
+      ? value.toFixed(decimals).replace('.', ',')
+      : Math.round(value).toLocaleString('pt-BR');
+
+  return (
+    <>
+      {prefix}
+      {display}
+      {suffix}
+    </>
+  );
+}
