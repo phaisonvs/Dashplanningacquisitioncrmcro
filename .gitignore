@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+
+.history/
+.sfdx/
+
+*.log
+.env
+.env.*
+
+.DS_Store
