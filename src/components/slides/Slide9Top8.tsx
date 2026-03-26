@@ -147,7 +147,7 @@ export function Slide9Top8({ isActive }: Props) {
           >
             {i > 0 && <div style={{ position: 'absolute', left: '-12px', top: '20%', bottom: '20%', width: '1px', background: `${clusterColor}20` }} />}
             <div style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 800, color: clusterColor, lineHeight: 1, letterSpacing: '-0.03em' }}>
-              +<AnimatedNumber target={imp.value} suffix={imp.suffix} isActive={isActive} duration={1600 + i * 100} />
+              +<AnimatedNumber target={imp.value} suffix={imp.suffix} isActive={isActive} duration={3000} />
             </div>
             <div style={{ color: WHITE, fontSize: '16px', fontWeight: 600, margin: '16px 0 8px', letterSpacing: '-0.01em' }}>{imp.label}</div>
             <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '13px', fontWeight: 300, lineHeight: 1.4 }}>{imp.sub}</div>

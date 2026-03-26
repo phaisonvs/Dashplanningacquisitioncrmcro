@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'; 
+import { useState, useEffect, useCallback, useRef, type ComponentType } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, Home, Menu, X } from 'lucide-react';
 import { Slide0Calendar } from './components/slides/Slide0Calendar';
@@ -9,68 +9,159 @@ import { Slide8Expansao } from './components/slides/Slide8Expansao';
 import { Slide9Top8 } from './components/slides/Slide9Top8';
 import { YELLOW, BG, CLUSTERS } from './components/theme';
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
-import logoImg from "figma:asset/fa06232f6f0fcb4b35dd8f86211b9feb55b56828.png";
+import logoImg from 'figma:asset/fa06232f6f0fcb4b35dd8f86211b9feb55b56828.png';
+
+type SlideConfig = {
+  Component: ComponentType<{ isActive: boolean; onNext?: () => void; onNavigate?: (slideIndex: number) => void }>;
+  label: string;
+  cluster: string | null;
+  subject: string | null;
+  slug: string;
+  aliases?: string[];
+};
 
 const getClusterColor = (cluster: string | null) => {
   if (!cluster) return YELLOW;
   switch (cluster) {
-    case 'LEADS': return CLUSTERS.LEADS;
-    case 'ECOMMERCE': return CLUSTERS.ECOMMERCE;
-    case 'EXPANSÃO': return CLUSTERS.EXPANSAO;
-    case 'CRM': return CLUSTERS.CRM;
-    case 'DURATEX': return CLUSTERS.DURATEX;
-    case 'CRO': return CLUSTERS.CRO;
-    case 'ACQUISITION': return CLUSTERS.ACQUISITION;
-    case 'ESTRATÉGIA': return CLUSTERS.ESTRATEGIA;
-    default: return YELLOW;
+    case 'LEADS':
+      return CLUSTERS.LEADS;
+    case 'ECOMMERCE':
+      return CLUSTERS.ECOMMERCE;
+    case 'EXPANSÃO':
+      return CLUSTERS.EXPANSAO;
+    case 'CRM':
+      return CLUSTERS.CRM;
+    case 'DURATEX':
+      return CLUSTERS.DURATEX;
+    case 'CRO':
+      return CLUSTERS.CRO;
+    case 'ACQUISITION':
+      return CLUSTERS.ACQUISITION;
+    case 'ESTRATÉGIA':
+      return CLUSTERS.ESTRATEGIA;
+    default:
+      return YELLOW;
   }
 };
 
-const slides = [
-  { Component: Slide0Calendar, label: 'Report Library', cluster: null, subject: null },
-  { Component: Slide1Cover, label: 'Capa', cluster: null, subject: null },
-  { Component: Slide2VisaoLeads, label: 'Leads', cluster: 'LEADS', subject: 'FUNIL & PERFORMANCE' },
-  { Component: Slide5Ecommerce, label: 'E-commerce', cluster: 'ECOMMERCE', subject: 'FUNIL & PRODUTO' },
-  { Component: Slide8Expansao, label: 'Funil Expansão', cluster: 'EXPANSÃO', subject: 'PIPELINE' },
-  { Component: Slide9Top8, label: 'Top 8 Ações', cluster: 'ESTRATÉGIA', subject: 'EXECUÇÃO' },
+const slides: SlideConfig[] = [
+  { Component: Slide0Calendar, label: 'Report Library', cluster: null, subject: null, slug: 'library' },
+  { Component: Slide1Cover, label: 'Capa', cluster: null, subject: null, slug: '', aliases: ['capa', 'cover'] },
+  { Component: Slide2VisaoLeads, label: 'Leads', cluster: 'LEADS', subject: 'FUNIL & PERFORMANCE', slug: 'leads' },
+  { Component: Slide5Ecommerce, label: 'E-commerce', cluster: 'ECOMMERCE', subject: 'FUNIL & PRODUTO', slug: 'ecommerce', aliases: ['e-com', 'e-commerce'] },
+  { Component: Slide8Expansao, label: 'Funil Expansão', cluster: 'EXPANSÃO', subject: 'PIPELINE', slug: 'expansao' },
+  { Component: Slide9Top8, label: 'Top 8 Ações', cluster: 'ESTRATÉGIA', subject: 'EXECUÇÃO', slug: 'top-8', aliases: ['top8'] },
 ];
+
+const slideAliases = new Map<string, number>();
+slides.forEach((slide, index) => {
+  const values = [slide.slug, slide.label, ...(slide.aliases ?? [])]
+    .filter(Boolean)
+    .map((value) => value.toLowerCase());
+
+  values.forEach((value) => slideAliases.set(value, index));
+});
+
+const normalizeRouteKey = (pathname: string, hash: string) => {
+  const rawHash = hash.startsWith('#') ? hash.slice(1) : hash;
+  const hashKey = rawHash.replace(/^\/+/, '').trim().toLowerCase();
+  if (hashKey) return hashKey;
+
+  const pathKey = pathname.replace(/^\/+/, '').replace(/\/+$/, '').trim().toLowerCase();
+  return pathKey;
+};
+
+const resolveSlideIndex = (pathname: string, hash: string) => {
+  const key = normalizeRouteKey(pathname, hash);
+  if (!key) return 1;
+  if (slideAliases.has(key)) return slideAliases.get(key) ?? 0;
+
+  const lastSegment = key.split('/').filter(Boolean).pop() ?? '';
+  if (slideAliases.has(lastSegment)) return slideAliases.get(lastSegment) ?? 0;
+
+  return 0;
+};
+
+const routeForIndex = (index: number) => {
+  if (index === 1) return '#';
+  if (index === 0) return '#/library';
+  const slug = slides[index]?.slug;
+  return slug ? `#/${slug}` : '#';
+};
+
+const canonicalUrlForIndex = (index: number) => `${window.location.origin}/${routeForIndex(index)}`;
 
 export default function App() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
   const [showMenu, setShowMenu] = useState(false);
+  const currentRef = useRef(0);
+
+  useEffect(() => {
+    currentRef.current = current;
+  }, [current]);
+
+  const syncRouteToIndex = useCallback((index: number, historyMethod: 'pushState' | 'replaceState' = 'pushState') => {
+    const safeIndex = Math.max(0, Math.min(index, slides.length - 1));
+    const previousIndex = currentRef.current;
+    const nextDirection = safeIndex === previousIndex ? 0 : safeIndex > previousIndex ? 1 : -1;
+
+    setDirection(nextDirection);
+    setCurrent(safeIndex);
+    setShowMenu(false);
+
+    const nextUrl = canonicalUrlForIndex(safeIndex);
+    if (window.location.href !== nextUrl) {
+      window.history[historyMethod](null, '', nextUrl);
+    }
+  }, []);
 
   const goNext = useCallback(() => {
-    if (current < slides.length - 1) {
-      setDirection(1);
-      setCurrent((c) => c + 1);
+    if (currentRef.current < slides.length - 1) {
+      syncRouteToIndex(currentRef.current + 1);
     }
-  }, [current]);
+  }, [syncRouteToIndex]);
 
   const goPrev = useCallback(() => {
-    if (current > 0) {
-      setDirection(-1);
-      setCurrent((c) => c - 1);
+    if (currentRef.current > 0) {
+      syncRouteToIndex(currentRef.current - 1);
     }
-  }, [current]);
+  }, [syncRouteToIndex]);
 
   const goToDashboard = useCallback(() => {
-    setDirection(current > 0 ? -1 : 0);
-    setCurrent(0);
-    setShowMenu(false);
-  }, [current]);
+    syncRouteToIndex(0);
+  }, [syncRouteToIndex]);
 
   const goToSlide = useCallback((index: number) => {
-    setDirection(index > current ? 1 : -1);
-    setCurrent(index);
-    setShowMenu(false);
-  }, [current]);
+    syncRouteToIndex(index);
+  }, [syncRouteToIndex]);
+
+  useEffect(() => {
+    const syncFromLocation = () => {
+      const nextIndex = resolveSlideIndex(window.location.pathname, window.location.hash);
+      const safeIndex = Math.max(0, Math.min(nextIndex, slides.length - 1));
+      const previousIndex = currentRef.current;
+
+      setDirection(safeIndex === previousIndex ? 0 : safeIndex > previousIndex ? 1 : -1);
+      setCurrent(safeIndex);
+
+      const nextUrl = canonicalUrlForIndex(safeIndex);
+      if (window.location.href !== nextUrl) {
+        window.history.replaceState(null, '', nextUrl);
+      }
+    };
+
+    syncFromLocation();
+    window.addEventListener('popstate', syncFromLocation);
+    return () => window.removeEventListener('popstate', syncFromLocation);
+  }, []);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goNext();
       if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goPrev();
     };
+
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [goNext, goPrev]);
@@ -88,7 +179,6 @@ export default function App() {
         fontFamily: 'var(--font-family)',
       }}
     >
-      {/* Top progress bar */}
       <div
         style={{
           position: 'absolute',
@@ -107,7 +197,6 @@ export default function App() {
         />
       </div>
 
-      {/* Header: Fixed, blurred background, logo + badges */}
       <div
         style={{
           position: 'absolute',
@@ -128,12 +217,12 @@ export default function App() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px', pointerEvents: 'auto' }}>
-            <ImageWithFallback 
-              src={logoImg} 
-              alt="Logo" 
-              style={{ height: '32px', width: 'auto', objectFit: 'contain' }} 
+            <ImageWithFallback
+              src={logoImg}
+              alt="Logo"
+              style={{ height: '32px', width: 'auto', objectFit: 'contain' }}
             />
-            
+
             <AnimatePresence mode="wait">
               {slides[current].cluster && (
                 <motion.div
@@ -145,7 +234,6 @@ export default function App() {
                   style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
                 >
                   <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.15)', margin: '0 8px' }} />
-                  {/* Cluster Badge */}
                   <div
                     style={{
                       display: 'inline-flex',
@@ -159,12 +247,11 @@ export default function App() {
                       {slides[current].cluster}
                     </span>
                   </div>
-                  {/* Subject Badge */}
                   <div
                     style={{
                       display: 'inline-flex',
                       background: 'rgba(255, 255, 255, 0.05)',
-                      border: `1px solid rgba(255, 255, 255, 0.1)`,
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
                       borderRadius: '4px',
                       padding: '6px 14px',
                     }}
@@ -179,7 +266,6 @@ export default function App() {
           </div>
 
           <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {/* Dashboard button - only show if not on dashboard */}
             {current > 0 && (
               <>
                 <motion.button
@@ -214,14 +300,13 @@ export default function App() {
                   </span>
                 </motion.button>
 
-                {/* Quick navigation menu */}
                 <div style={{ position: 'relative' }}>
                   <button
                     onClick={() => setShowMenu(!showMenu)}
                     title="Menu de navegação"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
-                      border: `1px solid rgba(255,255,255,0.1)`,
+                      border: '1px solid rgba(255,255,255,0.1)',
                       borderRadius: '6px',
                       padding: '8px 12px',
                       display: 'flex',
@@ -242,7 +327,6 @@ export default function App() {
                     {showMenu ? <X size={16} /> : <Menu size={16} />}
                   </button>
 
-                  {/* Dropdown menu */}
                   <AnimatePresence>
                     {showMenu && (
                       <motion.div
@@ -293,31 +377,37 @@ export default function App() {
                               }
                             }}
                           >
-                            <span style={{
-                              fontSize: '12px',
-                              fontWeight: 600,
-                              color: index === current ? YELLOW : 'rgba(255,255,255,0.9)',
-                              letterSpacing: '0.02em',
-                            }}>
+                            <span
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                color: index === current ? YELLOW : 'rgba(255,255,255,0.9)',
+                                letterSpacing: '0.02em',
+                              }}
+                            >
                               {slide.label}
                             </span>
                             {slide.cluster && (
                               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                <span style={{
-                                  fontSize: '9px',
-                                  fontWeight: 700,
-                                  color: getClusterColor(slide.cluster),
-                                  letterSpacing: '0.08em',
-                                  textTransform: 'uppercase',
-                                }}>
+                                <span
+                                  style={{
+                                    fontSize: '9px',
+                                    fontWeight: 700,
+                                    color: getClusterColor(slide.cluster),
+                                    letterSpacing: '0.08em',
+                                    textTransform: 'uppercase',
+                                  }}
+                                >
                                   {slide.cluster}
                                 </span>
-                                <span style={{
-                                  fontSize: '9px',
-                                  fontWeight: 500,
-                                  color: 'rgba(255,255,255,0.4)',
-                                  letterSpacing: '0.05em',
-                                }}>
+                                <span
+                                  style={{
+                                    fontSize: '9px',
+                                    fontWeight: 500,
+                                    color: 'rgba(255,255,255,0.4)',
+                                    letterSpacing: '0.05em',
+                                  }}
+                                >
                                   {slide.subject}
                                 </span>
                               </div>
@@ -338,7 +428,7 @@ export default function App() {
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 background: 'rgba(255,255,255,0.03)',
-                border: `1px solid rgba(255,255,255,0.1)`,
+                border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '40px',
                 padding: '6px 16px',
                 minWidth: '60px',
@@ -351,7 +441,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Slide content */}
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={current}
@@ -371,7 +460,6 @@ export default function App() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Prev button */}
       {current > 0 && (
         <motion.button
           initial={{ opacity: 0 }}
@@ -383,7 +471,7 @@ export default function App() {
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'rgba(0,0,0,0.4)',
-            border: `1px solid rgba(255,255,255,0.08)`,
+            border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '50%',
             width: '48px',
             height: '48px',
@@ -415,7 +503,6 @@ export default function App() {
         </motion.button>
       )}
 
-      {/* Next button */}
       {current < slides.length - 1 && (
         <motion.button
           initial={{ opacity: 0 }}
@@ -427,7 +514,7 @@ export default function App() {
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'rgba(0,0,0,0.4)',
-            border: `1px solid rgba(255,255,255,0.08)`,
+            border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '50%',
             width: '48px',
             height: '48px',
@@ -459,7 +546,6 @@ export default function App() {
         </motion.button>
       )}
 
-      {/* Dot navigation */}
       <div
         style={{
           position: 'absolute',
@@ -476,10 +562,7 @@ export default function App() {
           <button
             key={i}
             title={slide.label}
-            onClick={() => {
-              setDirection(i > current ? 1 : -1);
-              setCurrent(i);
-            }}
+            onClick={() => goToSlide(i)}
             style={{
               width: i === current ? '24px' : '6px',
               height: '6px',

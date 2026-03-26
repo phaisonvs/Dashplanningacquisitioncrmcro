@@ -74,7 +74,7 @@ export function Slide8Expansao({ isActive }: Props) {
                       {step.label}
                     </div>
                     <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', fontWeight: 500, marginTop: '2px' }}>
-                      <span style={{ color: WHITE, fontSize: '14px', fontWeight: 700 }}><AnimatedNumber target={step.value} isActive={isActive} duration={1000 + i * 150} /></span>
+                      <span style={{ color: WHITE, fontSize: '14px', fontWeight: 700 }}><AnimatedNumber target={step.value} isActive={isActive} duration={3000} /></span>
                       {step.sub ? ` • ${step.sub}` : ''}
                     </div>
                   </div>

@@ -5,6 +5,7 @@ interface Props {
   prefix?: string;
   suffix?: string;
   decimals?: number;
+  decimalSeparator?: string;
   duration?: number;
   isActive: boolean;
 }
@@ -14,6 +15,7 @@ export function AnimatedNumber({
   prefix = '',
   suffix = '',
   decimals = 0,
+  decimalSeparator = ',',
   duration = 1400,
   isActive,
 }: Props) {
@@ -39,7 +41,7 @@ export function AnimatedNumber({
 
   const display =
     decimals > 0
-      ? value.toFixed(decimals).replace('.', ',')
+      ? value.toFixed(decimals).replace('.', decimalSeparator)
       : Math.round(value).toLocaleString('pt-BR');
 
   return (
