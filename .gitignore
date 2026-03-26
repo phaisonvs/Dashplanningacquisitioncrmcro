@@ -3,10 +3,15 @@ build/
 dist/
 
 .history/
+.history_*/
 .sfdx/
 
 *.log
 .env
 .env.*
+.package-lock.json
+.gitignore_*
+.vite/
+.vite-temp/
 
 .DS_Store
