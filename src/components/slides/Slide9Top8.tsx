@@ -1,7 +1,7 @@
 ﻿import { motion } from 'motion/react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, CLUSTERS } from '../theme';
-import { SlideHeroHeader } from './sharedDeckTypography';
+import { SlideHeroHeader, useDeckViewport } from './sharedDeckTypography';
 
 interface Props {
   isActive: boolean;
@@ -31,7 +31,7 @@ const heroTokenPalette: Record<HeroToken, { color: string; background: string; b
   EXECUÇÃO: { color: '#C4B5FD', background: 'rgba(196, 181, 253, 0.08)', border: 'rgba(196, 181, 253, 0.22)' },
 };
 
-const TokenTag = ({ label }: { label: HeroToken }) => {
+const TokenTag = ({ label, compact = false }: { label: HeroToken; compact?: boolean }) => {
   const palette = heroTokenPalette[label];
 
   return (
@@ -40,14 +40,18 @@ const TokenTag = ({ label }: { label: HeroToken }) => {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '5px 10px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
+        padding: compact ? '4px 9px' : '5px 10px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
         fontSize: 'var(--text-chip)',
         fontWeight: 700,
-        letterSpacing: '0.09em',
+        letterSpacing: compact ? '0.08em' : '0.09em',
         lineHeight: 1,
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
@@ -101,15 +105,16 @@ const impacts: ImpactItem[] = [
   { value: 15, suffix: '%', label: 'Receita Incremental', sub: 'Estimativa de ganho com as 8 ações' },
 ];
 
-const ImpactRow = ({ item, isActive, index }: { item: ImpactItem; isActive: boolean; index: number }) => (
+const ImpactRow = ({ item, isActive, index, compact = false }: { item: ImpactItem; isActive: boolean; index: number; compact?: boolean }) => (
   <div
     style={{
       display: 'flex',
-      alignItems: 'flex-start',
+      alignItems: compact ? 'stretch' : 'flex-start',
       justifyContent: 'space-between',
       gap: '16px',
-      padding: '18px 0',
+      padding: compact ? '14px 0' : '18px 0',
       borderTop: index === 0 ? 'none' : '1px solid rgba(255,255,255,0.08)',
+      flexDirection: compact ? 'column' : 'row',
     }}
   >
     <div>
@@ -124,7 +129,7 @@ const ImpactRow = ({ item, isActive, index }: { item: ImpactItem; isActive: bool
     <div
       style={{
         color: index === 0 ? CLUSTERS.LEADS : index === 1 ? CLUSTERS.ECOMMERCE : CLUSTERS.EXPANSAO,
-        fontSize: 'var(--text-hero)',
+        fontSize: compact ? 'var(--text-section)' : 'var(--text-hero)',
         fontWeight: 800,
         lineHeight: 1,
         letterSpacing: '-0.03em',
@@ -137,23 +142,24 @@ const ImpactRow = ({ item, isActive, index }: { item: ImpactItem; isActive: bool
 
 export function Slide9Top8({ isActive }: Props) {
   const clusterColor = CLUSTERS.ESTRATEGIA;
+  const { isMobile, isCompact } = useDeckViewport();
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '60px' }}>
+    <div style={{ minHeight: '100vh', background: BG, padding: isMobile ? '108px 16px 48px' : isCompact ? '124px 24px 64px' : '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: isCompact ? '40px' : '60px' }}>
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <SlideHeroHeader accentColor={clusterColor} title="Fechamento Semanal">
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              <TokenTag label="ESTRATÉGIA" />
-              <TokenTag label="CRO" />
-              <TokenTag label="ANALYTICS" />
-              <TokenTag label="EXECUÇÃO" />
+              <TokenTag label="ESTRATÉGIA" compact={isCompact} />
+              <TokenTag label="CRO" compact={isCompact} />
+              <TokenTag label="ANALYTICS" compact={isCompact} />
+              <TokenTag label="EXECUÇÃO" compact={isCompact} />
             </div>
           </SlideHeroHeader>
         </motion.div>
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '20px' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
         {summaryCards.map((card) => (
           <motion.article
             key={card.cluster}
@@ -165,13 +171,13 @@ export function Slide9Top8({ isActive }: Props) {
               border: '1px solid rgba(255,255,255,0.05)',
               borderTop: `4px solid ${card.color}`,
               borderRadius: '16px',
-              padding: '26px',
+              padding: isCompact ? '20px' : '26px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '18px',
+              gap: isCompact ? '14px' : '18px',
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '12px', flexDirection: isCompact ? 'column' : 'row' }}>
               <div>
                 <div style={{ color: card.color, fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   {card.cluster}
@@ -212,7 +218,7 @@ export function Slide9Top8({ isActive }: Props) {
         ))}
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: '1.25fr 0.75fr', gap: '20px', alignItems: 'stretch' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1.25fr 0.75fr', gap: isCompact ? '16px' : '20px', alignItems: 'stretch' }}>
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -221,13 +227,13 @@ export function Slide9Top8({ isActive }: Props) {
             background: 'rgba(255,255,255,0.02)',
             border: '1px solid rgba(255,255,255,0.05)',
             borderRadius: '18px',
-            padding: '28px',
+            padding: isCompact ? '18px' : '28px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '18px',
+            gap: isCompact ? '16px' : '18px',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
             <div>
               <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 Leitura do analista
@@ -255,7 +261,7 @@ export function Slide9Top8({ isActive }: Props) {
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '14px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(0, 1fr))', gap: isCompact ? '12px' : '14px' }}>
             {[
               'O gargalo mais valioso está no meio do funil, não no topo.',
               'ROAS e UX precisam caminhar juntos para destravar ganho real.',
@@ -268,10 +274,10 @@ export function Slide9Top8({ isActive }: Props) {
                   background: 'rgba(0,0,0,0.22)',
                   border: '1px solid rgba(255,255,255,0.06)',
                   borderRadius: '14px',
-                  padding: '16px',
-                  display: 'flex',
-                  gap: '10px',
-                  alignItems: 'flex-start',
+                padding: isCompact ? '14px' : '16px',
+                display: 'flex',
+                gap: '10px',
+                alignItems: 'flex-start',
                 }}
               >
                 <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: GREEN, marginTop: '7px', flexShrink: 0 }} />
@@ -291,11 +297,11 @@ export function Slide9Top8({ isActive }: Props) {
             background: `${clusterColor}10`,
             border: `1px solid ${clusterColor}28`,
             borderRadius: '18px',
-            padding: '28px',
+            padding: isCompact ? '18px' : '28px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            gap: '12px',
+            gap: isCompact ? '10px' : '12px',
           }}
         >
           <div>
@@ -309,7 +315,7 @@ export function Slide9Top8({ isActive }: Props) {
 
           <div>
             {impacts.map((item, index) => (
-              <ImpactRow key={item.label} item={item} index={index} isActive={isActive} />
+              <ImpactRow key={item.label} item={item} index={index} isActive={isActive} compact={isCompact} />
             ))}
           </div>
 
@@ -322,7 +328,7 @@ export function Slide9Top8({ isActive }: Props) {
 
       <div
         style={{
-          padding: '18px 22px',
+          padding: isCompact ? '16px 18px' : '18px 22px',
           borderRadius: '14px',
           border: '1px solid rgba(255,255,255,0.06)',
           background: 'rgba(255,255,255,0.02)',

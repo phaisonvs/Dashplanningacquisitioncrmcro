@@ -1,9 +1,12 @@
-﻿import { motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { BG, CLUSTERS } from '../theme';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
+import { useDeckViewport } from './sharedDeckTypography';
 import coverBg from 'figma:asset/d372e1a58f8718b3849de8fc442cde0f366adde8.png';
 
-interface Props { isActive: boolean }
+interface Props {
+  isActive: boolean;
+}
 
 const coverTokens = [
   { label: 'ACQUISITION', color: CLUSTERS.ACQUISITION },
@@ -25,6 +28,10 @@ const TokenPill = ({
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
+      width: 'fit-content',
+      maxWidth: '100%',
+      alignSelf: 'flex-start',
+      flex: '0 0 auto',
       padding: compact ? '5px 10px' : '14px 22px',
       borderRadius: compact ? '999px' : '16px',
       border: `1px solid ${color}66`,
@@ -44,6 +51,8 @@ const TokenPill = ({
 );
 
 export function Slide1Cover({ isActive }: Props) {
+  const { isMobile, isCompact } = useDeckViewport();
+
   return (
     <div
       style={{
@@ -51,8 +60,8 @@ export function Slide1Cover({ isActive }: Props) {
         background: BG,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '0 clamp(40px, 8vw, 120px)',
+        justifyContent: isMobile ? 'flex-start' : 'center',
+        padding: isMobile ? '104px 18px 32px' : isCompact ? '96px 28px 40px' : '0 clamp(40px, 8vw, 120px)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -69,11 +78,7 @@ export function Slide1Cover({ isActive }: Props) {
           pointerEvents: 'none',
         }}
       >
-        <ImageWithFallback
-          src={coverBg}
-          alt="Background Pattern"
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
+        <ImageWithFallback src={coverBg} alt="Background Pattern" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div
           style={{
             position: 'absolute',
@@ -91,9 +96,9 @@ export function Slide1Cover({ isActive }: Props) {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          style={{ display: 'flex', gap: '12px', marginBottom: '18px', alignItems: 'center', flexWrap: 'wrap' }}
+          style={{ display: 'flex', gap: '12px', marginBottom: isCompact ? '14px' : '18px', alignItems: 'center', flexWrap: 'wrap' }}
         >
-          <div style={{ width: '32px', height: '1px', background: 'rgba(255,255,255,0.4)' }} />
+          <div style={{ width: isCompact ? '24px' : '32px', height: '1px', background: 'rgba(255,255,255,0.4)' }} />
           <span
             style={{
               color: 'rgba(255,255,255,0.42)',
@@ -107,14 +112,10 @@ export function Slide1Cover({ isActive }: Props) {
           </span>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-        >
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
+        <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7, delay: 0.3 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isCompact ? '10px' : '14px', alignItems: 'center' }}>
             {coverTokens.map((token) => (
-              <TokenPill key={`hero-${token.label}`} label={token.label} color={token.color} />
+              <TokenPill key={`hero-${token.label}`} label={token.label} color={token.color} compact={isCompact} />
             ))}
           </div>
         </motion.div>
@@ -126,9 +127,9 @@ export function Slide1Cover({ isActive }: Props) {
           style={{
             color: 'rgba(255,255,255,0.5)',
             fontSize: 'var(--text-body-lg)',
-            maxWidth: '540px',
+            maxWidth: isMobile ? '100%' : '540px',
             lineHeight: 1.6,
-            marginTop: '32px',
+            marginTop: isCompact ? '24px' : '32px',
             fontWeight: 300,
           }}
         >
@@ -139,7 +140,7 @@ export function Slide1Cover({ isActive }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.9 }}
-          style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '80px' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: isCompact ? '48px' : '80px' }}
         >
           <span
             style={{
@@ -157,4 +158,3 @@ export function Slide1Cover({ isActive }: Props) {
     </div>
   );
 }
-

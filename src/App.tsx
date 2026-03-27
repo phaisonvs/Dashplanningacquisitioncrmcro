@@ -7,6 +7,7 @@ import { Slide2VisaoLeads } from './components/slides/Slide2VisaoLeads';
 import { Slide5Ecommerce } from './components/slides/Slide5Ecommerce';
 import { Slide8Expansao } from './components/slides/Slide8Expansao';
 import { Slide9Top8 } from './components/slides/Slide9Top8';
+import { useDeckViewport } from './components/slides/sharedDeckTypography';
 import { YELLOW, BG, CLUSTERS } from './components/theme';
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import logoImg from 'figma:asset/fa06232f6f0fcb4b35dd8f86211b9feb55b56828.png';
@@ -125,6 +126,7 @@ export default function App() {
   const [direction, setDirection] = useState(1);
   const [showMenu, setShowMenu] = useState(false);
   const currentRef = useRef(0);
+  const { isCompact } = useDeckViewport();
 
   useEffect(() => {
     currentRef.current = current;
@@ -235,7 +237,8 @@ export default function App() {
           top: 0,
           left: 0,
           right: 0,
-          height: '84px',
+          height: isCompact ? 'auto' : '84px',
+          minHeight: isCompact ? 'auto' : '84px',
           background: 'rgba(13, 13, 13, 0.7)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
@@ -243,12 +246,21 @@ export default function App() {
           pointerEvents: 'none',
           borderBottom: '1px solid rgba(255,255,255,0.05)',
           display: 'flex',
-          alignItems: 'flex-start',
-          padding: '20px 28px 0',
+          alignItems: isCompact ? 'stretch' : 'flex-start',
+          padding: isCompact ? '12px 16px 12px' : '20px 28px 0',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', pointerEvents: 'auto' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: isCompact ? 'stretch' : 'center',
+            width: '100%',
+            gap: isCompact ? '10px' : 0,
+            flexDirection: isCompact ? 'column' : 'row',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: isCompact ? 'flex-start' : 'center', gap: isCompact ? '12px' : '16px', pointerEvents: 'auto', flexWrap: 'wrap', width: isCompact ? '100%' : 'auto' }}>
             <button
               type="button"
               onClick={goToDashboard}
@@ -265,7 +277,7 @@ export default function App() {
               <ImageWithFallback
                 src={logoImg}
                 alt="Logo"
-                style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
+                style={{ height: isCompact ? '24px' : '28px', width: 'auto', objectFit: 'contain' }}
               />
             </button>
 
@@ -277,16 +289,16 @@ export default function App() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.3 }}
-                  style={{ display: 'flex', gap: '6px', alignItems: 'center' }}
+                  style={{ display: 'flex', gap: isCompact ? '5px' : '6px', alignItems: 'center', flexWrap: 'wrap', width: isCompact ? '100%' : 'auto' }}
                 >
-                  <div style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 6px' }} />
+                  <div style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: isCompact ? '0 4px 0 0' : '0 6px' }} />
                   <div
                     style={{
                       display: 'inline-flex',
                       background: `${getClusterColor(slides[current].cluster)}15`,
                       border: `1px solid ${getClusterColor(slides[current].cluster)}50`,
                       borderRadius: '999px',
-                      padding: '4px 10px',
+                      padding: isCompact ? '3px 8px' : '4px 10px',
                     }}
                   >
                     <span style={{ color: getClusterColor(slides[current].cluster), fontSize: 'var(--text-chip)', fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
@@ -299,7 +311,7 @@ export default function App() {
                       background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.1)',
                       borderRadius: '999px',
-                      padding: '4px 10px',
+                      padding: isCompact ? '3px 8px' : '4px 10px',
                     }}
                   >
                     <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 'var(--text-chip)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
@@ -311,7 +323,7 @@ export default function App() {
             </AnimatePresence>
           </div>
 
-          <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: isCompact ? '8px' : '10px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
             {current > 0 && (
               <>
                 <motion.button
@@ -323,7 +335,7 @@ export default function App() {
                     background: 'rgba(255,239,0,0.08)',
                     border: `1px solid ${YELLOW}30`,
                     borderRadius: '999px',
-                    padding: '6px 12px',
+                    padding: isCompact ? '5px 10px' : '6px 12px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
@@ -389,13 +401,15 @@ export default function App() {
                         style={{
                           position: 'absolute',
                           top: 'calc(100% + 8px)',
-                          right: 0,
+                          right: isCompact ? 'auto' : 0,
+                          left: isCompact ? 0 : 'auto',
                           background: 'rgba(20, 20, 20, 0.95)',
                           backdropFilter: 'blur(20px)',
                           border: '1px solid rgba(255,255,255,0.1)',
                           borderRadius: '8px',
                           padding: '8px',
-                          minWidth: '220px',
+                          minWidth: isCompact ? '180px' : '220px',
+                          maxWidth: isCompact ? 'calc(100vw - 32px)' : 'none',
                           boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
                           zIndex: 1000,
                         }}
@@ -482,8 +496,8 @@ export default function App() {
                 background: 'rgba(255,255,255,0.03)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 borderRadius: '999px',
-                padding: '5px 12px',
-                minWidth: '52px',
+                padding: isCompact ? '4px 10px' : '5px 12px',
+                minWidth: isCompact ? '48px' : '52px',
                 textAlign: 'center',
               }}
             >
@@ -519,14 +533,14 @@ export default function App() {
           onClick={goPrev}
           style={{
             position: 'absolute',
-            left: '24px',
+            left: isCompact ? '12px' : '24px',
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'rgba(0,0,0,0.4)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '50%',
-            width: '44px',
-            height: '44px',
+            width: isCompact ? '40px' : '44px',
+            height: isCompact ? '40px' : '44px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -540,15 +554,19 @@ export default function App() {
             e.currentTarget.style.background = 'rgba(255,239,0,0.15)';
             e.currentTarget.style.borderColor = YELLOW;
             e.currentTarget.style.color = YELLOW;
-            e.currentTarget.style.width = '48px';
-            e.currentTarget.style.height = '48px';
+            if (!isCompact) {
+              e.currentTarget.style.width = '48px';
+              e.currentTarget.style.height = '48px';
+            }
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'rgba(0,0,0,0.4)';
             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
             e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-            e.currentTarget.style.width = '44px';
-            e.currentTarget.style.height = '44px';
+            if (!isCompact) {
+              e.currentTarget.style.width = '44px';
+              e.currentTarget.style.height = '44px';
+            }
           }}
         >
           <motion.span
@@ -568,15 +586,15 @@ export default function App() {
           onClick={goNext}
           style={{
             position: 'absolute',
-            right: '24px',
+            right: isCompact ? '12px' : '24px',
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'rgba(0,0,0,0.4)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: showAdvanceBadge ? '999px' : '50%',
-            width: showAdvanceBadge ? 'auto' : '44px',
-            height: '44px',
-            padding: showAdvanceBadge ? '0 12px 0 12px' : 0,
+            width: showAdvanceBadge ? 'auto' : isCompact ? '40px' : '44px',
+            height: isCompact ? '40px' : '44px',
+            padding: showAdvanceBadge ? (isCompact ? '0 10px 0 10px' : '0 12px 0 12px') : 0,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -591,7 +609,7 @@ export default function App() {
             e.currentTarget.style.background = 'rgba(255,239,0,0.15)';
             e.currentTarget.style.borderColor = YELLOW;
             e.currentTarget.style.color = YELLOW;
-            if (!showAdvanceBadge) {
+            if (!showAdvanceBadge && !isCompact) {
               e.currentTarget.style.width = '48px';
               e.currentTarget.style.height = '48px';
             }
@@ -600,7 +618,7 @@ export default function App() {
             e.currentTarget.style.background = 'rgba(0,0,0,0.4)';
             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
             e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-            if (!showAdvanceBadge) {
+            if (!showAdvanceBadge && !isCompact) {
               e.currentTarget.style.width = '44px';
               e.currentTarget.style.height = '44px';
             }
@@ -641,7 +659,7 @@ export default function App() {
       <div
         style={{
           position: 'absolute',
-          bottom: '36px',
+          bottom: isCompact ? '20px' : '36px',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',

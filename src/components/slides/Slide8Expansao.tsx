@@ -2,7 +2,7 @@
 import { AnimatedNumber } from '../AnimatedNumber';
 import { CLUSTERS, BG, WHITE, GREEN, RED } from '../theme';
 import { ConversionExperienceSection } from './sharedConversionExperience';
-import { SlideHeroHeader } from './sharedDeckTypography';
+import { SlideHeroHeader, useDeckViewport } from './sharedDeckTypography';
 import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
 import heroDesktopImg from 'figma:asset/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png';
 import heroMobileImg from 'figma:asset/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png';
@@ -214,6 +214,10 @@ const TokenTag = ({ label, compact = false }: { label: string; compact?: boolean
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
         padding: compact ? '4px 10px' : '5px 12px',
         borderRadius: '6px',
         border: `1px solid ${palette.border}`,
@@ -241,6 +245,10 @@ const StatusPill = ({ status }: { status: Status }) => {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '5px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
         padding: '4px 8px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
@@ -260,7 +268,17 @@ const StatusPill = ({ status }: { status: Status }) => {
   );
 };
 
-const StatusCounter = ({ status, count, isActive }: { status: Status; count: number; isActive: boolean }) => {
+const StatusCounter = ({
+  status,
+  count,
+  isActive,
+  compact = false,
+}: {
+  status: Status;
+  count: number;
+  isActive: boolean;
+  compact?: boolean;
+}) => {
   const palette = statusPalette[status];
 
   return (
@@ -268,8 +286,8 @@ const StatusCounter = ({ status, count, isActive }: { status: Status; count: num
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '10px',
-        padding: '7px 12px',
+        gap: compact ? '8px' : '10px',
+        padding: compact ? '6px 10px' : '7px 12px',
         borderRadius: '10px',
         background: 'rgba(255,255,255,0.02)',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -286,17 +304,17 @@ const StatusCounter = ({ status, count, isActive }: { status: Status; count: num
   );
 };
 
-const ActionCardView = ({ actionItem, variant = 'week' }: { actionItem: ActionCard; variant?: 'previous' | 'week' }) => (
+const ActionCardView = ({ actionItem, variant = 'week', compact = false }: { actionItem: ActionCard; variant?: 'previous' | 'week'; compact?: boolean }) => (
   <div
     style={{
       background: variant === 'previous' ? 'rgba(255,255,255,0.018)' : 'rgba(20,20,20,0.88)',
       border: `1px solid ${variant === 'previous' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'}`,
       borderRadius: '14px',
-      padding: '18px',
+      padding: compact ? '16px' : '18px',
       boxShadow: variant === 'previous' ? 'inset 0 1px 0 rgba(255,255,255,0.02)' : 'inset 0 1px 0 rgba(255,255,255,0.03)',
     }}
   >
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: compact ? '10px' : '12px', flexDirection: 'row', flexWrap: 'nowrap' }}>
       <TokenTag label={actionItem.cluster} compact />
       <StatusPill status={actionItem.status} />
     </div>
@@ -306,7 +324,7 @@ const ActionCardView = ({ actionItem, variant = 'week' }: { actionItem: ActionCa
   </div>
 );
 
-const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolean }) => (
+const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard; isActive: boolean; compact?: boolean }) => (
   <motion.article
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -315,14 +333,14 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       background: 'rgba(255,255,255,0.02)',
       border: '1px solid rgba(255,255,255,0.05)',
       borderRadius: '16px',
-      padding: '30px',
+      padding: compact ? '22px' : '30px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '24px',
+      gap: compact ? '18px' : '24px',
       minHeight: '100%',
     }}
   >
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
       <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.title}
       </div>
@@ -350,28 +368,31 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
             key={`${row.text}-${index}`}
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: compact ? 'flex-start' : 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
-              gap: '14px',
-              padding: '13px 18px',
+              gap: compact ? '10px' : '14px',
+              padding: compact ? '11px 14px' : '13px 18px',
               borderRadius: '10px',
               background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
+              flexDirection: compact ? 'column' : 'row',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0 }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
             {hasValue && (
               <div
                 style={{
-                  paddingLeft: '12px',
-                  borderLeft: `2px solid ${activeColor}`,
+                  paddingLeft: compact ? 0 : '12px',
+                  borderLeft: compact ? 'none' : `2px solid ${activeColor}`,
+                  paddingTop: compact ? '2px' : 0,
                   color: activeColor,
                   fontSize: 'var(--text-body)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
+                  alignSelf: compact ? 'flex-start' : 'auto',
                 }}
               >
                 {row.value}
@@ -404,7 +425,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.previousActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="previous" />
+          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="previous" compact={compact} />
         ))}
       </div>
     </div>
@@ -415,7 +436,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.weekActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="week" />
+          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="week" compact={compact} />
         ))}
       </div>
     </div>
@@ -424,19 +445,20 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
 
 export function Slide8Expansao({ isActive }: Props) {
   const clusterColor = CLUSTERS.EXPANSAO;
+  const { isMobile, isCompact } = useDeckViewport();
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '60px' }}>
+    <div style={{ minHeight: '100vh', background: BG, padding: isMobile ? '108px 16px 48px' : isCompact ? '124px 24px 64px' : '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: isCompact ? '40px' : '60px' }}>
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <SlideHeroHeader
             accentColor={clusterColor}
             title="Visão de Expansão MTD"
             right={
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
-                <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
-                <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
+                <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} compact={isCompact} />
+                <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} compact={isCompact} />
+                <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} compact={isCompact} />
               </div>
             }
           >
@@ -450,9 +472,9 @@ export function Slide8Expansao({ isActive }: Props) {
         </motion.div>
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '20px' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
         {expansionMetrics.map((item) => (
-          <MetricCardView key={item.title} item={item} isActive={isActive} />
+          <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
@@ -464,13 +486,13 @@ export function Slide8Expansao({ isActive }: Props) {
           background: 'rgba(255,255,255,0.02)',
           border: '1px solid rgba(255,255,255,0.05)',
           borderRadius: '20px',
-          padding: '26px',
+          padding: isCompact ? '18px' : '26px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '22px',
+          gap: isCompact ? '18px' : '22px',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
           <div>
             <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Leitura executiva
@@ -482,7 +504,7 @@ export function Slide8Expansao({ isActive }: Props) {
           <TokenTag label="EXPANSÃO" compact />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '18px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
           {[
             {
               title: 'Onde está o ganho',
@@ -506,17 +528,17 @@ export function Slide8Expansao({ isActive }: Props) {
                 background: item.tone === 'positive' ? 'rgba(74, 222, 128, 0.06)' : 'rgba(255, 82, 82, 0.08)',
                 border: `1px solid ${item.tone === 'positive' ? 'rgba(74, 222, 128, 0.18)' : 'rgba(255, 82, 82, 0.18)'}`,
                 borderRadius: '14px',
-                padding: '20px',
+                padding: isCompact ? '16px' : '20px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
+                gap: isCompact ? '8px' : '10px',
               }}
             >
-              <div style={{ color: item.tone === 'positive' ? GREEN : RED, fontSize: 'var(--text-body)', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                {item.title}
-              </div>
-              <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
-                {item.text}
+            <div style={{ color: item.tone === 'positive' ? GREEN : RED, fontSize: 'var(--text-body)', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              {item.title}
+            </div>
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
+              {item.text}
               </div>
             </div>
           ))}

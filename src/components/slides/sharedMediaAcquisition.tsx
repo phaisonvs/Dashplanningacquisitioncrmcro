@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { Maximize2, X } from 'lucide-react';
 import { CLUSTERS, WHITE } from '../theme';
+import { useDeckViewport } from './sharedDeckTypography';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
 import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
 import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
@@ -124,7 +125,7 @@ const tokenStyle = (tag: MediaAcquisitionItem['tags'][number]) => {
   }
 };
 
-const TokenTag = ({ label }: { label: MediaAcquisitionItem['tags'][number] }) => {
+const TokenTag = ({ label, compact = false }: { label: MediaAcquisitionItem['tags'][number]; compact?: boolean }) => {
   const palette = tokenStyle(label);
 
   return (
@@ -133,14 +134,18 @@ const TokenTag = ({ label }: { label: MediaAcquisitionItem['tags'][number] }) =>
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '5px 10px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
+        padding: compact ? '4px 8px' : '5px 10px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
         fontSize: 'var(--text-chip)',
         fontWeight: 700,
-        letterSpacing: '0.09em',
+        letterSpacing: compact ? '0.08em' : '0.09em',
         lineHeight: 1,
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
@@ -164,6 +169,10 @@ const StatusPill = ({ status }: { status: Status }) => {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '5px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
         padding: '4px 8px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
@@ -183,7 +192,7 @@ const StatusPill = ({ status }: { status: Status }) => {
   );
 };
 
-const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
+const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; isCompact: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -195,7 +204,7 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
         style={{
           background: 'linear-gradient(180deg, rgba(255,255,255,0.032) 0%, rgba(255,255,255,0.018) 100%)',
           border: '1px solid rgba(255,255,255,0.07)',
-          borderRadius: '20px',
+          borderRadius: isCompact ? '18px' : '20px',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -204,22 +213,33 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)',
         }}
       >
-        <div style={{ padding: '18px 18px 0', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '14px' }}>
+        <div
+          style={{
+            padding: isCompact ? '16px 16px 0' : '18px 18px 0',
+            display: 'flex',
+            alignItems: isCompact ? 'stretch' : 'flex-start',
+            justifyContent: 'space-between',
+            gap: '14px',
+            flexDirection: isCompact ? 'column' : 'row',
+          }}
+        >
           <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, lineHeight: 1.28, letterSpacing: '-0.01em' }}>
+            <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, lineHeight: 1.24, letterSpacing: '-0.01em' }}>
               {item.title}
             </div>
             <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: 'var(--text-body)', lineHeight: 1.5 }}>
               {item.description}
             </div>
           </div>
-          <StatusPill status={item.status} />
+          <div style={{ alignSelf: isCompact ? 'flex-start' : 'auto' }}>
+            <StatusPill status={item.status} />
+          </div>
         </div>
 
         <div
           style={{
             position: 'relative',
-            padding: '16px 18px 18px',
+            padding: isCompact ? '14px 16px 16px' : '16px 18px 18px',
           }}
         >
           <button
@@ -228,11 +248,11 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
             aria-label={`Expandir ${item.title}`}
             style={{
               position: 'absolute',
-              top: '24px',
-              right: '30px',
+              top: isCompact ? '20px' : '24px',
+              right: isCompact ? '18px' : '30px',
               zIndex: 3,
-              width: '36px',
-              height: '36px',
+              width: isCompact ? '34px' : '36px',
+              height: isCompact ? '34px' : '36px',
               borderRadius: '12px',
               border: '1px solid rgba(255,255,255,0.12)',
               background: 'rgba(0,0,0,0.62)',
@@ -307,7 +327,7 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '32px',
+              padding: isCompact ? '16px' : '32px',
             }}
           >
             <motion.div
@@ -321,15 +341,23 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
                 maxHeight: '92vh',
                 display: 'grid',
                 gridTemplateRows: 'auto 1fr auto',
-                gap: '18px',
+                gap: isCompact ? '14px' : '18px',
                 background: 'rgba(18,18,18,0.92)',
                 border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '22px',
-                padding: '20px',
+                borderRadius: isCompact ? '18px' : '22px',
+                padding: isCompact ? '16px' : '20px',
                 boxShadow: '0 36px 80px rgba(0,0,0,0.45)',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: isCompact ? 'stretch' : 'flex-start',
+                  gap: '16px',
+                  flexDirection: isCompact ? 'column' : 'row',
+                }}
+              >
                 <div style={{ minWidth: 0 }}>
                   <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
                     {item.title}
@@ -342,8 +370,8 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
                   type="button"
                   onClick={() => setIsOpen(false)}
                   style={{
-                    width: '40px',
-                    height: '40px',
+                    width: isCompact ? '36px' : '40px',
+                    height: isCompact ? '36px' : '40px',
                     borderRadius: '12px',
                     border: '1px solid rgba(255,255,255,0.12)',
                     background: 'rgba(255,255,255,0.06)',
@@ -386,7 +414,7 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {item.tags.map((tag) => (
-                    <TokenTag key={`modal-${item.title}-${tag}`} label={tag} />
+                    <TokenTag key={`modal-${item.title}-${tag}`} label={tag} compact={isCompact} />
                   ))}
                 </div>
                 <StatusPill status={item.status} />
@@ -421,8 +449,10 @@ export const MediaAcquisitionSection = ({
     [],
   );
 
+  const { isMobile, isCompact } = useDeckViewport();
+
   const itemsByColumn = useMemo(() => {
-    const totalColumns = 4;
+    const totalColumns = isMobile ? 1 : isCompact ? 2 : 4;
     const columns = Array.from({ length: totalColumns }, () => [] as MediaAcquisitionItem[]);
 
     items.forEach((item, index) => {
@@ -430,7 +460,7 @@ export const MediaAcquisitionSection = ({
     });
 
     return columns;
-  }, [items]);
+  }, [items, isCompact, isMobile]);
 
   return (
     <motion.section
@@ -441,13 +471,22 @@ export const MediaAcquisitionSection = ({
         background: 'rgba(255,255,255,0.02)',
         border: '1px solid rgba(255,255,255,0.05)',
         borderRadius: '20px',
-        padding: '26px',
+        padding: isCompact ? '20px' : '26px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '32px',
+        gap: isCompact ? '24px' : '32px',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: isCompact ? 'stretch' : 'flex-start',
+          gap: '16px',
+          flexWrap: 'wrap',
+          flexDirection: isCompact ? 'column' : 'row',
+        }}
+      >
         <div>
           <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             Evidências da frente
@@ -459,7 +498,7 @@ export const MediaAcquisitionSection = ({
             {subtitle}
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
           {badges.map((badge) => {
             const palette = badgeColors[badge];
             return (
@@ -492,7 +531,7 @@ export const MediaAcquisitionSection = ({
           minWidth: 0,
           alignSelf: 'stretch',
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+          gridTemplateColumns: `repeat(${itemsByColumn.length}, minmax(0, 1fr))`,
           gap: '14px',
         }}
       >
@@ -503,12 +542,12 @@ export const MediaAcquisitionSection = ({
               minWidth: 0,
               display: 'flex',
               flexDirection: 'column',
-              gap: '18px',
+              gap: isCompact ? '14px' : '18px',
             }}
           >
             {columnItems.map((item) => (
               <div key={item.title} style={{ minWidth: 0, height: 'fit-content' }}>
-                <ExpandableMediaCard item={item} />
+                <ExpandableMediaCard item={item} isCompact={isCompact} />
               </div>
             ))}
           </div>

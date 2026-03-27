@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, RED, CLUSTERS } from '../theme';
 import { ConversionExperienceSection } from './sharedConversionExperience';
-import { SlideHeroHeader } from './sharedDeckTypography';
+import { SlideHeroHeader, useDeckViewport } from './sharedDeckTypography';
 import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
 import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
@@ -290,43 +290,33 @@ const funnelStages: FunnelStage[] = [
 
 const conversionExperienceItems = [
   {
-    title: 'LP Interna Semana do Consumidor',
+    title: 'Adição do CTA "Falar com especialista" nas Landing Pages "Mês do Consumidor" e "Chance Única"',
     tags: ['LEADS', 'ACQUISITION', 'CRO'] as const,
     status: 'feito' as const,
-    objective: 'A LP segue como peça de captura direta, com leitura rápida da oferta e hierarquia visual voltada para conversão qualificada.',
+    objective: 'Integramos o CTA "Falar com especialista" para capturar dados dos usuários usando o formulário de WhatsApp floating.',
     desktopImage: lpSemanaConsumidorImg,
     mobileImage: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
     imageHeight: 240,
   },
   {
-    title: 'WhatsApp Floating + Salesforce',
+    title: 'Formulário WhatsApp Floating',
     tags: ['CRM', 'LEADS', 'CRO'] as const,
-    status: 'pendente' as const,
-    objective: 'O fluxo de WhatsApp precisa fechar a integração com Salesforce sem perda de lead e com menos atrito na passagem comercial.',
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
-    imageLabel: 'Landing Page',
-    imageHeight: 240,
-  },
-  {
-    title: 'Hero Section de Conversão',
-    tags: ['CRO', 'ACQUISITION'] as const,
     status: 'feito' as const,
-    objective: 'A hero foi ajustada para reforçar proposta de valor, CTAs e responsividade antes de levar o usuário ao cadastro.',
+    objective: 'Dados de usuários chegavam com valores indevidos devido aos erros de máscaras dos inputs: Nome aceitava números, E-mail aceitava fora do padrão @(provedor).com.br e Telefone aceitava letras.',
     desktopImage: heroDesktopImg,
     mobileImage: heroMobileImg,
-    imageLabel: 'Hero Section',
+    imageLabel: 'Formulário',
     imageHeight: 240,
   },
   {
-    title: 'Régua de vantagens mobile',
+    title: 'Adição do CTA "Falar com especialista" nas Páginas que assumem cluster por categoria "Pisos e Revestimentos"',
     tags: ['LEADS', 'CRO'] as const,
     status: 'feito' as const,
-    objective: 'A régua de vantagens no mobile reduz fricção de leitura e acelera a entrada nas LPs com maior intenção.',
+    objective: 'Ao considerarmos o custo alto para cotações de frete, ajustamos para que a jornada priorizasse contato assistido nas páginas de categoria de Pisos e Revestimentos.',
     desktopImage: lpChanceUnicaImg,
     mobileImage: lpChanceUnicaMobileImg,
-    imageLabel: 'Landing Page',
+    imageLabel: 'Categoria',
     imageHeight: 240,
   },
 ] satisfies Array<{
@@ -369,6 +359,10 @@ const TokenTag = ({ label, compact = false }: { label: string; compact?: boolean
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
         padding: compact ? '4px 10px' : '5px 12px',
         borderRadius: '6px',
         border: `1px solid ${palette.border}`,
@@ -396,6 +390,10 @@ const StatusPill = ({ status }: { status: Status }) => {
         display: 'inline-flex',
         alignItems: 'center',
         gap: '5px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
         padding: '4px 8px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
@@ -415,7 +413,17 @@ const StatusPill = ({ status }: { status: Status }) => {
   );
 };
 
-const StatusCounter = ({ status, count, isActive }: { status: Status; count: number; isActive: boolean }) => {
+const StatusCounter = ({
+  status,
+  count,
+  isActive,
+  compact = false,
+}: {
+  status: Status;
+  count: number;
+  isActive: boolean;
+  compact?: boolean;
+}) => {
   const palette = statusPalette[status];
 
   return (
@@ -423,8 +431,8 @@ const StatusCounter = ({ status, count, isActive }: { status: Status; count: num
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '10px',
-        padding: '7px 12px',
+        gap: compact ? '8px' : '10px',
+        padding: compact ? '6px 10px' : '7px 12px',
         borderRadius: '10px',
         background: 'rgba(255,255,255,0.02)',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -441,17 +449,17 @@ const StatusCounter = ({ status, count, isActive }: { status: Status; count: num
   );
 };
 
-const ActionCardView = ({ action, variant = 'week' }: { action: ActionCard; variant?: 'previous' | 'week' }) => (
+const ActionCardView = ({ action, variant = 'week', compact = false }: { action: ActionCard; variant?: 'previous' | 'week'; compact?: boolean }) => (
   <div
     style={{
       background: variant === 'previous' ? 'rgba(255,255,255,0.018)' : 'rgba(20,20,20,0.88)',
       border: `1px solid ${variant === 'previous' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'}`,
       borderRadius: '14px',
-      padding: '18px',
+      padding: compact ? '16px' : '18px',
       boxShadow: variant === 'previous' ? 'inset 0 1px 0 rgba(255,255,255,0.02)' : 'inset 0 1px 0 rgba(255,255,255,0.03)',
     }}
   >
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: compact ? '10px' : '12px', flexDirection: 'row', flexWrap: 'nowrap' }}>
       <TokenTag label={action.cluster} compact />
       <StatusPill status={action.status} />
     </div>
@@ -461,7 +469,7 @@ const ActionCardView = ({ action, variant = 'week' }: { action: ActionCard; vari
   </div>
 );
 
-const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolean }) => (
+const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard; isActive: boolean; compact?: boolean }) => (
   <motion.article
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -470,18 +478,18 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       background: 'rgba(255,255,255,0.02)',
       border: '1px solid rgba(255,255,255,0.05)',
       borderRadius: '16px',
-      padding: '30px',
+      padding: compact ? '22px' : '30px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '24px',
+      gap: compact ? '18px' : '24px',
       minHeight: '100%',
     }}
   >
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
       <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.title}
       </div>
-      <TokenTag label={item.dateTag} />
+      <TokenTag label={item.dateTag} compact />
     </div>
 
     <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
@@ -505,28 +513,31 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
             key={`${row.text}-${index}`}
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: compact ? 'flex-start' : 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
-              gap: '14px',
-              padding: '13px 18px',
+              gap: compact ? '10px' : '14px',
+              padding: compact ? '11px 14px' : '13px 18px',
               borderRadius: '8px',
               background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
+              flexDirection: compact ? 'column' : 'row',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0 }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
             {hasValue && (
               <div
                 style={{
-                  paddingLeft: '12px',
-                  borderLeft: `2px solid ${activeColor}`,
+                  paddingLeft: compact ? 0 : '12px',
+                  borderLeft: compact ? 'none' : `2px solid ${activeColor}`,
+                  paddingTop: compact ? '2px' : 0,
                   color: activeColor,
                   fontSize: 'var(--text-body)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
+                  alignSelf: compact ? 'flex-start' : 'auto',
                 }}
               >
                 {row.value}
@@ -559,7 +570,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.previousActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="previous" />
+          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="previous" compact={compact} />
         ))}
       </div>
     </div>
@@ -570,14 +581,14 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.weekActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="week" />
+          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="week" compact={compact} />
         ))}
       </div>
     </div>
   </motion.article>
 );
 
-const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boolean }) => (
+const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelStage; isActive: boolean; compact?: boolean }) => (
   <motion.article
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -586,13 +597,13 @@ const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boo
       background: 'rgba(255,255,255,0.02)',
       border: '1px solid rgba(255,255,255,0.05)',
       borderRadius: '16px',
-      padding: '18px',
+      padding: compact ? '16px' : '18px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '16px',
+      gap: compact ? '14px' : '16px',
     }}
   >
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
       <div>
         <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-chip)', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
           {stage.title}
@@ -601,7 +612,7 @@ const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boo
           {stage.label}
         </div>
       </div>
-      <TokenTag label={stage.dateTag} />
+      <TokenTag label={stage.dateTag} compact />
     </div>
 
     <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
@@ -625,21 +636,22 @@ const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boo
             key={`${row.text}-${index}`}
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: compact ? 'flex-start' : 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
-              gap: '12px',
-              padding: '10px 14px',
+              gap: compact ? '10px' : '12px',
+              padding: compact ? '9px 12px' : '10px 14px',
               borderRadius: '8px',
               background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
+              flexDirection: compact ? 'column' : 'row',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0 }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
             {hasValue && (
-              <div style={{ color: activeColor, fontSize: 'var(--text-body)', fontWeight: 800, whiteSpace: 'nowrap' }}>
+              <div style={{ color: activeColor, fontSize: 'var(--text-body)', fontWeight: 800, whiteSpace: 'nowrap', alignSelf: compact ? 'flex-start' : 'auto' }}>
                 {row.value}
               </div>
             )}
@@ -670,7 +682,7 @@ const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boo
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {stage.previousActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="previous" />
+          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="previous" compact={compact} />
         ))}
       </div>
     </div>
@@ -681,31 +693,35 @@ const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boo
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {stage.weekActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="week" />
+          <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="week" compact={compact} />
         ))}
       </div>
     </div>
   </motion.article>
 );
 
-const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: string; right?: ReactNode }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-      <div style={{ width: '4px', height: '28px', background: CLUSTERS.LEADS, borderRadius: '2px' }} />
-      <div>
-        <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-          {title}
-        </div>
-        {subtitle ? (
-          <div style={{ color: 'rgba(255,255,255,0.44)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: '6px' }}>
-            {subtitle}
+const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: string; right?: ReactNode }) => {
+  const { isCompact } = useDeckViewport();
+
+  return (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: isCompact ? '100%' : 'auto' }}>
+        <div style={{ width: '4px', height: '28px', background: CLUSTERS.LEADS, borderRadius: '2px' }} />
+        <div>
+          <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+            {title}
           </div>
-        ) : null}
+          {subtitle ? (
+            <div style={{ color: 'rgba(255,255,255,0.44)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: '6px' }}>
+              {subtitle}
+            </div>
+          ) : null}
+        </div>
       </div>
+      {right ? <div style={{ display: 'flex', width: isCompact ? '100%' : 'auto', justifyContent: isCompact ? 'flex-start' : 'flex-end', flexWrap: 'wrap', gap: '8px' }}>{right}</div> : null}
     </div>
-    {right}
-  </div>
-);
+  );
+};
 
 type MediaGalleryItem = {
   title: string;
@@ -861,15 +877,17 @@ const MediaGalleryCard = ({ item }: { item: MediaGalleryItem }) => (
 );
 
 export function Slide2VisaoLeads({ isActive }: Props) {
+  const { isMobile, isCompact } = useDeckViewport();
+
   return (
     <div
       style={{
         minHeight: '100vh',
         background: BG,
-        padding: '140px clamp(28px, 5vw, 72px) 80px',
+        padding: isMobile ? '108px 16px 48px' : isCompact ? '124px 24px 64px' : '140px clamp(28px, 5vw, 72px) 80px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '60px',
+        gap: isCompact ? '40px' : '60px',
       }}
     >
       <section>
@@ -878,10 +896,10 @@ export function Slide2VisaoLeads({ isActive }: Props) {
             accentColor={CLUSTERS.LEADS}
             title="Visão Leads MTD"
             right={
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end', marginTop: '8px' }}>
-                <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
-                <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
-                <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end', marginTop: isCompact ? '0' : '8px' }}>
+                <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} compact={isCompact} />
+                <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} compact={isCompact} />
+                <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} compact={isCompact} />
               </div>
             }
           >
@@ -895,15 +913,15 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         </motion.div>
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
         {primaryMetrics.map((item) => (
-          <MetricCardView key={item.title} item={item} isActive={isActive} />
+          <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
         {secondaryMetrics.map((item) => (
-          <MetricCardView key={item.title} item={item} isActive={isActive} />
+          <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
@@ -912,16 +930,16 @@ export function Slide2VisaoLeads({ isActive }: Props) {
           background: 'rgba(255,255,255,0.02)',
           border: '1px solid rgba(255,255,255,0.05)',
           borderRadius: '18px',
-          padding: '22px',
+          padding: isCompact ? '18px' : '22px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '32px',
+          gap: isCompact ? '24px' : '32px',
         }}
       >
         <SectionTitle
           title="Cadastro → Orçamento → Pedido"
           right={
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
               <TokenTag label="CRO" compact />
               <TokenTag label="LEADS" compact />
               <TokenTag label="ACQUISITION" compact />
@@ -929,9 +947,9 @@ export function Slide2VisaoLeads({ isActive }: Props) {
           }
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
           {funnelStages.map((stage) => (
-            <FunnelCardView key={stage.label} stage={stage} isActive={isActive} />
+            <FunnelCardView key={stage.label} stage={stage} isActive={isActive} compact={isCompact} />
           ))}
         </div>
       </section>

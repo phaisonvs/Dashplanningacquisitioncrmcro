@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Maximize2, Minimize2, Monitor, Smartphone, X } from 'lucide-react';
+import { Maximize2, Monitor, Smartphone, X } from 'lucide-react';
 import { WHITE } from '../theme';
+import { useDeckViewport } from './sharedDeckTypography';
 
 interface ImageViewerProps {
   id: string;
@@ -14,7 +15,6 @@ interface ImageViewerProps {
 }
 
 export function ImageViewer({ 
-  id, 
   desktopImage, 
   mobileImage, 
   alt, 
@@ -27,9 +27,18 @@ export function ImageViewer({
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { isMobile, isCompact } = useDeckViewport();
 
   const hasMultipleVersions = desktopImage && mobileImage;
   const currentImage = viewMode === 'desktop' ? desktopImage : mobileImage;
+  const containerWidth = fullWidth ? '100%' : isCompact ? '100%' : `${width}px`;
+  const containerHeight = fullWidth
+    ? isMobile
+      ? `clamp(${Math.max(190, Math.round(height * 0.72))}px, 56vw, ${Math.max(height + 40, 320)}px)`
+      : isCompact
+        ? `clamp(${Math.max(220, Math.round(height * 0.82))}px, 34vw, ${Math.max(height + 80, 420)}px)`
+        : `${height}px`
+    : `${height}px`;
 
   // Auto-reset scroll after 10 seconds of inactivity (only when not expanded)
   const handleScroll = () => {
@@ -67,9 +76,9 @@ export function ImageViewer({
     return (
       <div 
           style={{
-            width: fullWidth ? '100%' : `${width}px`,
-            minWidth: fullWidth ? '100%' : undefined,
-            height: `${height}px`, 
+            width: containerWidth,
+            minWidth: containerWidth,
+            height: containerHeight, 
             background: 'rgba(255,255,255,0.02)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '10px',
@@ -91,10 +100,10 @@ export function ImageViewer({
     <>
       <div style={{ 
         position: 'relative', 
-        width: fullWidth ? '100%' : `${width}px`,
+        width: containerWidth,
         display: 'flex',
         flexDirection: 'column',
-        minWidth: fullWidth ? '100%' : undefined,
+        minWidth: containerWidth,
         flex: fullWidth ? 1 : undefined
       }}>
         {/* Toggle Desktop/Mobile - Only show if both versions exist */}
@@ -163,7 +172,7 @@ export function ImageViewer({
           onClick={() => setIsExpanded(true)}
           style={{
             width: '100%',
-            height: `${height}px`,
+            height: containerHeight,
             overflowY: 'auto',
             overflowX: 'hidden',
             borderRadius: '12px',
@@ -175,7 +184,7 @@ export function ImageViewer({
             display: 'flex',
             alignItems: 'flex-start',
             justifyContent: 'center',
-            padding: viewMode === 'mobile' ? '20px' : '0',
+            padding: isCompact ? '14px' : viewMode === 'mobile' ? '20px' : '0',
             cursor: 'pointer'
           }}
           className="image-viewer-scroll image-viewer-container"
@@ -183,31 +192,33 @@ export function ImageViewer({
           {viewMode === 'mobile' ? (
             // Mobile Mockup
             <div style={{
-              width: 'fit-content',
+              width: isCompact ? 'clamp(240px, 84vw, 375px)' : 'fit-content',
+              maxWidth: '100%',
               background: '#1a1a1a',
-              borderRadius: '28px',
-              padding: '10px',
+              borderRadius: isCompact ? 'clamp(22px, 6vw, 28px)' : '28px',
+              padding: isCompact ? 'clamp(8px, 2vw, 10px)' : '10px',
               boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-              border: '6px solid #2a2a2a',
+              border: `${isCompact ? 'clamp(4px, 1.2vw, 6px)' : '6px'} solid #2a2a2a`,
               position: 'relative'
             }}>
               {/* Notch */}
               <div style={{
                 position: 'absolute',
-                top: '10px',
+                top: isCompact ? '8px' : '10px',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                width: '96px',
-                height: '20px',
+                width: isCompact ? 'clamp(72px, 24vw, 96px)' : '96px',
+                height: isCompact ? 'clamp(16px, 5vw, 20px)' : '20px',
                 background: '#1a1a1a',
-                borderRadius: '0 0 14px 14px',
+                borderRadius: isCompact ? '0 0 12px 12px' : '0 0 14px 14px',
                 zIndex: 10
               }} />
               
               {/* Screen */}
               <div style={{
-                width: 'fit-content',
-                borderRadius: '24px',
+                width: '100%',
+                height: isCompact ? 'clamp(280px, 62vh, 560px)' : 'calc(90vh - 120px)',
+                borderRadius: isCompact ? 'clamp(18px, 5vw, 24px)' : '24px',
                 overflow: 'hidden',
                 background: '#fff'
               }}>
@@ -215,9 +226,8 @@ export function ImageViewer({
                   src={currentImage}
                   alt={alt}
                   style={{
-                    width: 'auto',
-                    maxWidth: '100%',
-                    height: 'auto',
+                    width: '100%',
+                    height: '100%',
                     display: 'block',
                     objectFit: 'contain'
                   }}
@@ -246,11 +256,11 @@ export function ImageViewer({
             }}
             style={{
               position: 'absolute',
-              top: '8px',
-              right: '8px',
+              top: isCompact ? '6px' : '8px',
+              right: isCompact ? '6px' : '8px',
               background: 'rgba(0,0,0,0.8)',
               backdropFilter: 'blur(8px)',
-              padding: '6px',
+              padding: isCompact ? '5px' : '6px',
               borderRadius: '10px',
               border: '1px solid rgba(255,255,255,0.2)',
               display: 'flex',
@@ -291,7 +301,7 @@ export function ImageViewer({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '24px',
+              padding: isCompact ? '14px' : '24px',
             animation: 'fadeIn 0.2s ease'
           }}
           onClick={() => setIsExpanded(false)}
@@ -301,18 +311,18 @@ export function ImageViewer({
             onClick={() => setIsExpanded(false)}
             style={{
               position: 'absolute',
-              top: '20px',
-              right: '20px',
+              top: isCompact ? '12px' : '20px',
+              right: isCompact ? '12px' : '20px',
               background: 'rgba(255,255,255,0.1)',
               border: '1px solid rgba(255,255,255,0.2)',
               borderRadius: '8px',
-              padding: '10px',
+              padding: isCompact ? '8px' : '10px',
               color: WHITE,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              fontSize: 'var(--text-body-lg)',
+              fontSize: isCompact ? 'var(--text-chip)' : 'var(--text-body-lg)',
               fontWeight: 600,
               transition: 'all 0.2s ease',
               zIndex: 10001
@@ -332,13 +342,13 @@ export function ImageViewer({
           {hasMultipleVersions && (
             <div style={{ 
               position: 'absolute',
-              top: '20px',
+              top: isCompact ? '12px' : '20px',
               left: '50%',
               transform: 'translateX(-50%)',
               display: 'flex', 
-              gap: '5px', 
+              gap: '4px', 
               background: 'rgba(0,0,0,0.6)',
-              padding: '5px',
+              padding: isCompact ? '4px' : '5px',
               borderRadius: '999px',
               border: '1px solid rgba(255,255,255,0.15)',
               zIndex: 10001
@@ -352,7 +362,7 @@ export function ImageViewer({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '6px 12px',
+                  padding: isCompact ? '5px 10px' : '6px 12px',
                   background: viewMode === 'desktop' ? 'rgba(255,255,255,0.15)' : 'transparent',
                   border: viewMode === 'desktop' ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
                   borderRadius: '999px',
@@ -377,7 +387,7 @@ export function ImageViewer({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '6px 12px',
+                  padding: isCompact ? '5px 10px' : '6px 12px',
                   background: viewMode === 'mobile' ? 'rgba(255,255,255,0.15)' : 'transparent',
                   border: viewMode === 'mobile' ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
                   borderRadius: '999px',
@@ -408,39 +418,40 @@ export function ImageViewer({
               display: 'flex',
               alignItems: 'flex-start',
               justifyContent: 'center',
-              paddingTop: '20px'
+              paddingTop: isCompact ? '12px' : '20px'
             }}
           >
             {viewMode === 'mobile' ? (
               // Mobile Mockup in Modal
               <div style={{
-                width: 'fit-content',
+                width: isCompact ? 'clamp(240px, 84vw, 375px)' : 'fit-content',
+                maxWidth: '100%',
                 background: '#1a1a1a',
-                borderRadius: '48px',
-                padding: '16px',
+                borderRadius: isCompact ? 'clamp(22px, 6vw, 32px)' : '48px',
+                padding: isCompact ? 'clamp(10px, 2vw, 14px)' : '16px',
                 boxShadow: '0 30px 80px rgba(0,0,0,0.8)',
-                border: '12px solid #2a2a2a',
+                border: `${isCompact ? 'clamp(4px, 1.4vw, 8px)' : '12px'} solid #2a2a2a`,
                 position: 'relative',
                 margin: '0 auto'
               }}>
                 {/* Notch */}
                 <div style={{
                   position: 'absolute',
-                  top: '16px',
+                  top: isCompact ? '10px' : '16px',
                   left: '50%',
                   transform: 'translateX(-50%)',
-                  width: '160px',
-                  height: '32px',
+                  width: isCompact ? 'clamp(90px, 28vw, 160px)' : '160px',
+                  height: isCompact ? 'clamp(20px, 6vw, 32px)' : '32px',
                   background: '#1a1a1a',
-                  borderRadius: '0 0 20px 20px',
+                  borderRadius: isCompact ? '0 0 14px 14px' : '0 0 20px 20px',
                   zIndex: 10
                 }} />
                 
                 {/* Screen with fixed width and internal scroll */}
                 <div style={{
-                  width: '375px',
-                  height: 'calc(90vh - 120px)',
-                  borderRadius: '32px',
+                  width: '100%',
+                  height: isCompact ? 'clamp(280px, 62vh, 560px)' : 'calc(90vh - 120px)',
+                  borderRadius: isCompact ? 'clamp(18px, 5vw, 28px)' : '32px',
                   overflow: 'hidden',
                   background: '#fff'
                 }}>
@@ -457,7 +468,7 @@ export function ImageViewer({
                       alt={alt}
                       style={{
                         width: '100%',
-                        height: 'auto',
+                        height: '100%',
                         display: 'block'
                       }}
                     />

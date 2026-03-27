@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { CLUSTERS, WHITE } from '../theme';
 import { ImageViewer } from './ImageViewer';
-import { SlideSectionHeader, SLIDE_META_WEIGHT } from './sharedDeckTypography';
+import { SlideSectionHeader, SLIDE_META_WEIGHT, useDeckViewport } from './sharedDeckTypography';
 
 export type ConversionExperienceItem = {
   title: string;
@@ -38,7 +38,7 @@ const tokenStyle = (tag: ConversionExperienceItem['tags'][number]) => {
   }
 };
 
-const TokenTag = ({ label }: { label: ConversionExperienceItem['tags'][number] }) => {
+const TokenTag = ({ label, compact = false }: { label: ConversionExperienceItem['tags'][number]; compact?: boolean }) => {
   const palette = tokenStyle(label);
 
   return (
@@ -47,14 +47,18 @@ const TokenTag = ({ label }: { label: ConversionExperienceItem['tags'][number] }
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '4px 9px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
+        padding: compact ? '4px 8px' : '4px 9px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
         fontSize: 'var(--text-chip)',
         fontWeight: 700,
-        letterSpacing: '0.08em',
+        letterSpacing: compact ? '0.07em' : '0.08em',
         lineHeight: 1,
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
@@ -78,6 +82,10 @@ const StatusPill = ({ status }: { status: ConversionExperienceItem['status'] }) 
         display: 'inline-flex',
         alignItems: 'center',
         gap: '5px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
         padding: '3px 8px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
@@ -97,11 +105,11 @@ const StatusPill = ({ status }: { status: ConversionExperienceItem['status'] }) 
   );
 };
 
-const ObjectiveBlock = ({ text }: { text: string }) => (
+const ObjectiveBlock = ({ text, compact = false }: { text: string; compact?: boolean }) => (
   <div
     style={{
       background: 'rgba(255,255,255,0.018)',
-      padding: '18px',
+      padding: compact ? '16px' : '18px',
       borderRadius: '14px',
       border: '1px solid rgba(255,255,255,0.05)',
     }}
@@ -113,7 +121,7 @@ const ObjectiveBlock = ({ text }: { text: string }) => (
         fontWeight: 700,
         textTransform: 'uppercase',
         letterSpacing: '0.08em',
-        marginBottom: '10px',
+        marginBottom: compact ? '8px' : '10px',
         display: 'flex',
         alignItems: 'center',
         gap: '6px',
@@ -131,6 +139,7 @@ const ObjectiveBlock = ({ text }: { text: string }) => (
 const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
   const desktopImage = item.desktopImage ?? item.mobileImage;
   const mobileImage = item.mobileImage ?? item.desktopImage;
+  const { isCompact } = useDeckViewport();
 
   return (
     <motion.article
@@ -144,19 +153,21 @@ const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
         overflow: 'hidden',
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '26px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: isCompact ? '16px' : '20px', padding: isCompact ? '20px' : '26px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '14px', flexDirection: 'row', flexWrap: 'nowrap' }}>
+          <div style={{ display: 'flex', alignItems: isCompact ? 'flex-start' : 'center', gap: isCompact ? '8px' : '10px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
             <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, marginBottom: '0', lineHeight: 1.25 }}>
               {item.title}
             </div>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
               {item.tags.map((tag) => (
-                <TokenTag key={`${item.title}-${tag}`} label={tag} />
+                <TokenTag key={`${item.title}-${tag}`} label={tag} compact={isCompact} />
               ))}
             </div>
           </div>
-          <StatusPill status={item.status} />
+          <div style={{ alignSelf: 'flex-start' }}>
+            <StatusPill status={item.status} />
+          </div>
         </div>
 
         <ImageViewer
@@ -169,7 +180,7 @@ const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
           fullWidth
         />
 
-        <ObjectiveBlock text={item.objective} />
+        <ObjectiveBlock text={item.objective} compact={isCompact} />
       </div>
     </motion.article>
   );
@@ -181,6 +192,8 @@ export function ConversionExperienceSection({
   subtitle,
   badges = ['CRO'],
 }: ConversionExperienceSectionProps) {
+  const { isMobile, isCompact } = useDeckViewport();
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
@@ -190,10 +203,10 @@ export function ConversionExperienceSection({
         background: 'rgba(255,255,255,0.02)',
         border: '1px solid rgba(255,255,255,0.05)',
         borderRadius: '18px',
-        padding: '22px',
+        padding: isCompact ? '18px' : '22px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '32px',
+        gap: isCompact ? '24px' : '32px',
       }}
     >
       <SlideSectionHeader
@@ -201,7 +214,7 @@ export function ConversionExperienceSection({
         title={title}
         subtitle={subtitle}
         right={
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
             {badges.map((badge) => {
               const palette = tokenStyle(badge as ConversionExperienceItem['tags'][number]);
               return (
@@ -229,7 +242,7 @@ export function ConversionExperienceSection({
         }
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '22px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))', gap: isCompact ? '16px' : '22px' }}>
         {items.map((item) => (
           <EvidenceCard key={item.title} item={item} />
         ))}
