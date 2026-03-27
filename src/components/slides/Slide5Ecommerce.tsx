@@ -193,7 +193,7 @@ const TokenTag = ({ label, compact = false }: { label: string; compact?: boolean
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '11px',
+        fontSize: 'var(--text-meta)',
         fontWeight: 800,
         letterSpacing: '0.09em',
         lineHeight: 1,
@@ -220,7 +220,7 @@ const StatusPill = ({ status }: { status: Status }) => {
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '10px',
+        fontSize: 'var(--text-chip)',
         fontWeight: 800,
         letterSpacing: '0.08em',
         lineHeight: 1,
@@ -249,11 +249,11 @@ const StatusCounter = ({ status, count, isActive }: { status: Status; count: num
         border: `1px solid ${CARD_BORDER}`,
       }}
     >
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: '12px', fontWeight: 700, lineHeight: 1 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: 'var(--text-body)', fontWeight: 700, lineHeight: 1 }}>
         <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
         {palette.label}
       </span>
-      <span style={{ color: WHITE, fontSize: '14px', fontWeight: 800, lineHeight: 1 }}>
+      <span style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 800, lineHeight: 1 }}>
         <AnimatedNumber target={count} isActive={isActive} duration={900} />
       </span>
     </div>
@@ -287,7 +287,7 @@ const GoogleShoppingBadge = () => (
     <span
       style={{
         color: '#161616',
-        fontSize: '9px',
+        fontSize: 'var(--text-chip)',
         fontWeight: 900,
         letterSpacing: '0.06em',
         lineHeight: 1,
@@ -314,7 +314,7 @@ const ActionCardView = ({ actionItem, variant = 'week' }: { actionItem: ActionCa
       <TokenTag label={actionItem.cluster} compact />
       <StatusPill status={actionItem.status} />
     </div>
-    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.68)' : 'rgba(255,255,255,0.88)', fontSize: '13px', lineHeight: 1.55, fontWeight: 500 }}>
+    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.68)' : 'rgba(255,255,255,0.88)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
       {actionItem.text}
     </div>
   </div>
@@ -337,13 +337,13 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
-      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.title}
       </div>
       <TokenTag label="Mar/2026" compact />
     </div>
 
-    <div style={{ fontSize: 'clamp(30px, 3vw, 50px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
+    <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
       <AnimatedNumber
         target={item.value.target}
         prefix={item.value.prefix}
@@ -356,7 +356,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     {item.subtitle && (
-      <div style={{ color: 'rgba(255,255,255,0.56)', fontSize: '13px', lineHeight: 1.45, fontWeight: 400 }}>
+      <div style={{ color: 'rgba(255,255,255,0.56)', fontSize: 'var(--text-body)', lineHeight: 1.45, fontWeight: 400 }}>
         {item.subtitle}
       </div>
     )}
@@ -380,7 +380,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.22)' : 'rgba(255, 82, 82, 0.22)'}`,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: '12px', lineHeight: 1.35 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35 }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
@@ -390,7 +390,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
                   paddingLeft: '12px',
                   borderLeft: `2px solid ${activeColor}`,
                   color: activeColor,
-                  fontSize: '12px',
+                  fontSize: 'var(--text-body)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
                 }}
@@ -404,14 +404,14 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.bullets.map((row, index) => (
           <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: '13px', lineHeight: 1.45 }}>
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.45 }}>
               {row.text}
             </div>
           </div>
@@ -421,7 +421,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
 
     {item.previousActions.length > 0 && (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           Ações da semana anterior
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -434,7 +434,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
 
     {item.weekActions.length > 0 && (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           Ação na semana
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -476,7 +476,7 @@ const MediaEfficiencyCardView = ({ isActive }: { isActive: boolean }) => (
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Eficiência de Mídia
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
@@ -485,12 +485,12 @@ const MediaEfficiencyCardView = ({ isActive }: { isActive: boolean }) => (
       </div>
     </div>
 
-    <div style={{ fontSize: 'clamp(30px, 3vw, 50px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
+    <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
       <AnimatedNumber target={mediaEfficiencyCard.value.target} isActive={isActive} duration={3000} />
     </div>
 
     {mediaEfficiencyCard.subtitle && (
-      <div style={{ color: 'rgba(255,255,255,0.56)', fontSize: '13px', lineHeight: 1.45, fontWeight: 400 }}>
+      <div style={{ color: 'rgba(255,255,255,0.56)', fontSize: 'var(--text-body)', lineHeight: 1.45, fontWeight: 400 }}>
         {mediaEfficiencyCard.subtitle}
       </div>
     )}
@@ -514,7 +514,7 @@ const MediaEfficiencyCardView = ({ isActive }: { isActive: boolean }) => (
               border: '1px solid rgba(255, 82, 82, 0.22)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: '12px', lineHeight: 1.35 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35 }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
@@ -524,7 +524,7 @@ const MediaEfficiencyCardView = ({ isActive }: { isActive: boolean }) => (
                   paddingLeft: '12px',
                   borderLeft: `2px solid ${activeColor}`,
                   color: activeColor,
-                  fontSize: '12px',
+                  fontSize: 'var(--text-body)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
                 }}
@@ -538,14 +538,14 @@ const MediaEfficiencyCardView = ({ isActive }: { isActive: boolean }) => (
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {mediaEfficiencyCard.bullets.map((row, index) => (
           <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: '13px', lineHeight: 1.45 }}>
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.45 }}>
               {row.text}
             </div>
           </div>
@@ -554,7 +554,7 @@ const MediaEfficiencyCardView = ({ isActive }: { isActive: boolean }) => (
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Ação na semana
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -784,12 +784,31 @@ const mediaAcquisitionItems: EvidenceItem[] = [
 ];
 
 const ObjectiveBlock = ({ text }: { text: string }) => (
-  <div style={{ background: 'rgba(255,255,255,0.018)', padding: '22px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-    <div style={{ color: WHITE, fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <div style={{ width: '3px', height: '12px', background: CLUSTERS.ECOMMERCE, borderRadius: '2px' }} />
+  <div
+    style={{
+      background: 'rgba(255,255,255,0.018)',
+      padding: '18px',
+      borderRadius: '14px',
+      border: '1px solid rgba(255,255,255,0.05)',
+    }}
+  >
+    <div
+      style={{
+        color: WHITE,
+        fontSize: 'var(--text-meta)',
+        fontWeight: 700,
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+        marginBottom: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '6px',
+      }}
+    >
+      <div style={{ width: '3px', height: '10px', background: CLUSTERS.ECOMMERCE, borderRadius: '999px' }} />
       Objetivo da Frente
     </div>
-    <div style={{ color: 'rgba(255,255,255,0.68)', fontSize: '14px', lineHeight: 1.65, fontWeight: 300 }}>
+    <div style={{ color: 'rgba(255,255,255,0.68)', fontSize: 'var(--text-body)', lineHeight: 1.5, fontWeight: 300 }}>
       {text}
     </div>
   </div>
@@ -814,7 +833,7 @@ const EvidenceCardView = ({ item }: { item: EvidenceItem }) => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '26px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '18px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <div style={{ color: WHITE, fontSize: '16px', fontWeight: 700, marginBottom: '0', lineHeight: 1.35 }}>
+          <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, marginBottom: '0', lineHeight: 1.35 }}>
             {item.title}
           </div>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -893,6 +912,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
     </div>
   );
 }
+
 
 
 

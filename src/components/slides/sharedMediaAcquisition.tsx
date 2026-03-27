@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+﻿import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Maximize2, X } from 'lucide-react';
 import { CLUSTERS, WHITE } from '../theme';
@@ -138,7 +138,7 @@ const TokenTag = ({ label }: { label: MediaAcquisitionItem['tags'][number] }) =>
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '10px',
+        fontSize: 'var(--text-chip)',
         fontWeight: 700,
         letterSpacing: '0.09em',
         lineHeight: 1,
@@ -169,7 +169,7 @@ const StatusPill = ({ status }: { status: Status }) => {
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '10px',
+        fontSize: 'var(--text-chip)',
         fontWeight: 700,
         letterSpacing: '0.08em',
         lineHeight: 1,
@@ -206,10 +206,10 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
       >
         <div style={{ padding: '18px 18px 0', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '14px' }}>
           <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ color: WHITE, fontSize: '16px', fontWeight: 700, lineHeight: 1.28, letterSpacing: '-0.01em' }}>
+            <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, lineHeight: 1.28, letterSpacing: '-0.01em' }}>
               {item.title}
             </div>
-            <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', lineHeight: 1.5 }}>
+            <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: 'var(--text-body)', lineHeight: 1.5 }}>
               {item.description}
             </div>
           </div>
@@ -283,7 +283,7 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
               }}
             />
             <div style={{ position: 'absolute', left: '12px', right: '12px', bottom: '12px' }}>
-              <div style={{ color: WHITE, fontSize: '13px', lineHeight: 1.45, fontWeight: 600 }}>
+              <div style={{ color: WHITE, fontSize: 'var(--text-body)', lineHeight: 1.45, fontWeight: 600 }}>
                 {item.badgeLabel}
               </div>
             </div>
@@ -331,10 +331,10 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ color: WHITE, fontSize: '22px', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+                  <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
                     {item.title}
                   </div>
-                  <div style={{ color: 'rgba(255,255,255,0.52)', fontSize: '13px', lineHeight: 1.5, marginTop: '6px', maxWidth: '760px' }}>
+                  <div style={{ color: 'rgba(255,255,255,0.52)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: '6px', maxWidth: '760px' }}>
                     {item.description}
                   </div>
                 </div>
@@ -449,13 +449,13 @@ export const MediaAcquisitionSection = ({
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
         <div>
-          <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+          <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             Evidências da frente
           </div>
-          <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
+          <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
             {title}
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '13px', lineHeight: 1.5, marginTop: '6px', maxWidth: '780px' }}>
+          <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: '6px', maxWidth: '780px' }}>
             {subtitle}
           </div>
         </div>
@@ -473,7 +473,7 @@ export const MediaAcquisitionSection = ({
                   border: `1px solid ${palette.border}`,
                   background: palette.background,
                   color: palette.color,
-                  fontSize: '10px',
+                  fontSize: 'var(--text-chip)',
                   fontWeight: 700,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -517,3 +517,4 @@ export const MediaAcquisitionSection = ({
   </motion.section>
 );
 };
+

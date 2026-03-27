@@ -66,20 +66,20 @@ export function ImageViewer({
   if (!currentImage) {
     return (
       <div 
-        style={{ 
-          width: fullWidth ? '100%' : `${width}px`,
-          minWidth: fullWidth ? '100%' : undefined,
-          height: `${height}px`, 
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '6px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '11px',
-          color: 'rgba(255,255,255,0.3)',
-          textAlign: 'center',
-          padding: '8px'
+          style={{
+            width: fullWidth ? '100%' : `${width}px`,
+            minWidth: fullWidth ? '100%' : undefined,
+            height: `${height}px`, 
+            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 'var(--text-chip)',
+            color: 'rgba(255,255,255,0.3)',
+            textAlign: 'center',
+            padding: '8px'
         }}
       >
         {label}
@@ -102,10 +102,10 @@ export function ImageViewer({
           <div style={{ 
             display: 'flex', 
             gap: '4px', 
-            marginBottom: '8px',
+            marginBottom: '6px',
             background: 'rgba(0,0,0,0.4)',
-            padding: '4px',
-            borderRadius: '6px',
+            padding: '3px',
+            borderRadius: '999px',
             border: '1px solid rgba(255,255,255,0.05)',
             width: 'fit-content'
           }}>
@@ -115,12 +115,12 @@ export function ImageViewer({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 12px',
+                padding: '5px 10px',
                 background: viewMode === 'desktop' ? 'rgba(255,255,255,0.12)' : 'transparent',
                 border: viewMode === 'desktop' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-                borderRadius: '4px',
+                borderRadius: '999px',
                 color: viewMode === 'desktop' ? WHITE : 'rgba(255,255,255,0.5)',
-                fontSize: '11px',
+                fontSize: 'var(--text-chip)',
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
@@ -137,12 +137,12 @@ export function ImageViewer({
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 12px',
+                padding: '5px 10px',
                 background: viewMode === 'mobile' ? 'rgba(255,255,255,0.12)' : 'transparent',
                 border: viewMode === 'mobile' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-                borderRadius: '4px',
+                borderRadius: '999px',
                 color: viewMode === 'mobile' ? WHITE : 'rgba(255,255,255,0.5)',
-                fontSize: '11px',
+                fontSize: 'var(--text-chip)',
                 fontWeight: 700,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
@@ -166,7 +166,7 @@ export function ImageViewer({
             height: `${height}px`,
             overflowY: 'auto',
             overflowX: 'hidden',
-            borderRadius: '8px',
+            borderRadius: '12px',
             border: '2px solid rgba(255,255,255,0.1)',
             position: 'relative',
             transition: 'all 0.3s ease',
@@ -185,22 +185,22 @@ export function ImageViewer({
             <div style={{
               width: 'fit-content',
               background: '#1a1a1a',
-              borderRadius: '32px',
-              padding: '12px',
+              borderRadius: '28px',
+              padding: '10px',
               boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-              border: '8px solid #2a2a2a',
+              border: '6px solid #2a2a2a',
               position: 'relative'
             }}>
               {/* Notch */}
               <div style={{
                 position: 'absolute',
-                top: '12px',
+                top: '10px',
                 left: '50%',
                 transform: 'translateX(-50%)',
-                width: '120px',
-                height: '24px',
+                width: '96px',
+                height: '20px',
                 background: '#1a1a1a',
-                borderRadius: '0 0 16px 16px',
+                borderRadius: '0 0 14px 14px',
                 zIndex: 10
               }} />
               
@@ -246,12 +246,12 @@ export function ImageViewer({
             }}
             style={{
               position: 'absolute',
-              top: '10px',
-              right: '10px',
+              top: '8px',
+              right: '8px',
               background: 'rgba(0,0,0,0.8)',
               backdropFilter: 'blur(8px)',
-              padding: '8px',
-              borderRadius: '6px',
+              padding: '6px',
+              borderRadius: '10px',
               border: '1px solid rgba(255,255,255,0.2)',
               display: 'flex',
               alignItems: 'center',
@@ -271,8 +271,8 @@ export function ImageViewer({
               e.currentTarget.style.transform = 'scale(1)';
             }}
           >
-            <Maximize2 size={16} />
-          </div>
+              <Maximize2 size={14} />
+            </div>
         </div>
       </div>
 
@@ -306,13 +306,13 @@ export function ImageViewer({
               background: 'rgba(255,255,255,0.1)',
               border: '1px solid rgba(255,255,255,0.2)',
               borderRadius: '8px',
-              padding: '12px',
+              padding: '10px',
               color: WHITE,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              fontSize: '14px',
+              gap: '6px',
+              fontSize: 'var(--text-body-lg)',
               fontWeight: 600,
               transition: 'all 0.2s ease',
               zIndex: 10001
@@ -336,10 +336,10 @@ export function ImageViewer({
               left: '50%',
               transform: 'translateX(-50%)',
               display: 'flex', 
-              gap: '6px', 
+              gap: '5px', 
               background: 'rgba(0,0,0,0.6)',
-              padding: '6px',
-              borderRadius: '8px',
+              padding: '5px',
+              borderRadius: '999px',
               border: '1px solid rgba(255,255,255,0.15)',
               zIndex: 10001
             }}>
@@ -351,13 +351,13 @@ export function ImageViewer({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
+                  gap: '6px',
+                  padding: '6px 12px',
                   background: viewMode === 'desktop' ? 'rgba(255,255,255,0.15)' : 'transparent',
                   border: viewMode === 'desktop' ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-                  borderRadius: '6px',
+                  borderRadius: '999px',
                   color: WHITE,
-                  fontSize: '12px',
+                  fontSize: 'var(--text-chip)',
                   fontWeight: 700,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
@@ -365,7 +365,7 @@ export function ImageViewer({
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Monitor size={16} />
+                <Monitor size={14} />
                 Desktop
               </button>
               <button
@@ -376,13 +376,13 @@ export function ImageViewer({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '8px 16px',
+                  gap: '6px',
+                  padding: '6px 12px',
                   background: viewMode === 'mobile' ? 'rgba(255,255,255,0.15)' : 'transparent',
                   border: viewMode === 'mobile' ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-                  borderRadius: '6px',
+                  borderRadius: '999px',
                   color: WHITE,
-                  fontSize: '12px',
+                  fontSize: 'var(--text-chip)',
                   fontWeight: 700,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
@@ -390,7 +390,7 @@ export function ImageViewer({
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Smartphone size={16} />
+                <Smartphone size={14} />
                 Mobile
               </button>
             </div>

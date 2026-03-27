@@ -1,3 +1,10 @@
+# Typography
+
+- Treat `12px` as the base body size for the deck and keep the overall rhythm compact by default.
+- Use the shared text tokens from `src/styles/globals.css` for sizing: `--text-chip`, `--text-meta`, `--text-body`, `--text-body-lg`, `--text-section`, and `--text-hero`.
+- Prefer smaller letter-spacing, tighter padding, and shorter line-heights for headers, chips, pills, labels, and helper text.
+- Only exceed the shared compact scale when a slide truly needs emphasis, and keep that emphasis restrained.
+
 **Add your own guidelines here**
 <!--
 

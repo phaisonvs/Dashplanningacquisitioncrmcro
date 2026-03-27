@@ -27,30 +27,30 @@ export function SlideHeroHeader({
   subtitle,
   right,
   children,
-  titleMaxWidth = '980px',
+  titleMaxWidth = '920px',
 }: SlideHeroHeaderProps) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '24px', flexWrap: 'wrap' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', minWidth: 0 }}>
-        <div style={{ width: '4px', height: '32px', background: accentColor, borderRadius: '2px', flexShrink: 0 }} />
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '18px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', minWidth: 0 }}>
+        <div style={{ width: '3px', height: '24px', background: accentColor, borderRadius: '999px', flexShrink: 0 }} />
         <div style={{ minWidth: 0, maxWidth: titleMaxWidth }}>
           <div
             style={{
               color: WHITE,
-              fontSize: 'clamp(32px, 4vw, 48px)',
+              fontSize: 'var(--text-hero)',
               fontWeight: SLIDE_TITLE_WEIGHT,
-              letterSpacing: '-0.03em',
-              lineHeight: 1.08,
+              letterSpacing: '-0.035em',
+              lineHeight: 1.12,
             }}
           >
             {title}
           </div>
           {subtitle ? (
-            <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '18px', lineHeight: 1.55, fontWeight: 300, marginTop: '10px' }}>
+            <div style={{ color: 'rgba(255,255,255,0.56)', fontSize: 'var(--text-body)', lineHeight: 1.45, fontWeight: 300, marginTop: '8px' }}>
               {subtitle}
             </div>
           ) : null}
-          {children ? <div style={{ marginTop: subtitle ? '24px' : '28px' }}>{children}</div> : null}
+          {children ? <div style={{ marginTop: subtitle ? '18px' : '22px' }}>{children}</div> : null}
         </div>
       </div>
       {right}
@@ -60,23 +60,23 @@ export function SlideHeroHeader({
 
 export function SlideSectionHeader({ accentColor, title, subtitle, right }: SlideSectionHeaderProps) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
-        {accentColor ? <div style={{ width: '4px', height: '28px', background: accentColor, borderRadius: '2px', flexShrink: 0 }} /> : null}
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+        {accentColor ? <div style={{ width: '3px', height: '20px', background: accentColor, borderRadius: '999px', flexShrink: 0 }} /> : null}
         <div style={{ minWidth: 0 }}>
           <div
             style={{
               color: WHITE,
-              fontSize: 'clamp(22px, 2.6vw, 32px)',
+              fontSize: 'var(--text-section)',
               fontWeight: SLIDE_SECTION_TITLE_WEIGHT,
               letterSpacing: '-0.03em',
-              lineHeight: 1.08,
+              lineHeight: 1.12,
             }}
           >
             {title}
           </div>
           {subtitle ? (
-            <div style={{ color: 'rgba(255,255,255,0.44)', fontSize: '12px', lineHeight: 1.5, marginTop: '6px' }}>
+            <div style={{ color: 'rgba(255,255,255,0.44)', fontSize: 'var(--text-meta)', lineHeight: 1.4, marginTop: '5px' }}>
               {subtitle}
             </div>
           ) : null}

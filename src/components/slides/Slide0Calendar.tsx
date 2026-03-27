@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+﻿import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 import { BG, WHITE, YELLOW } from '../theme';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
@@ -49,7 +49,7 @@ const TagPill = ({ label, color, background, border }: (typeof dashboardTags)[nu
       border: `1px solid ${border}`,
       background,
       color,
-      fontSize: 'clamp(11px, 1vw, 13px)',
+      fontSize: 'var(--text-chip)',
       fontWeight: 800,
       letterSpacing: '0.1em',
       lineHeight: 1,
@@ -108,7 +108,7 @@ const WeekCard = ({ week, onClick }: { week: WeekItem; onClick?: () => void }) =
         <div
           style={{
             color: isActive ? YELLOW : isCompleted ? 'rgba(255,255,255,0.44)' : WHITE,
-            fontSize: '17px',
+            fontSize: 'var(--text-body-lg)',
             fontWeight: 800,
             letterSpacing: '-0.01em',
             lineHeight: 1.15,
@@ -119,7 +119,7 @@ const WeekCard = ({ week, onClick }: { week: WeekItem; onClick?: () => void }) =
         <div
           style={{
             color: isCompleted ? 'rgba(255,255,255,0.34)' : 'rgba(255,255,255,0.56)',
-            fontSize: '13px',
+            fontSize: 'var(--text-body)',
             fontWeight: 400,
             lineHeight: 1.35,
           }}
@@ -131,7 +131,7 @@ const WeekCard = ({ week, onClick }: { week: WeekItem; onClick?: () => void }) =
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
         <div
           style={{
-            fontSize: '10px',
+            fontSize: 'var(--text-chip)',
             fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.11em',
@@ -179,7 +179,7 @@ const WeekColumn = ({
       <div
         style={{
           color: WHITE,
-          fontSize: '18px',
+          fontSize: 'var(--text-section)',
           fontWeight: 800,
           letterSpacing: '0.09em',
           textTransform: 'uppercase',
@@ -255,7 +255,7 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
               <div
                 style={{
                   color: 'rgba(255,255,255,0.42)',
-                  fontSize: '11px',
+                  fontSize: 'var(--text-meta)',
                   fontWeight: 800,
                   letterSpacing: '0.28em',
                   textTransform: 'uppercase',
@@ -266,7 +266,7 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px 14px' }}>
-              <div style={{ fontSize: 'clamp(34px, 4vw, 52px)', fontWeight: 800, color: WHITE, letterSpacing: '-0.03em', lineHeight: 1 }}>
+              <div style={{ fontSize: 'var(--text-hero)', fontWeight: 800, color: WHITE, letterSpacing: '-0.03em', lineHeight: 1 }}>
                 Dashboard
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -279,7 +279,7 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
             <div
               style={{
                 color: 'rgba(255,255,255,0.58)',
-                fontSize: 'clamp(15px, 1.5vw, 18px)',
+                fontSize: 'var(--text-body-lg)',
                 maxWidth: '760px',
                 lineHeight: 1.55,
                 marginTop: '12px',
@@ -307,3 +307,4 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
     </div>
   );
 }
+

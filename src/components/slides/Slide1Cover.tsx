@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+﻿import { motion } from 'motion/react';
 import { BG, CLUSTERS } from '../theme';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import coverBg from 'figma:asset/d372e1a58f8718b3849de8fc442cde0f366adde8.png';
@@ -30,7 +30,7 @@ const TokenPill = ({
       border: `1px solid ${color}66`,
       background: `${color}10`,
       color,
-      fontSize: compact ? '11px' : 'clamp(18px, 2.4vw, 28px)',
+      fontSize: compact ? 'var(--text-chip)' : 'var(--text-section)',
       fontWeight: 800,
       letterSpacing: compact ? '0.1em' : '0.12em',
       lineHeight: 1,
@@ -97,7 +97,7 @@ export function Slide1Cover({ isActive }: Props) {
           <span
             style={{
               color: 'rgba(255,255,255,0.42)',
-              fontSize: '16px',
+              fontSize: 'var(--text-meta)',
               fontWeight: 700,
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
@@ -125,7 +125,7 @@ export function Slide1Cover({ isActive }: Props) {
           transition={{ duration: 0.7, delay: 0.6 }}
           style={{
             color: 'rgba(255,255,255,0.5)',
-            fontSize: '20px',
+            fontSize: 'var(--text-body-lg)',
             maxWidth: '540px',
             lineHeight: 1.6,
             marginTop: '32px',
@@ -144,7 +144,7 @@ export function Slide1Cover({ isActive }: Props) {
           <span
             style={{
               color: 'rgba(255,255,255,0.3)',
-              fontSize: '12px',
+              fontSize: 'var(--text-meta)',
               letterSpacing: '0.15em',
               textTransform: 'uppercase',
               fontWeight: 500,
@@ -157,3 +157,4 @@ export function Slide1Cover({ isActive }: Props) {
     </div>
   );
 }
+

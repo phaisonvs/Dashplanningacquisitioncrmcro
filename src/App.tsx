@@ -235,7 +235,7 @@ export default function App() {
           top: 0,
           left: 0,
           right: 0,
-          height: '100px',
+          height: '84px',
           background: 'rgba(13, 13, 13, 0.7)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
@@ -244,11 +244,11 @@ export default function App() {
           borderBottom: '1px solid rgba(255,255,255,0.05)',
           display: 'flex',
           alignItems: 'flex-start',
-          padding: '32px 40px 0',
+          padding: '20px 28px 0',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px', pointerEvents: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', pointerEvents: 'auto' }}>
             <button
               type="button"
               onClick={goToDashboard}
@@ -265,7 +265,7 @@ export default function App() {
               <ImageWithFallback
                 src={logoImg}
                 alt="Logo"
-                style={{ height: '32px', width: 'auto', objectFit: 'contain' }}
+                style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
               />
             </button>
 
@@ -277,19 +277,19 @@ export default function App() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.3 }}
-                  style={{ display: 'flex', gap: '8px', alignItems: 'center' }}
+                  style={{ display: 'flex', gap: '6px', alignItems: 'center' }}
                 >
-                  <div style={{ width: '1px', height: '24px', background: 'rgba(255,255,255,0.15)', margin: '0 8px' }} />
+                  <div style={{ width: '1px', height: '18px', background: 'rgba(255,255,255,0.15)', margin: '0 6px' }} />
                   <div
                     style={{
                       display: 'inline-flex',
                       background: `${getClusterColor(slides[current].cluster)}15`,
                       border: `1px solid ${getClusterColor(slides[current].cluster)}50`,
-                      borderRadius: '4px',
-                      padding: '6px 14px',
+                      borderRadius: '999px',
+                      padding: '4px 10px',
                     }}
                   >
-                    <span style={{ color: getClusterColor(slides[current].cluster), fontSize: '11px', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                    <span style={{ color: getClusterColor(slides[current].cluster), fontSize: 'var(--text-chip)', fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
                       {slides[current].cluster}
                     </span>
                   </div>
@@ -298,11 +298,11 @@ export default function App() {
                       display: 'inline-flex',
                       background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '4px',
-                      padding: '6px 14px',
+                      borderRadius: '999px',
+                      padding: '4px 10px',
                     }}
                   >
-                    <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                    <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 'var(--text-chip)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                       {slides[current].subject}
                     </span>
                   </div>
@@ -311,7 +311,7 @@ export default function App() {
             </AnimatePresence>
           </div>
 
-          <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
             {current > 0 && (
               <>
                 <motion.button
@@ -322,11 +322,11 @@ export default function App() {
                   style={{
                     background: 'rgba(255,239,0,0.08)',
                     border: `1px solid ${YELLOW}30`,
-                    borderRadius: '6px',
-                    padding: '8px 16px',
+                    borderRadius: '999px',
+                    padding: '6px 12px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
+                    gap: '6px',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     color: YELLOW,
@@ -345,9 +345,9 @@ export default function App() {
                     transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
                     style={{ display: 'inline-flex' }}
                   >
-                    <Home size={16} />
+                    <Home size={14} />
                   </motion.span>
-                  <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em' }}>
+                  <span style={{ fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em' }}>
                     DASHBOARD
                   </span>
                 </motion.button>
@@ -359,8 +359,8 @@ export default function App() {
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       border: '1px solid rgba(255,255,255,0.1)',
-                      borderRadius: '6px',
-                      padding: '8px 12px',
+                      borderRadius: '999px',
+                      padding: '6px 10px',
                       display: 'flex',
                       alignItems: 'center',
                       cursor: 'pointer',
@@ -376,7 +376,7 @@ export default function App() {
                       e.currentTarget.style.color = 'rgba(255,255,255,0.6)';
                     }}
                   >
-                    {showMenu ? <X size={16} /> : <Menu size={16} />}
+                    {showMenu ? <X size={14} /> : <Menu size={14} />}
                   </button>
 
                   <AnimatePresence>
@@ -406,16 +406,16 @@ export default function App() {
                             onClick={() => goToSlide(index)}
                             style={{
                               width: '100%',
-                              padding: '10px 12px',
+                              padding: '8px 10px',
                               background: index === current ? 'rgba(255,239,0,0.1)' : 'transparent',
                               border: 'none',
-                              borderRadius: '4px',
+                              borderRadius: '10px',
                               textAlign: 'left',
                               cursor: 'pointer',
                               transition: 'all 0.15s',
                               display: 'flex',
                               flexDirection: 'column',
-                              gap: '4px',
+                              gap: '3px',
                               borderLeft: index === current ? `2px solid ${YELLOW}` : '2px solid transparent',
                             }}
                             onMouseEnter={(e) => {
@@ -431,7 +431,7 @@ export default function App() {
                           >
                             <span
                               style={{
-                                fontSize: '12px',
+                                fontSize: 'var(--text-body)',
                                 fontWeight: 600,
                                 color: index === current ? YELLOW : 'rgba(255,255,255,0.9)',
                                 letterSpacing: '0.02em',
@@ -443,7 +443,7 @@ export default function App() {
                               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                                 <span
                                   style={{
-                                    fontSize: '9px',
+                                    fontSize: 'var(--text-chip)',
                                     fontWeight: 700,
                                     color: getClusterColor(slide.cluster),
                                     letterSpacing: '0.08em',
@@ -454,7 +454,7 @@ export default function App() {
                                 </span>
                                 <span
                                   style={{
-                                    fontSize: '9px',
+                                    fontSize: 'var(--text-chip)',
                                     fontWeight: 500,
                                     color: 'rgba(255,255,255,0.4)',
                                     letterSpacing: '0.05em',
@@ -476,14 +476,14 @@ export default function App() {
             <span
               style={{
                 color: 'rgba(255,255,255,0.5)',
-                fontSize: '11px',
+                fontSize: 'var(--text-meta)',
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 background: 'rgba(255,255,255,0.03)',
                 border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '40px',
-                padding: '6px 16px',
-                minWidth: '60px',
+                borderRadius: '999px',
+                padding: '5px 12px',
+                minWidth: '52px',
                 textAlign: 'center',
               }}
             >
@@ -525,8 +525,8 @@ export default function App() {
             background: 'rgba(0,0,0,0.4)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '50%',
-            width: '48px',
-            height: '48px',
+            width: '44px',
+            height: '44px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -540,15 +540,15 @@ export default function App() {
             e.currentTarget.style.background = 'rgba(255,239,0,0.15)';
             e.currentTarget.style.borderColor = YELLOW;
             e.currentTarget.style.color = YELLOW;
-            e.currentTarget.style.width = '52px';
-            e.currentTarget.style.height = '52px';
+            e.currentTarget.style.width = '48px';
+            e.currentTarget.style.height = '48px';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'rgba(0,0,0,0.4)';
             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
             e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-            e.currentTarget.style.width = '48px';
-            e.currentTarget.style.height = '48px';
+            e.currentTarget.style.width = '44px';
+            e.currentTarget.style.height = '44px';
           }}
         >
           <motion.span
@@ -556,7 +556,7 @@ export default function App() {
             transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
             style={{ display: 'inline-flex' }}
           >
-            <ChevronLeft size={24} />
+            <ChevronLeft size={20} />
           </motion.span>
         </motion.button>
       )}
@@ -574,9 +574,9 @@ export default function App() {
             background: 'rgba(0,0,0,0.4)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: showAdvanceBadge ? '999px' : '50%',
-            width: showAdvanceBadge ? 'auto' : '48px',
-            height: '48px',
-            padding: showAdvanceBadge ? '0 16px 0 14px' : 0,
+            width: showAdvanceBadge ? 'auto' : '44px',
+            height: '44px',
+            padding: showAdvanceBadge ? '0 12px 0 12px' : 0,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -592,8 +592,8 @@ export default function App() {
             e.currentTarget.style.borderColor = YELLOW;
             e.currentTarget.style.color = YELLOW;
             if (!showAdvanceBadge) {
-              e.currentTarget.style.width = '52px';
-              e.currentTarget.style.height = '52px';
+              e.currentTarget.style.width = '48px';
+              e.currentTarget.style.height = '48px';
             }
           }}
           onMouseLeave={(e) => {
@@ -601,8 +601,8 @@ export default function App() {
             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
             e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
             if (!showAdvanceBadge) {
-              e.currentTarget.style.width = '48px';
-              e.currentTarget.style.height = '48px';
+              e.currentTarget.style.width = '44px';
+              e.currentTarget.style.height = '44px';
             }
           }}
         >
@@ -613,14 +613,14 @@ export default function App() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                padding: '6px 12px',
+                padding: '5px 10px',
                 borderRadius: '999px',
                 border: '1px solid currentColor',
                 background: 'transparent',
                 color: 'currentColor',
-                fontSize: '10px',
+                fontSize: 'var(--text-chip)',
                 fontWeight: 800,
-                letterSpacing: '0.14em',
+                letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 lineHeight: 1,
               }}
@@ -633,7 +633,7 @@ export default function App() {
             transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
             style={{ display: 'inline-flex' }}
           >
-            <ChevronRight size={24} />
+            <ChevronRight size={20} />
           </motion.span>
         </motion.button>
       )}

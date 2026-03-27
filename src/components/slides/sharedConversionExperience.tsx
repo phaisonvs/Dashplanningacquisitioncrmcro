@@ -47,14 +47,14 @@ const TokenTag = ({ label }: { label: ConversionExperienceItem['tags'][number] }
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '5px 10px',
+        padding: '4px 9px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '10px',
+        fontSize: 'var(--text-chip)',
         fontWeight: 700,
-        letterSpacing: '0.09em',
+        letterSpacing: '0.08em',
         lineHeight: 1,
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
@@ -78,14 +78,14 @@ const StatusPill = ({ status }: { status: ConversionExperienceItem['status'] }) 
         display: 'inline-flex',
         alignItems: 'center',
         gap: '5px',
-        padding: '4px 8px',
+        padding: '3px 8px',
         borderRadius: '999px',
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '10px',
+        fontSize: 'var(--text-chip)',
         fontWeight: 700,
-        letterSpacing: '0.08em',
+        letterSpacing: '0.07em',
         lineHeight: 1,
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
@@ -101,28 +101,28 @@ const ObjectiveBlock = ({ text }: { text: string }) => (
   <div
     style={{
       background: 'rgba(255,255,255,0.018)',
-      padding: '22px',
-      borderRadius: '12px',
+      padding: '18px',
+      borderRadius: '14px',
       border: '1px solid rgba(255,255,255,0.05)',
     }}
   >
     <div
       style={{
         color: WHITE,
-        fontSize: '12px',
+        fontSize: 'var(--text-meta)',
         fontWeight: 700,
         textTransform: 'uppercase',
         letterSpacing: '0.08em',
-        marginBottom: '14px',
+        marginBottom: '10px',
         display: 'flex',
         alignItems: 'center',
-        gap: '8px',
+        gap: '6px',
       }}
     >
-      <div style={{ width: '3px', height: '12px', background: CLUSTERS.CRO, borderRadius: '2px' }} />
+      <div style={{ width: '3px', height: '10px', background: CLUSTERS.CRO, borderRadius: '999px' }} />
       Objetivo da frente
     </div>
-    <div style={{ color: 'rgba(255,255,255,0.68)', fontSize: '14px', lineHeight: 1.65, fontWeight: 300 }}>
+    <div style={{ color: 'rgba(255,255,255,0.68)', fontSize: 'var(--text-body)', lineHeight: 1.5, fontWeight: 300 }}>
       {text}
     </div>
   </div>
@@ -147,7 +147,7 @@ const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '26px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            <div style={{ color: WHITE, fontSize: '16px', fontWeight: 700, marginBottom: '0', lineHeight: 1.35 }}>
+            <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, marginBottom: '0', lineHeight: 1.25 }}>
               {item.title}
             </div>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
@@ -210,14 +210,14 @@ export function ConversionExperienceSection({
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    padding: '6px 10px',
+                    padding: '5px 9px',
                     borderRadius: '999px',
                     border: `1px solid ${palette.border}`,
                     background: palette.background,
                     color: palette.color,
-                    fontSize: '10px',
+                    fontSize: 'var(--text-chip)',
                     fontWeight: SLIDE_META_WEIGHT,
-                    letterSpacing: '0.12em',
+                    letterSpacing: '0.1em',
                     textTransform: 'uppercase',
                   }}
                 >

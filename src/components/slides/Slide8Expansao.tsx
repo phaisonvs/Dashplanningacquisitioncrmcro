@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+﻿import { motion } from 'motion/react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { CLUSTERS, BG, WHITE, GREEN, RED } from '../theme';
 import { ConversionExperienceSection } from './sharedConversionExperience';
@@ -219,7 +219,7 @@ const TokenTag = ({ label, compact = false }: { label: string; compact?: boolean
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '11px',
+        fontSize: 'var(--text-meta)',
         fontWeight: 800,
         letterSpacing: '0.09em',
         lineHeight: 1,
@@ -246,7 +246,7 @@ const StatusPill = ({ status }: { status: Status }) => {
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: '10px',
+        fontSize: 'var(--text-chip)',
         fontWeight: 800,
         letterSpacing: '0.08em',
         lineHeight: 1,
@@ -275,11 +275,11 @@ const StatusCounter = ({ status, count, isActive }: { status: Status; count: num
         border: '1px solid rgba(255,255,255,0.08)',
       }}
     >
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: '12px', fontWeight: 700, lineHeight: 1 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: 'var(--text-body)', fontWeight: 700, lineHeight: 1 }}>
         <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
         {palette.label}
       </span>
-      <span style={{ color: WHITE, fontSize: '14px', fontWeight: 800, lineHeight: 1 }}>
+      <span style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 800, lineHeight: 1 }}>
         <AnimatedNumber target={count} isActive={isActive} duration={900} />
       </span>
     </div>
@@ -300,7 +300,7 @@ const ActionCardView = ({ actionItem, variant = 'week' }: { actionItem: ActionCa
       <TokenTag label={actionItem.cluster} compact />
       <StatusPill status={actionItem.status} />
     </div>
-    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: '13px', lineHeight: 1.55, fontWeight: 500 }}>
+    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
       {actionItem.text}
     </div>
   </div>
@@ -323,13 +323,13 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.title}
       </div>
       <TokenTag label={item.dateTag} compact />
     </div>
 
-    <div style={{ fontSize: 'clamp(28px, 3vw, 50px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
+    <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
       <AnimatedNumber
         target={item.value.target}
         prefix={item.value.prefix}
@@ -359,7 +359,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: '12px', lineHeight: 1.35 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35 }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
@@ -369,7 +369,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
                   paddingLeft: '12px',
                   borderLeft: `2px solid ${activeColor}`,
                   color: activeColor,
-                  fontSize: '12px',
+                  fontSize: 'var(--text-body)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
                 }}
@@ -383,14 +383,14 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.bullets.map((row, index) => (
           <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: '13px', lineHeight: 1.45 }}>
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.45 }}>
               {row.text}
             </div>
           </div>
@@ -399,7 +399,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Ações da semana anterior
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -410,7 +410,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Ação na semana
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -472,10 +472,10 @@ export function Slide8Expansao({ isActive }: Props) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
           <div>
-            <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Leitura executiva
             </div>
-            <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
+            <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
               A expansão é promissora quando o jogo é qualificação, não volume bruto.
             </div>
           </div>
@@ -512,10 +512,10 @@ export function Slide8Expansao({ isActive }: Props) {
                 gap: '10px',
               }}
             >
-              <div style={{ color: item.tone === 'positive' ? GREEN : RED, fontSize: '12px', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              <div style={{ color: item.tone === 'positive' ? GREEN : RED, fontSize: 'var(--text-body)', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 {item.title}
               </div>
-              <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: '13px', lineHeight: 1.55, fontWeight: 500 }}>
+              <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
                 {item.text}
               </div>
             </div>
@@ -531,3 +531,4 @@ export function Slide8Expansao({ isActive }: Props) {
     </div>
   );
 }
+

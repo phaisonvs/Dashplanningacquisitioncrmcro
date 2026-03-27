@@ -10,27 +10,27 @@ interface Props {
 export function ImageUploadPlaceholder({ title, subtitle, height = '180px' }: Props) {
   return (
     <div
-      style={{
-        background: CARD_BG,
-        border: `1px dashed ${CARD_BORDER}`,
-        borderRadius: '8px',
-        height,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '10px',
-        padding: '20px',
-        position: 'relative',
-      }}
-    >
+        style={{
+          background: CARD_BG,
+          border: `1px dashed ${CARD_BORDER}`,
+          borderRadius: '12px',
+          height,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          padding: '16px',
+          position: 'relative',
+        }}
+      >
       <div
         style={{
           position: 'absolute',
-          top: '12px',
-          left: '14px',
+          top: '10px',
+          left: '12px',
           color: YELLOW,
-          fontSize: '11px',
+          fontSize: 'var(--text-meta)',
           fontWeight: 700,
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
@@ -38,18 +38,18 @@ export function ImageUploadPlaceholder({ title, subtitle, height = '180px' }: Pr
       >
         {title}
       </div>
-      <Upload size={24} color="#444" />
-      <div style={{ color: '#555', fontSize: '12px', textAlign: 'center', lineHeight: 1.5 }}>
+      <Upload size={20} color="#444" />
+      <div style={{ color: '#555', fontSize: 'var(--text-body)', textAlign: 'center', lineHeight: 1.45 }}>
         {subtitle || 'Dados a serem anexados'}
       </div>
       <div
         style={{
-          fontSize: '10px',
+          fontSize: 'var(--text-chip)',
           color: '#3A3A3A',
           border: '1px solid #2A2A2A',
-          borderRadius: '4px',
-          padding: '3px 10px',
-          marginTop: '4px',
+          borderRadius: '999px',
+          padding: '3px 8px',
+          marginTop: '2px',
         }}
       >
         Inserir imagem / print aqui
