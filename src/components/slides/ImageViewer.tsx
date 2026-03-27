@@ -67,10 +67,11 @@ export function ImageViewer({
     return (
       <div 
         style={{ 
-          width: `${width}px`, 
+          width: fullWidth ? '100%' : `${width}px`,
+          minWidth: fullWidth ? '100%' : undefined,
           height: `${height}px`, 
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px dashed rgba(255,255,255,0.1)',
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: '6px',
           display: 'flex',
           alignItems: 'center',
@@ -177,7 +178,7 @@ export function ImageViewer({
             padding: viewMode === 'mobile' ? '20px' : '0',
             cursor: 'pointer'
           }}
-          className="image-viewer-container"
+          className="image-viewer-scroll image-viewer-container"
         >
           {viewMode === 'mobile' ? (
             // Mobile Mockup
@@ -398,6 +399,7 @@ export function ImageViewer({
           {/* Modal Content */}
           <div 
             onClick={(e) => e.stopPropagation()}
+            className="image-viewer-scroll image-viewer-modal-scroll"
             style={{
               width: '100%',
               height: '100%',
@@ -447,7 +449,9 @@ export function ImageViewer({
                     height: '100%',
                     overflowY: 'auto',
                     overflowX: 'hidden'
-                  }}>
+                  }}
+                  className="image-viewer-scroll image-viewer-modal-image-scroll"
+                  >
                     <img
                       src={currentImage}
                       alt={alt}

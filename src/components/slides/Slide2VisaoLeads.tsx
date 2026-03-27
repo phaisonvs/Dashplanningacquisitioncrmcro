@@ -2,6 +2,11 @@ import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, RED, CLUSTERS } from '../theme';
+import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
+import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
+import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
+import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
+import lpChanceUnicaMobileImg from 'figma:asset/63f4568abbe03cbb8b0834a2bb70e3613df7a874.png';
 
 interface Props {
   isActive: boolean;
@@ -69,8 +74,8 @@ const primaryMetrics: MetricCard[] = [
       action('CRO', 'feito', 'Inclusão de botão de contato nas páginas de pisos e em LPs promocionais para ampliar captação qualificada.'),
     ],
     weekActions: [
-      action('CRM', 'pendente', 'Meta por representante para cadastros no Pipe com monitoramento diário até sexta.'),
-      action('ACQUISITION', 'pendente', 'Foco em praças zeradas com campanhas locais para elevar geração de leads nas filiais com baixo volume.'),
+      action('CRM', 'pendente', 'Otimização de fluxos e Bot no Site'),
+      action('ACQUISITION', 'pendente', 'Redistribuir mídia para lojas com 0 entradas'),
     ],
   },
   {
@@ -274,19 +279,13 @@ const funnelStages: FunnelStage[] = [
     ],
     weekActions: [
       action('CRO', 'pendente', 'Publicar CTA de WhatsApp em home + carrinho com 2 scripts A/B e medir avanço qualificado.'),
-      action('ACQUISITION', 'pendente', 'Escalar campanhas com maior taxa de pedidos, mantendo controle diário de custo por loja.'),
+      action('ACQUISITION', 'pendente', 'Recuperar conversão de orçamentos → pedidos'),
     ],
   },
 ];
 
 const allActions = [...primaryMetrics, ...secondaryMetrics, ...funnelStages].flatMap((item) => [...item.previousActions, ...item.weekActions]);
-const statusCounts = allActions.reduce(
-  (acc, current) => {
-    acc[current.status] += 1;
-    return acc;
-  },
-  { feito: 0, pendente: 0, bloqueado: 0 } as Record<Status, number>,
-);
+const statusCounts = collectStatusCounts(allActions);
 
 const tokenPalette: Record<string, { color: string; background: string; border: string }> = {
   LEADS: { color: '#7DD3FC', background: 'rgba(125, 211, 252, 0.08)', border: 'rgba(125, 211, 252, 0.28)' },
@@ -391,12 +390,12 @@ const ActionCardView = ({ action, variant = 'week' }: { action: ActionCard; vari
     style={{
       background: variant === 'previous' ? 'rgba(255,255,255,0.018)' : 'rgba(20,20,20,0.88)',
       border: `1px solid ${variant === 'previous' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'}`,
-      borderRadius: '12px',
-      padding: '14px',
+      borderRadius: '14px',
+      padding: '18px',
       boxShadow: variant === 'previous' ? 'inset 0 1px 0 rgba(255,255,255,0.02)' : 'inset 0 1px 0 rgba(255,255,255,0.03)',
     }}
   >
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
       <TokenTag label={action.cluster} compact />
       <StatusPill status={action.status} />
     </div>
@@ -414,11 +413,11 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     style={{
       background: 'rgba(255,255,255,0.02)',
       border: '1px solid rgba(255,255,255,0.05)',
-      borderRadius: '14px',
-      padding: '22px',
+      borderRadius: '16px',
+      padding: '30px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '18px',
+      gap: '24px',
       minHeight: '100%',
     }}
   >
@@ -440,7 +439,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       />
     </div>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {item.comparisons.map((row, index) => {
         const activeColor = row.tone === 'positive' ? GREEN : RED;
         const hasValue = Boolean(row.value);
@@ -453,7 +452,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
               alignItems: 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
               gap: '14px',
-              padding: '12px 16px',
+              padding: '13px 18px',
               borderRadius: '8px',
               background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
@@ -482,11 +481,11 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       })}
     </div>
 
-    <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '10px' }}>
+    <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
       <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.bullets.map((row, index) => (
           <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
@@ -498,22 +497,22 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
       </div>
     </div>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Ações da semana anterior
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.previousActions.map((itemAction, index) => (
           <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="previous" />
         ))}
       </div>
     </div>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Ação na semana
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.weekActions.map((itemAction, index) => (
           <ActionCardView key={`${itemAction.text}-${index}`} action={itemAction} variant="week" />
         ))}
@@ -530,11 +529,11 @@ const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boo
     style={{
       background: 'rgba(255,255,255,0.02)',
       border: '1px solid rgba(255,255,255,0.05)',
-      borderRadius: '14px',
-      padding: '16px',
+      borderRadius: '16px',
+      padding: '18px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '14px',
+      gap: '16px',
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
@@ -593,7 +592,7 @@ const FunnelCardView = ({ stage, isActive }: { stage: FunnelStage; isActive: boo
       })}
     </div>
 
-    <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '8px' }}>
+    <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
       <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
@@ -652,6 +651,159 @@ const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: st
   </div>
 );
 
+type MediaGalleryItem = {
+  title: string;
+  tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM'>;
+  status: Status;
+  summary: string;
+  image: string;
+  formatLabel: string;
+  aspectRatio: string;
+  accent: string;
+};
+
+const mediaAcquisitionItems: MediaGalleryItem[] = [
+  {
+    title: 'Facebook Feed - Semana do Consumidor',
+    tags: ['LEADS', 'ACQUISITION'],
+    status: 'feito',
+    summary: 'Peça quadrada para feed com leitura direta e chamada sazonal de captação.',
+    image: lpSemanaConsumidorImg,
+    formatLabel: 'Feed 1:1',
+    aspectRatio: '1 / 1',
+    accent: CLUSTERS.ACQUISITION,
+  },
+  {
+    title: 'Instagram Story - Chance Única',
+    tags: ['ACQUISITION', 'CRO'],
+    status: 'pendente',
+    summary: 'Formato vertical para story com urgência e CTA forte em poucos segundos.',
+    image: lpChanceUnicaMobileImg,
+    formatLabel: 'Story 9:16',
+    aspectRatio: '9 / 16',
+    accent: CLUSTERS.CRO,
+  },
+  {
+    title: 'Hero de Produto - Feed Square',
+    tags: ['CRO', 'ACQUISITION'],
+    status: 'feito',
+    summary: 'Criativo quadrado para mídia paga com hero limpo e mensagem de conversão.',
+    image: lpChanceUnicaImg,
+    formatLabel: 'Feed 1:1',
+    aspectRatio: '1 / 1',
+    accent: CLUSTERS.CRO,
+  },
+  {
+    title: 'WhatsApp e Captura - Story',
+    tags: ['CRM', 'LEADS'],
+    status: 'feito',
+    summary: 'Peça vertical para remarketing, reforçando contato e captura com menos atrito.',
+    image: lpSemanaConsumidorMobileImg,
+    formatLabel: 'Story 9:16',
+    aspectRatio: '9 / 16',
+    accent: CLUSTERS.CRM,
+  },
+];
+
+const MediaGalleryCard = ({ item }: { item: MediaGalleryItem }) => (
+  <motion.article
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.45 }}
+    style={{
+      background: 'linear-gradient(180deg, rgba(255,255,255,0.024) 0%, rgba(255,255,255,0.014) 100%)',
+      border: '1px solid rgba(255,255,255,0.05)',
+      borderRadius: '18px',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+      padding: '14px',
+    }}
+  >
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
+      <div style={{ minWidth: 0 }}>
+        <div style={{ color: WHITE, fontSize: '15px', fontWeight: 800, lineHeight: 1.35, letterSpacing: '-0.01em' }}>
+          {item.title}
+        </div>
+        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', lineHeight: 1.4, marginTop: '4px' }}>
+          Peça para campanhas pagas em Facebook e Instagram.
+        </div>
+      </div>
+      <StatusPill status={item.status} />
+    </div>
+
+    <div
+      style={{
+        position: 'relative',
+        aspectRatio: item.aspectRatio,
+        borderRadius: '16px',
+        overflow: 'hidden',
+        border: '1px solid rgba(255,255,255,0.08)',
+        background: 'rgba(255,255,255,0.03)',
+      }}
+    >
+      <img
+        src={item.image}
+        alt={item.title}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          display: 'block',
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.1) 42%, rgba(0,0,0,0.66) 100%)',
+        }}
+      />
+      <div style={{ position: 'absolute', left: '12px', top: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '5px 9px',
+            borderRadius: '999px',
+            background: 'rgba(0,0,0,0.45)',
+            color: item.accent,
+            border: `1px solid ${item.accent}4d`,
+            fontSize: '10px',
+            fontWeight: 800,
+            letterSpacing: '0.09em',
+            textTransform: 'uppercase',
+          }}
+        >
+          {item.formatLabel}
+        </span>
+      </div>
+      <div style={{ position: 'absolute', left: '12px', right: '12px', bottom: '12px' }}>
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
+          {item.tags.map((tag) => (
+            <TokenTag key={`${item.title}-${tag}`} label={tag} compact />
+          ))}
+        </div>
+        <div style={{ color: WHITE, fontSize: '13px', lineHeight: 1.45, fontWeight: 600, maxWidth: '92%' }}>
+          {item.summary}
+        </div>
+      </div>
+    </div>
+
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        Gallery Asset
+      </div>
+      <div style={{ color: 'rgba(255,255,255,0.52)', fontSize: '11px', fontWeight: 700 }}>
+        {item.formatLabel}
+      </div>
+    </div>
+  </motion.article>
+);
+
 export function Slide2VisaoLeads({ isActive }: Props) {
   return (
     <div
@@ -661,7 +813,7 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         padding: '140px clamp(28px, 5vw, 72px) 80px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '32px',
+        gap: '40px',
       }}
     >
       <section>
@@ -690,13 +842,13 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         </motion.div>
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '16px' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px' }}>
         {primaryMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} />
         ))}
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px' }}>
         {secondaryMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} />
         ))}
@@ -706,11 +858,11 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         style={{
           background: 'rgba(255,255,255,0.02)',
           border: '1px solid rgba(255,255,255,0.05)',
-          borderRadius: '14px',
-          padding: '18px',
+          borderRadius: '18px',
+          padding: '22px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '18px',
+          gap: '22px',
         }}
       >
         <SectionTitle
@@ -724,12 +876,14 @@ export function Slide2VisaoLeads({ isActive }: Props) {
           }
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '14px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px' }}>
           {funnelStages.map((stage) => (
             <FunnelCardView key={stage.label} stage={stage} isActive={isActive} />
           ))}
         </div>
       </section>
+
+      <MediaAcquisitionSection />
     </div>
   );
 }

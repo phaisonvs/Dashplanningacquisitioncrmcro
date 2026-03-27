@@ -45,7 +45,7 @@ const getClusterColor = (cluster: string | null) => {
 };
 
 const slides: SlideConfig[] = [
-  { Component: Slide0Calendar, label: 'Report Library', cluster: null, subject: null, slug: 'library' },
+  { Component: Slide0Calendar, label: 'Dashboard', cluster: null, subject: null, slug: 'dashboard', aliases: ['library', 'home'] },
   { Component: Slide1Cover, label: 'Capa', cluster: null, subject: null, slug: '', aliases: ['capa', 'cover'] },
   { Component: Slide2VisaoLeads, label: 'Leads', cluster: 'LEADS', subject: 'FUNIL & PERFORMANCE', slug: 'leads' },
   { Component: Slide5Ecommerce, label: 'E-commerce', cluster: 'ECOMMERCE', subject: 'FUNIL & PRODUTO', slug: 'ecommerce', aliases: ['e-com', 'e-commerce'] },
@@ -63,17 +63,16 @@ slides.forEach((slide, index) => {
 });
 
 const normalizeRouteKey = (pathname: string, hash: string) => {
-  const rawHash = hash.startsWith('#') ? hash.slice(1) : hash;
-  const hashKey = rawHash.replace(/^\/+/, '').trim().toLowerCase();
-  if (hashKey) return hashKey;
-
   const pathKey = pathname.replace(/^\/+/, '').replace(/\/+$/, '').trim().toLowerCase();
-  return pathKey;
+  if (pathKey) return pathKey;
+
+  const rawHash = hash.startsWith('#') ? hash.slice(1) : hash;
+  return rawHash.replace(/^\/+/, '').trim().toLowerCase();
 };
 
 const resolveSlideIndex = (pathname: string, hash: string) => {
   const key = normalizeRouteKey(pathname, hash);
-  if (!key) return 1;
+  if (!key) return 0;
   if (slideAliases.has(key)) return slideAliases.get(key) ?? 0;
 
   const lastSegment = key.split('/').filter(Boolean).pop() ?? '';
@@ -83,13 +82,13 @@ const resolveSlideIndex = (pathname: string, hash: string) => {
 };
 
 const routeForIndex = (index: number) => {
-  if (index === 1) return '#';
-  if (index === 0) return '#/library';
+  if (index === 0) return '/dashboard';
+  if (index === 1) return '/cover';
   const slug = slides[index]?.slug;
-  return slug ? `#/${slug}` : '#';
+  return slug ? `/${slug}` : '/';
 };
 
-const canonicalUrlForIndex = (index: number) => `${window.location.origin}/${routeForIndex(index)}`;
+const canonicalUrlForIndex = (index: number) => `${window.location.origin}${routeForIndex(index)}`;
 
 export default function App() {
   const [current, setCurrent] = useState(0);
@@ -135,6 +134,9 @@ export default function App() {
   const goToSlide = useCallback((index: number) => {
     syncRouteToIndex(index);
   }, [syncRouteToIndex]);
+
+  const showAdvanceBadge = current === 1;
+  const hideNavigationArrows = current === 0;
 
   useEffect(() => {
     const syncFromLocation = () => {
@@ -217,11 +219,25 @@ export default function App() {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px', pointerEvents: 'auto' }}>
-            <ImageWithFallback
-              src={logoImg}
-              alt="Logo"
-              style={{ height: '32px', width: 'auto', objectFit: 'contain' }}
-            />
+            <button
+              type="button"
+              onClick={goToDashboard}
+              title="Ir para o Dashboard"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+              }}
+            >
+              <ImageWithFallback
+                src={logoImg}
+                alt="Logo"
+                style={{ height: '32px', width: 'auto', objectFit: 'contain' }}
+              />
+            </button>
 
             <AnimatePresence mode="wait">
               {slides[current].cluster && (
@@ -294,7 +310,13 @@ export default function App() {
                     e.currentTarget.style.borderColor = `${YELLOW}30`;
                   }}
                 >
-                  <Home size={16} />
+                  <motion.span
+                    animate={{ x: [0, -4, 0] }}
+                    transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
+                    style={{ display: 'inline-flex' }}
+                  >
+                    <Home size={16} />
+                  </motion.span>
                   <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em' }}>
                     DASHBOARD
                   </span>
@@ -460,7 +482,7 @@ export default function App() {
         </motion.div>
       </AnimatePresence>
 
-      {current > 0 && (
+      {!hideNavigationArrows && current > 0 && (
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -499,11 +521,17 @@ export default function App() {
             e.currentTarget.style.height = '48px';
           }}
         >
-          <ChevronLeft size={24} />
+          <motion.span
+            animate={{ x: [0, -4, 0] }}
+            transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ display: 'inline-flex' }}
+          >
+            <ChevronLeft size={24} />
+          </motion.span>
         </motion.button>
       )}
 
-      {current < slides.length - 1 && (
+      {!hideNavigationArrows && current < slides.length - 1 && (
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -515,12 +543,14 @@ export default function App() {
             transform: 'translateY(-50%)',
             background: 'rgba(0,0,0,0.4)',
             border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '50%',
-            width: '48px',
+            borderRadius: showAdvanceBadge ? '999px' : '50%',
+            width: showAdvanceBadge ? 'auto' : '48px',
             height: '48px',
+            padding: showAdvanceBadge ? '0 16px 0 14px' : 0,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            gap: showAdvanceBadge ? '10px' : 0,
             cursor: 'pointer',
             zIndex: 300,
             color: 'rgba(255,255,255,0.5)',
@@ -531,18 +561,48 @@ export default function App() {
             e.currentTarget.style.background = 'rgba(255,239,0,0.15)';
             e.currentTarget.style.borderColor = YELLOW;
             e.currentTarget.style.color = YELLOW;
-            e.currentTarget.style.width = '52px';
-            e.currentTarget.style.height = '52px';
+            if (!showAdvanceBadge) {
+              e.currentTarget.style.width = '52px';
+              e.currentTarget.style.height = '52px';
+            }
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'rgba(0,0,0,0.4)';
             e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
             e.currentTarget.style.color = 'rgba(255,255,255,0.5)';
-            e.currentTarget.style.width = '48px';
-            e.currentTarget.style.height = '48px';
+            if (!showAdvanceBadge) {
+              e.currentTarget.style.width = '48px';
+              e.currentTarget.style.height = '48px';
+            }
           }}
         >
-          <ChevronRight size={24} />
+          {showAdvanceBadge && (
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '6px 12px',
+                borderRadius: '999px',
+                border: '1px solid currentColor',
+                background: 'transparent',
+                color: 'currentColor',
+                fontSize: '10px',
+                fontWeight: 800,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                lineHeight: 1,
+              }}
+            >
+              AVANÇAR
+            </span>
+          )}
+          <motion.span
+            animate={{ x: [0, 4, 0] }}
+            transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ display: 'inline-flex' }}
+          >
+            <ChevronRight size={24} />
+          </motion.span>
         </motion.button>
       )}
 

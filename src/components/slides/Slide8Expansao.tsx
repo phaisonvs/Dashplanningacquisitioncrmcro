@@ -1,150 +1,480 @@
 import { motion } from 'motion/react';
-import { CLUSTERS, BG, WHITE, RED, GREEN } from '../theme';
 import { AnimatedNumber } from '../AnimatedNumber';
+import { CLUSTERS, BG, WHITE, GREEN, RED } from '../theme';
+import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
 
-interface Props { isActive: boolean }
+interface Props {
+  isActive: boolean;
+}
 
-const funelSteps = [
-  { label: 'Leads', value: 149, color: 'rgba(255,255,255,0.02)', textColor: WHITE, borderColor: 'rgba(255,255,255,0.1)', sub: '' },
-  { label: 'Apresentações', value: 9, color: 'rgba(255,255,255,0.05)', textColor: WHITE, borderColor: 'rgba(255,255,255,0.2)', sub: 'taxa de 6%' },
-  { label: 'Oportunidades', value: 6, color: `${CLUSTERS.EXPANSAO}30`, textColor: CLUSTERS.EXPANSAO, borderColor: CLUSTERS.EXPANSAO, sub: 'taxa de 66%' },
-  { label: 'Contratos fechados', value: 0, color: `${RED}10`, textColor: RED, borderColor: RED, sub: '' },
+type Status = 'feito' | 'pendente' | 'bloqueado';
+type ClusterTag = 'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM';
+type Tone = 'positive' | 'negative';
+
+type Comparison = {
+  tone: Tone;
+  text: string;
+  value?: string;
+};
+
+type Bullet = {
+  tone: Tone;
+  text: string;
+};
+
+type ActionCard = {
+  cluster: ClusterTag;
+  status: Status;
+  text: string;
+};
+
+type MetricCard = {
+  title: string;
+  dateTag: string;
+  value: {
+    target: number;
+    prefix?: string;
+    suffix?: string;
+    decimals?: number;
+  };
+  comparisons: Comparison[];
+  bullets: Bullet[];
+  previousActions: ActionCard[];
+  weekActions: ActionCard[];
+};
+
+const action = (cluster: ClusterTag, status: Status, text: string): ActionCard => ({ cluster, status, text });
+const bullet = (tone: Tone, text: string): Bullet => ({ tone, text });
+const comparison = (tone: Tone, text: string, value?: string): Comparison => ({ tone, text, value });
+
+const expansionMetrics: MetricCard[] = [
+  {
+    title: 'LEADS QUALIFICADOS',
+    dateTag: 'Mar/2026',
+    value: { target: 149 },
+    comparisons: [
+      comparison('positive', 'base suficiente para expansão controlada'),
+      comparison('negative', 'volume ainda concentrado em poucas frentes'),
+    ],
+    bullets: [
+      bullet('positive', 'A base de leads qualificados sustenta a frente de expansão com clareza de intenção.'),
+      bullet('negative', 'A operação ainda depende de poucos canais e de cadência comercial consistente.'),
+    ],
+    previousActions: [
+      action('ACQUISITION', 'feito', 'Estratégia "Oportunidade por Praça" (Gatilho Escassez)'),
+    ],
+    weekActions: [
+      action('ACQUISITION', 'pendente', 'Ativação de estratégia LinkedIn Ads (Perfis B2B)'),
+    ],
+  },
+  {
+    title: 'APRESENTAÇÕES',
+    dateTag: 'Mar/2026',
+    value: { target: 9 },
+    comparisons: [
+      comparison('positive', 'taxa de avanço de 6%'),
+      comparison('negative', 'escala ainda limitada pelo volume de entrada'),
+    ],
+    bullets: [
+      bullet('positive', 'O avanço para apresentações mostra boa qualificação inicial da demanda.'),
+      bullet('negative', 'O volume ainda não é suficiente para acelerar fechamento sem ampliar aquisição.'),
+    ],
+    previousActions: [
+      action('CRM', 'feito', 'Fluxo D0, D2, D5 para leads não convertidos'),
+    ],
+    weekActions: [
+      action('CRO', 'pendente', 'Nova LP focada em conversão e persona "Executivo"'),
+    ],
+  },
+  {
+    title: 'OPORTUNIDADES',
+    dateTag: 'Mar/2026',
+    value: { target: 6 },
+    comparisons: [
+      comparison('positive', 'taxa de avanço de 66%'),
+      comparison('positive', 'sinal claro de qualificação comercial'),
+    ],
+    bullets: [
+      bullet('positive', 'A conversão de apresentação para oportunidade segue como o melhor sinal da frente.'),
+      bullet('negative', 'Ainda existe espaço para ampliar a geração de oportunidade em pipeline maior.'),
+    ],
+    previousActions: [
+      action('CRM', 'feito', 'Destaque de leads com maior intenção via CRM e follow-up ativo'),
+    ],
+    weekActions: [
+      action('CRO', 'pendente', 'Teste de formulário multi-step vs simples'),
+    ],
+  },
+  {
+    title: 'CONTRATOS FECHADOS',
+    dateTag: 'Mar/2026',
+    value: { target: 0 },
+    comparisons: [
+      comparison('negative', 'fechamento ainda não capturado no recorte atual'),
+      comparison('positive', 'pipeline pronto para ativação comercial mais agressiva'),
+    ],
+    bullets: [
+      bullet('negative', 'O volume atual ainda não converteu em contratos fechados.'),
+      bullet('positive', 'A disciplina de aquisição e CRM cria a base para destravar o fechamento.'),
+    ],
+    previousActions: [
+      action('CRM', 'feito', 'Reforço de nutrição e reaquecimento de leads parados'),
+    ],
+    weekActions: [
+      action('ACQUISITION', 'pendente', 'Novas campanhas de B2B e reativação via CRM'),
+    ],
+  },
 ];
 
-const widths = [100, 70, 48, 30];
+const statusCounts = collectStatusCounts(
+  ...expansionMetrics.map((item) => [...item.previousActions, ...item.weekActions]),
+);
+
+const tokenPalette: Record<ClusterTag, { color: string; background: string; border: string }> = {
+  LEADS: { color: '#7DD3FC', background: 'rgba(125, 211, 252, 0.08)', border: 'rgba(125, 211, 252, 0.22)' },
+  ACQUISITION: { color: '#A78BFA', background: 'rgba(167, 139, 250, 0.08)', border: 'rgba(167, 139, 250, 0.22)' },
+  CRO: { color: '#60A5FA', background: 'rgba(96, 165, 250, 0.08)', border: 'rgba(96, 165, 250, 0.22)' },
+  CRM: { color: '#2DD4BF', background: 'rgba(45, 212, 191, 0.08)', border: 'rgba(45, 212, 191, 0.22)' },
+};
+
+const statusPalette: Record<Status, { label: string; color: string; background: string; border: string }> = {
+  feito: { label: 'Feito', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.06)', border: 'rgba(74, 222, 128, 0.16)' },
+  pendente: { label: 'Pendente', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.06)', border: 'rgba(251, 191, 36, 0.16)' },
+  bloqueado: { label: 'Bloqueado', color: '#F87171', background: 'rgba(248, 113, 113, 0.06)', border: 'rgba(248, 113, 113, 0.16)' },
+};
+
+const TokenTag = ({ label, compact = false }: { label: string; compact?: boolean }) => {
+  const palette = tokenPalette[label as ClusterTag] ?? {
+    color: 'rgba(255,255,255,0.72)',
+    background: 'rgba(255,255,255,0.03)',
+    border: 'rgba(255,255,255,0.08)',
+  };
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: compact ? '4px 10px' : '5px 12px',
+        borderRadius: '6px',
+        border: `1px solid ${palette.border}`,
+        background: palette.background,
+        color: palette.color,
+        fontSize: '11px',
+        fontWeight: 800,
+        letterSpacing: '0.09em',
+        lineHeight: 1,
+        textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {label}
+    </span>
+  );
+};
+
+const StatusPill = ({ status }: { status: Status }) => {
+  const palette = statusPalette[status];
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '5px',
+        padding: '4px 8px',
+        borderRadius: '999px',
+        border: `1px solid ${palette.border}`,
+        background: palette.background,
+        color: palette.color,
+        fontSize: '10px',
+        fontWeight: 800,
+        letterSpacing: '0.08em',
+        lineHeight: 1,
+        textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <span style={{ width: '5px', height: '5px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
+      {palette.label}
+    </span>
+  );
+};
+
+const StatusCounter = ({ status, count, isActive }: { status: Status; count: number; isActive: boolean }) => {
+  const palette = statusPalette[status];
+
+  return (
+    <div
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '10px',
+        padding: '7px 12px',
+        borderRadius: '10px',
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: '12px', fontWeight: 700, lineHeight: 1 }}>
+        <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
+        {palette.label}
+      </span>
+      <span style={{ color: WHITE, fontSize: '14px', fontWeight: 800, lineHeight: 1 }}>
+        <AnimatedNumber target={count} isActive={isActive} duration={900} />
+      </span>
+    </div>
+  );
+};
+
+const ActionCardView = ({ actionItem, variant = 'week' }: { actionItem: ActionCard; variant?: 'previous' | 'week' }) => (
+  <div
+    style={{
+      background: variant === 'previous' ? 'rgba(255,255,255,0.018)' : 'rgba(20,20,20,0.88)',
+      border: `1px solid ${variant === 'previous' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'}`,
+      borderRadius: '14px',
+      padding: '18px',
+      boxShadow: variant === 'previous' ? 'inset 0 1px 0 rgba(255,255,255,0.02)' : 'inset 0 1px 0 rgba(255,255,255,0.03)',
+    }}
+  >
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+      <TokenTag label={actionItem.cluster} compact />
+      <StatusPill status={actionItem.status} />
+    </div>
+    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: '13px', lineHeight: 1.55, fontWeight: 500 }}>
+      {actionItem.text}
+    </div>
+  </div>
+);
+
+const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolean }) => (
+  <motion.article
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.45 }}
+    style={{
+      background: 'rgba(255,255,255,0.02)',
+      border: '1px solid rgba(255,255,255,0.05)',
+      borderRadius: '16px',
+      padding: '30px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '24px',
+      minHeight: '100%',
+    }}
+  >
+    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '12px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        {item.title}
+      </div>
+      <TokenTag label={item.dateTag} compact />
+    </div>
+
+    <div style={{ fontSize: 'clamp(28px, 3vw, 50px)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
+      <AnimatedNumber
+        target={item.value.target}
+        prefix={item.value.prefix}
+        suffix={item.value.suffix}
+        decimals={item.value.decimals}
+        isActive={isActive}
+        duration={3000}
+      />
+    </div>
+
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      {item.comparisons.map((row, index) => {
+        const activeColor = row.tone === 'positive' ? GREEN : RED;
+        const hasValue = Boolean(row.value);
+
+        return (
+          <div
+            key={`${row.text}-${index}`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: hasValue ? 'space-between' : 'flex-start',
+              gap: '14px',
+              padding: '13px 18px',
+              borderRadius: '10px',
+              background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
+              border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: '12px', lineHeight: 1.35 }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
+              {row.text}
+            </div>
+            {hasValue && (
+              <div
+                style={{
+                  paddingLeft: '12px',
+                  borderLeft: `2px solid ${activeColor}`,
+                  color: activeColor,
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {row.value}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+
+    <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+        Leituras
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {item.bullets.map((row, index) => (
+          <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+            <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: '13px', lineHeight: 1.45 }}>
+              {row.text}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        Ações da semana anterior
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {item.previousActions.map((itemAction, index) => (
+          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="previous" />
+        ))}
+      </div>
+    </div>
+
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        Ação na semana
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {item.weekActions.map((itemAction, index) => (
+          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="week" />
+        ))}
+      </div>
+    </div>
+  </motion.article>
+);
 
 export function Slide8Expansao({ isActive }: Props) {
   const clusterColor = CLUSTERS.EXPANSAO;
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
-      {/* Header */}
+    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
             <div style={{ width: '4px', height: '32px', background: clusterColor, borderRadius: '2px' }} />
             <div style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: WHITE, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-              Funil de Expansão — Pipeline
+              Visão de Expansão MTD
             </div>
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '20px', maxWidth: '800px', lineHeight: 1.6, fontWeight: 300 }}>
-            Geração de leads qualificados para expansão. Embora o volume seja controlado, a taxa de conversão 
-            de apresentação para oportunidade atingiu 66%, indicando alta qualificação.
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '20px', maxWidth: '860px', lineHeight: 1.6, fontWeight: 300 }}>
+            Expansão opera com volume menor, mas com qualidade de qualificação acima do restante do funil. A leitura aqui é de
+            preparo de pipeline, não de escala cega.
           </p>
         </motion.div>
       </section>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
-        {/* Funnel Area */}
-        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', padding: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-            {funelSteps.map((step, i) => {
-              const w = widths[i];
-              const nextW = i < widths.length - 1 ? widths[i + 1] : widths[i] - 8;
-              const leftPad = (100 - w) / 2;
-              const nextLeftPad = (100 - nextW) / 2;
+      <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <TokenTag label="LEADS" compact />
+          <TokenTag label="ACQUISITION" compact />
+          <TokenTag label="CRO" compact />
+          <TokenTag label="CRM" compact />
+        </div>
 
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scaleX: 0.4 }}
-                  animate={{ opacity: 1, scaleX: 1 }}
-                  transition={{ duration: 0.5, delay: 0.2 + i * 0.2 }}
-                  style={{ width: '100%', maxWidth: '400px', position: 'relative', height: '70px' }}
-                >
-                  {/* Funnel layer shape */}
-                  <div
-                    style={{
-                      position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                      clipPath: `polygon(${leftPad}% 0%, ${100 - leftPad}% 0%, ${100 - nextLeftPad}% 100%, ${nextLeftPad}% 100%)`,
-                      background: step.color,
-                      border: `1px solid ${step.borderColor}`,
-                      borderTop: i === 0 ? `1px solid ${step.borderColor}` : 'none'
-                    }}
-                  />
-                  {/* Text */}
-                  <div
-                    style={{
-                      position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                      zIndex: 2,
-                    }}
-                  >
-                    <div style={{ color: step.textColor, fontSize: '14px', fontWeight: 800, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                      {step.label}
-                    </div>
-                    <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '12px', fontWeight: 500, marginTop: '2px' }}>
-                      <span style={{ color: WHITE, fontSize: '14px', fontWeight: 700 }}><AnimatedNumber target={step.value} isActive={isActive} duration={3000} /></span>
-                      {step.sub ? ` • ${step.sub}` : ''}
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
+          <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
+          <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
+        </div>
+      </section>
 
-        {/* Diagnosis and Action Plan */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 1.0 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}
-        >
-          <div style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid rgba(255,255,255,0.06)`, borderLeft: `4px solid ${RED}`, borderRadius: '12px', padding: '32px' }}>
-            <div style={{ color: RED, fontSize: '14px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '20px' }}>
-              Diagnóstico de Fricção (Causa)
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+        {expansionMetrics.map((item) => (
+          <MetricCardView key={item.title} item={item} isActive={isActive} />
+        ))}
+      </section>
+
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.05)',
+          borderRadius: '20px',
+          padding: '26px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '22px',
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              Leitura executiva
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {[
-                'Redução pontual dos investimentos de mídia de expansão.',
-                'Gargalo operacional na aprovação de novos assets e LPs.',
-                'Concentração de estratégia em canal único (Google Search).',
-                'Déficit em fluxos de nutrição e reaquecimento de leads parados.',
-              ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                  <div style={{ color: RED, fontSize: '16px', marginTop: '2px' }}>✕</div>
-                  <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px', fontWeight: 300, lineHeight: 1.5 }}>{item}</span>
-                </div>
-              ))}
+            <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
+              A expansão é promissora quando o jogo é qualificação, não volume bruto.
             </div>
           </div>
+          <TokenTag label="EXPANSÃO" compact />
+        </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <div style={{ background: `${CLUSTERS.ACQUISITION}10`, border: `1px solid ${CLUSTERS.ACQUISITION}30`, borderRadius: '12px', padding: '24px' }}>
-              <div style={{ color: CLUSTERS.ACQUISITION, fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>
-                Plano de Ação ACQUISITION
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '18px' }}>
+          {[
+            {
+              title: 'Onde está o ganho',
+              text: 'A frente já demonstra qualificação suficiente para escalar com critério, principalmente quando o tráfego é hiper segmentado.',
+              tone: 'positive' as const,
+            },
+            {
+              title: 'Onde está o risco',
+              text: 'Sem diversificação de canais, a operação fica sujeita a pouca profundidade de pipeline e baixo fechamento no curto prazo.',
+              tone: 'negative' as const,
+            },
+            {
+              title: 'O próximo passo',
+              text: 'Combinar LinkedIn, CRM e uma LP executiva para transformar intenção em oportunidade real com velocidade comercial.',
+              tone: 'positive' as const,
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              style={{
+                background: item.tone === 'positive' ? 'rgba(74, 222, 128, 0.06)' : 'rgba(255, 82, 82, 0.08)',
+                border: `1px solid ${item.tone === 'positive' ? 'rgba(74, 222, 128, 0.18)' : 'rgba(255, 82, 82, 0.18)'}`,
+                borderRadius: '14px',
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+              }}
+            >
+              <div style={{ color: item.tone === 'positive' ? GREEN : RED, fontSize: '12px', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                {item.title}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {[
-                  { text: 'Estratégia "Oportunidade por Praça" (Gatilho Escassez)' },
-                  { text: 'Ativação de estratégia LinkedIn Ads (Perfis B2B)' },
-                ].map((item, i) => (
-                  <div key={i} style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px' }}>
-                    <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', fontWeight: 300 }}>{item.text}</div>
-                  </div>
-                ))}
+              <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: '13px', lineHeight: 1.55, fontWeight: 500 }}>
+                {item.text}
               </div>
             </div>
+          ))}
+        </div>
+      </motion.section>
 
-            <div style={{ background: `${CLUSTERS.CRO}10`, border: `1px solid ${CLUSTERS.CRO}30`, borderRadius: '12px', padding: '24px' }}>
-              <div style={{ color: CLUSTERS.CRO, fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>
-                Plano de Ação CRO
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {[
-                  { text: 'Nova LP focada em conversão e persona "Executivo"' },
-                  { text: 'Teste de formulário multi-step vs simples' },
-                ].map((item, i) => (
-                  <div key={i} style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '8px' }}>
-                    <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', fontWeight: 300 }}>{item.text}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
+      <MediaAcquisitionSection
+        subtitle="Peças e anúncios que apoiam o funil de expansão, sem perder consistência com Leads e E-commerce."
+      />
     </div>
   );
 }
