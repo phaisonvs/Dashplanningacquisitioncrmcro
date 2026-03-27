@@ -139,7 +139,7 @@ const TokenTag = ({ label }: { label: MediaAcquisitionItem['tags'][number] }) =>
         background: palette.background,
         color: palette.color,
         fontSize: '10px',
-        fontWeight: 800,
+        fontWeight: 700,
         letterSpacing: '0.09em',
         lineHeight: 1,
         textTransform: 'uppercase',
@@ -170,7 +170,7 @@ const StatusPill = ({ status }: { status: Status }) => {
         background: palette.background,
         color: palette.color,
         fontSize: '10px',
-        fontWeight: 800,
+        fontWeight: 700,
         letterSpacing: '0.08em',
         lineHeight: 1,
         textTransform: 'uppercase',
@@ -206,7 +206,7 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
       >
         <div style={{ padding: '18px 18px 0', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '14px' }}>
           <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ color: WHITE, fontSize: '16px', fontWeight: 800, lineHeight: 1.28, letterSpacing: '-0.01em' }}>
+            <div style={{ color: WHITE, fontSize: '16px', fontWeight: 700, lineHeight: 1.28, letterSpacing: '-0.01em' }}>
               {item.title}
             </div>
             <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', lineHeight: 1.5 }}>
@@ -282,31 +282,7 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
                     : 'linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.12) 52%, rgba(0,0,0,0.68) 100%)',
               }}
             />
-            <div style={{ position: 'absolute', left: '12px', top: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '5px 9px',
-                  borderRadius: '999px',
-                  background: 'rgba(0,0,0,0.5)',
-                  color: item.accent,
-                  border: `1px solid ${item.accent}4d`,
-                  fontSize: '10px',
-                  fontWeight: 800,
-                  letterSpacing: '0.09em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {item.formatLabel}
-              </span>
-            </div>
-            <div style={{ position: 'absolute', left: '12px', right: '48px', bottom: '12px' }}>
-              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
-                {item.tags.map((tag) => (
-                  <TokenTag key={`${item.title}-${tag}`} label={tag} />
-                ))}
-              </div>
+            <div style={{ position: 'absolute', left: '12px', right: '12px', bottom: '12px' }}>
               <div style={{ color: WHITE, fontSize: '13px', lineHeight: 1.45, fontWeight: 600 }}>
                 {item.badgeLabel}
               </div>
@@ -355,7 +331,7 @@ const ExpandableMediaCard = ({ item }: { item: MediaAcquisitionItem }) => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ color: WHITE, fontSize: '22px', fontWeight: 800, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+                  <div style={{ color: WHITE, fontSize: '22px', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
                     {item.title}
                   </div>
                   <div style={{ color: 'rgba(255,255,255,0.52)', fontSize: '13px', lineHeight: 1.5, marginTop: '6px', maxWidth: '760px' }}>
@@ -462,10 +438,10 @@ export const MediaAcquisitionSection = ({
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
         <div>
-          <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+          <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             Evidências da frente
           </div>
-          <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
+          <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
             {title}
           </div>
           <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '13px', lineHeight: 1.5, marginTop: '6px', maxWidth: '780px' }}>
@@ -487,7 +463,7 @@ export const MediaAcquisitionSection = ({
                   background: palette.background,
                   color: palette.color,
                   fontSize: '10px',
-                  fontWeight: 800,
+                  fontWeight: 700,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
                 }}

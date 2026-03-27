@@ -49,8 +49,8 @@ const slides: SlideConfig[] = [
   { Component: Slide1Cover, label: 'Capa', cluster: null, subject: null, slug: '', aliases: ['capa', 'cover'] },
   { Component: Slide2VisaoLeads, label: 'Leads', cluster: 'LEADS', subject: 'FUNIL & PERFORMANCE', slug: 'leads' },
   { Component: Slide5Ecommerce, label: 'E-commerce', cluster: 'ECOMMERCE', subject: 'FUNIL & PRODUTO', slug: 'ecommerce', aliases: ['e-com', 'e-commerce'] },
-  { Component: Slide8Expansao, label: 'Funil Expansão', cluster: 'EXPANSÃO', subject: 'PIPELINE', slug: 'expansao' },
-  { Component: Slide9Top8, label: 'Top 8 Ações', cluster: 'ESTRATÉGIA', subject: 'EXECUÇÃO', slug: 'top-8', aliases: ['top8'] },
+  { Component: Slide8Expansao, label: 'Expansão', cluster: 'EXPANSÃO', subject: 'PIPELINE', slug: 'expansao' },
+  { Component: Slide9Top8, label: 'Fechamento Semanal', cluster: 'ESTRATÉGIA', subject: 'EXECUÇÃO', slug: 'fechamento-semanal', aliases: ['top-8', 'top8'] },
 ];
 
 const slideAliases = new Map<string, number>();

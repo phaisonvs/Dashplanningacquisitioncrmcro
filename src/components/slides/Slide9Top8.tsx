@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, CLUSTERS } from '../theme';
+import { SlideHeroHeader } from './sharedDeckTypography';
 
 interface Props {
   isActive: boolean;
@@ -19,6 +20,42 @@ type ImpactItem = {
   suffix: string;
   label: string;
   sub: string;
+};
+
+type HeroToken = 'ESTRATÉGIA' | 'CRO' | 'ANALYTICS' | 'EXECUÇÃO';
+
+const heroTokenPalette: Record<HeroToken, { color: string; background: string; border: string }> = {
+  ESTRATÉGIA: { color: CLUSTERS.ESTRATEGIA, background: 'rgba(254, 240, 138, 0.08)', border: 'rgba(254, 240, 138, 0.22)' },
+  CRO: { color: CLUSTERS.CRO, background: 'rgba(147, 197, 253, 0.08)', border: 'rgba(147, 197, 253, 0.22)' },
+  ANALYTICS: { color: '#D1D5DB', background: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.12)' },
+  EXECUÇÃO: { color: '#C4B5FD', background: 'rgba(196, 181, 253, 0.08)', border: 'rgba(196, 181, 253, 0.22)' },
+};
+
+const TokenTag = ({ label }: { label: HeroToken }) => {
+  const palette = heroTokenPalette[label];
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '5px 10px',
+        borderRadius: '999px',
+        border: `1px solid ${palette.border}`,
+        background: palette.background,
+        color: palette.color,
+        fontSize: '10px',
+        fontWeight: 700,
+        letterSpacing: '0.09em',
+        lineHeight: 1,
+        textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {label}
+    </span>
+  );
 };
 
 const summaryCards: SummaryCard[] = [
@@ -76,10 +113,10 @@ const ImpactRow = ({ item, isActive, index }: { item: ImpactItem; isActive: bool
     }}
   >
     <div>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.sub}
       </div>
-      <div style={{ color: WHITE, fontSize: '18px', fontWeight: 800, lineHeight: 1.3, letterSpacing: '-0.02em', marginTop: '8px' }}>
+      <div style={{ color: WHITE, fontSize: '18px', fontWeight: 700, lineHeight: 1.3, letterSpacing: '-0.02em', marginTop: '8px' }}>
         {item.label}
       </div>
     </div>
@@ -105,16 +142,14 @@ export function Slide9Top8({ isActive }: Props) {
     <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-            <div style={{ width: '4px', height: '32px', background: clusterColor, borderRadius: '2px' }} />
-            <div style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: WHITE, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-              Fechamento Executivo — CRO & Analytics
+          <SlideHeroHeader accentColor={clusterColor} title="Fechamento Semanal">
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <TokenTag label="ESTRATÉGIA" />
+              <TokenTag label="CRO" />
+              <TokenTag label="ANALYTICS" />
+              <TokenTag label="EXECUÇÃO" />
             </div>
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '20px', maxWidth: '920px', lineHeight: 1.6, fontWeight: 300 }}>
-            O report fecha com três leituras simples: onde o funil perde mais, onde a mídia ainda pode render mais e onde
-            a expansão precisa ganhar profundidade antes de buscar escala.
-          </p>
+          </SlideHeroHeader>
         </motion.div>
       </section>
 
@@ -138,10 +173,10 @@ export function Slide9Top8({ isActive }: Props) {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
               <div>
-                <div style={{ color: card.color, fontSize: '12px', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                <div style={{ color: card.color, fontSize: '12px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   {card.cluster}
                 </div>
-                <div style={{ color: WHITE, fontSize: '24px', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.02em', marginTop: '6px' }}>
+                <div style={{ color: WHITE, fontSize: '24px', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginTop: '6px' }}>
                   {card.title}
                 </div>
               </div>
@@ -194,10 +229,10 @@ export function Slide9Top8({ isActive }: Props) {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
             <div>
-              <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                 Leitura do analista
               </div>
-              <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.6vw, 30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
+              <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.6vw, 30px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
                 O que move o resultado aqui é menos barulho e mais precisão de alocação.
               </div>
             </div>
@@ -264,10 +299,10 @@ export function Slide9Top8({ isActive }: Props) {
           }}
         >
           <div>
-            <div style={{ color: clusterColor, fontSize: '12px', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            <div style={{ color: clusterColor, fontSize: '12px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Impacto estimado
             </div>
-            <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.8vw, 32px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '8px' }}>
+            <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.8vw, 32px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '8px' }}>
               Potencial consolidado das oito ações.
             </div>
           </div>

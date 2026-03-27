@@ -2,6 +2,8 @@
 import { AnimatedNumber } from '../AnimatedNumber';
 import { CLUSTERS, BG, CARD_BG, CARD_BORDER, WHITE, GREEN, RED } from '../theme';
 import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
+import { ConversionExperienceSection } from './sharedConversionExperience';
+import { SlideHeroHeader } from './sharedDeckTypography';
 import { ImageViewer } from './ImageViewer';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
 import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
@@ -80,7 +82,10 @@ const topMetrics: MetricCard[] = [
       action('CRO', 'feito', 'Mapeamento de fricções prioritárias do funil com foco em checkout e PDP.'),
       action('CRO', 'feito', 'Ajustes de hero e componentes críticos para reduzir atrito na navegação inicial.'),
     ],
-    weekActions: [action('CRO', 'pendente', 'Reestruturar UX do e-commerce (catálogo + filtros)')],
+    weekActions: [
+      action('CRO', 'pendente', 'Reestruturar UX do e-commerce (catálogo + filtros)'),
+      action('CRO', 'pendente', 'Continuar testes A/B de ofertas promocionais'),
+    ],
   },
   {
     title: 'RECEITA CAPTADA',
@@ -92,7 +97,10 @@ const topMetrics: MetricCard[] = [
       bullet('positive', 'Queda frente à referência indica necessidade de elevar conversão e ticket simultaneamente.'),
     ],
     previousActions: [action('CRO', 'feito', 'Subida de vitrine segmentada "Chance Única" para ampliar captação comercial.')],
-    weekActions: [action('CRO', 'pendente', 'Aprofundar análise de vendas em encomenda expressa para ampliar recuperação de faturamento.')],
+    weekActions: [
+      action('CRO', 'pendente', 'Aprofundar análise de vendas em encomenda expressa para ampliar recuperação de faturamento.'),
+      action('CRM', 'pendente', 'Monitorar integração Salesforce do WhatsApp form'),
+    ],
   },
   {
     title: 'INVESTIMENTO',
@@ -140,7 +148,10 @@ const bottomMetrics: MetricCard[] = [
       bullet('negative', 'Conversão ainda abaixo do ideal impede expansão mais forte de receita faturada.'),
     ],
     previousActions: [action('CRO', 'feito', 'Implementação de venda apartada (split) para recuperar pedidos com mix de itens.')],
-    weekActions: [action('CRO', 'pendente', 'Evoluir Split de Entregas e análises de experiência')],
+    weekActions: [
+      action('CRO', 'pendente', 'Evoluir Split de Entregas e análises de experiência'),
+      action('CRO', 'pendente', 'Implementar acordeom mobile em PDPs'),
+    ],
   },
 ];
 
@@ -326,7 +337,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
-      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.title}
       </div>
       <TokenTag label="Mar/2026" compact />
@@ -393,7 +404,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -410,7 +421,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
 
     {item.previousActions.length > 0 && (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           Ações da semana anterior
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -423,7 +434,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
 
     {item.weekActions.length > 0 && (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           Ação na semana
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -465,7 +476,7 @@ const MediaEfficiencyCardView = ({ isActive }: { isActive: boolean }) => (
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Eficiência de Mídia
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
@@ -840,20 +851,24 @@ export function Slide5Ecommerce({ isActive }: Props) {
       {/* 1. Hero */}
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '24px', marginBottom: '24px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ width: '4px', height: '32px', background: clusterColor, borderRadius: '2px' }} />
-              <div style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: WHITE, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-                Visão de Funil — E-commerce
+          <SlideHeroHeader
+            accentColor={clusterColor}
+            title="Visão de Funil — E-commerce"
+            right={
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
+                <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
+                <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
               </div>
+            }
+          >
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <TokenTag label="CRO" compact />
+              <TokenTag label="E-COMMERCE" compact />
+              <TokenTag label="ACQUISITION" compact />
+              <TokenTag label="CRM" compact />
             </div>
-
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
-              <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
-              <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
-            </div>
-          </div>
+          </SlideHeroHeader>
         </motion.div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginTop: '16px' }}>
@@ -872,51 +887,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
         </div>
       </section>
 
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        style={{
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          borderRadius: '12px',
-          padding: '40px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '24px',
-        }}
-        >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-          <div style={{ color: WHITE, fontSize: '28px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '12px' }}>
-            Conversão & Experiência
-          </div>
-          <TokenTag label="CRO" compact />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '22px' }}>
-          {frontEvidenceItems.map((item) => (
-            <EvidenceCardView key={item.title} item={item} />
-          ))}
-        </div>
-
-        <div style={{ background: 'rgba(0,0,0,0.3)', padding: '24px', borderRadius: '10px', border: `1px solid ${CLUSTERS.CRO}30` }}>
-          <div style={{ color: CLUSTERS.CRO, fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
-            Próximos Passos CRO
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
-            {[
-              'Continuar testes A/B de ofertas promocionais',
-              'Implementar acordeom mobile em PDPs',
-              'Monitorar integração Salesforce do WhatsApp form',
-            ].map((item, index) => (
-              <div key={item} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                <div style={{ color: CLUSTERS.CRO, marginTop: '2px', fontSize: '14px' }}>→</div>
-                <div style={{ color: WHITE, fontSize: '13px', fontWeight: 300, lineHeight: 1.5 }}>{item}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
+      <ConversionExperienceSection items={frontEvidenceItems} />
 
       <MediaAcquisitionSection />
     </div>

@@ -2,11 +2,15 @@ import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, RED, CLUSTERS } from '../theme';
+import { ConversionExperienceSection } from './sharedConversionExperience';
+import { SlideHeroHeader } from './sharedDeckTypography';
 import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
 import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
 import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
 import lpChanceUnicaMobileImg from 'figma:asset/63f4568abbe03cbb8b0834a2bb70e3613df7a874.png';
+import heroDesktopImg from 'figma:asset/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png';
+import heroMobileImg from 'figma:asset/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png';
 
 interface Props {
   isActive: boolean;
@@ -284,6 +288,58 @@ const funnelStages: FunnelStage[] = [
   },
 ];
 
+const conversionExperienceItems = [
+  {
+    title: 'LP Interna Semana do Consumidor',
+    tags: ['LEADS', 'ACQUISITION', 'CRO'] as const,
+    status: 'feito' as const,
+    objective: 'A LP segue como peça de captura direta, com leitura rápida da oferta e hierarquia visual voltada para conversão qualificada.',
+    desktopImage: lpSemanaConsumidorImg,
+    mobileImage: lpSemanaConsumidorMobileImg,
+    imageLabel: 'Landing Page',
+    imageHeight: 240,
+  },
+  {
+    title: 'WhatsApp Floating + Salesforce',
+    tags: ['CRM', 'LEADS', 'CRO'] as const,
+    status: 'pendente' as const,
+    objective: 'O fluxo de WhatsApp precisa fechar a integração com Salesforce sem perda de lead e com menos atrito na passagem comercial.',
+    desktopImage: heroDesktopImg,
+    mobileImage: heroMobileImg,
+    imageLabel: 'Landing Page',
+    imageHeight: 240,
+  },
+  {
+    title: 'Hero Section de Conversão',
+    tags: ['CRO', 'ACQUISITION'] as const,
+    status: 'feito' as const,
+    objective: 'A hero foi ajustada para reforçar proposta de valor, CTAs e responsividade antes de levar o usuário ao cadastro.',
+    desktopImage: heroDesktopImg,
+    mobileImage: heroMobileImg,
+    imageLabel: 'Hero Section',
+    imageHeight: 240,
+  },
+  {
+    title: 'Régua de vantagens mobile',
+    tags: ['LEADS', 'CRO'] as const,
+    status: 'feito' as const,
+    objective: 'A régua de vantagens no mobile reduz fricção de leitura e acelera a entrada nas LPs com maior intenção.',
+    desktopImage: lpChanceUnicaImg,
+    mobileImage: lpChanceUnicaMobileImg,
+    imageLabel: 'Landing Page',
+    imageHeight: 240,
+  },
+] satisfies Array<{
+  title: string;
+  tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM'>;
+  status: 'feito' | 'pendente' | 'bloqueado';
+  objective: string;
+  desktopImage?: string;
+  mobileImage?: string;
+  imageLabel: string;
+  imageHeight?: number;
+}>;
+
 const allActions = [...primaryMetrics, ...secondaryMetrics, ...funnelStages].flatMap((item) => [...item.previousActions, ...item.weekActions]);
 const statusCounts = collectStatusCounts(allActions);
 
@@ -422,7 +478,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '12px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.title}
       </div>
       <TokenTag label={item.dateTag} />
@@ -482,7 +538,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -498,7 +554,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Ações da semana anterior
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -509,7 +565,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         Ação na semana
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -637,7 +693,7 @@ const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: st
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
       <div style={{ width: '4px', height: '28px', background: CLUSTERS.LEADS, borderRadius: '2px' }} />
       <div>
-        <div style={{ color: WHITE, fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+        <div style={{ color: WHITE, fontSize: 'clamp(26px, 3vw, 38px)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
           {title}
         </div>
         {subtitle ? (
@@ -818,27 +874,24 @@ export function Slide2VisaoLeads({ isActive }: Props) {
     >
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '24px', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ width: '4px', height: '32px', background: CLUSTERS.LEADS, borderRadius: '2px' }} />
-              <div style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: WHITE, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-                Visão Leads MTD
+          <SlideHeroHeader
+            accentColor={CLUSTERS.LEADS}
+            title="Visão Leads MTD"
+            right={
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end', marginTop: '8px' }}>
+                <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
+                <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
+                <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
               </div>
+            }
+          >
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <TokenTag label="LEADS" compact />
+              <TokenTag label="ACQUISITION" compact />
+              <TokenTag label="CRO" compact />
+              <TokenTag label="CRM" compact />
             </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end', marginTop: '8px' }}>
-              <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
-              <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
-              <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            <TokenTag label="LEADS" compact />
-            <TokenTag label="ACQUISITION" compact />
-            <TokenTag label="CRO" compact />
-            <TokenTag label="CRM" compact />
-          </div>
+          </SlideHeroHeader>
         </motion.div>
       </section>
 
@@ -882,6 +935,8 @@ export function Slide2VisaoLeads({ isActive }: Props) {
           ))}
         </div>
       </section>
+
+      <ConversionExperienceSection items={conversionExperienceItems} />
 
       <MediaAcquisitionSection />
     </div>

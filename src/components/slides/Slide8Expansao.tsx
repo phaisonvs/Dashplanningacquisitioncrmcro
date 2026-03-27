@@ -1,7 +1,13 @@
 import { motion } from 'motion/react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { CLUSTERS, BG, WHITE, GREEN, RED } from '../theme';
+import { ConversionExperienceSection } from './sharedConversionExperience';
+import { SlideHeroHeader } from './sharedDeckTypography';
 import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
+import heroDesktopImg from 'figma:asset/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png';
+import heroMobileImg from 'figma:asset/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png';
+import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
+import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
 
 interface Props {
   isActive: boolean;
@@ -125,6 +131,58 @@ const expansionMetrics: MetricCard[] = [
     ],
   },
 ];
+
+const conversionExperienceItems = [
+  {
+    title: 'Oportunidade por Praça',
+    tags: ['ACQUISITION', 'LEADS', 'CRM'] as const,
+    status: 'feito' as const,
+    objective: 'A frente combina sinal de escassez territorial com qualificação comercial para gerar pipeline mais profundo e previsível.',
+    desktopImage: lpSemanaConsumidorImg,
+    mobileImage: lpSemanaConsumidorMobileImg,
+    imageLabel: 'Landing Page',
+    imageHeight: 240,
+  },
+  {
+    title: 'Ativação LinkedIn Ads',
+    tags: ['ACQUISITION', 'CRO'] as const,
+    status: 'pendente' as const,
+    objective: 'A ativação de B2B precisa aumentar a densidade do topo com segmentação mais precisa e mensagem executiva.',
+    desktopImage: heroDesktopImg,
+    mobileImage: heroMobileImg,
+    imageLabel: 'Creative',
+    imageHeight: 240,
+  },
+  {
+    title: 'Fluxo D0, D2, D5',
+    tags: ['CRM', 'LEADS'] as const,
+    status: 'feito' as const,
+    objective: 'A régua comercial em janelas curtas mantém o lead aquecido e reduz perda entre intenção e oportunidade.',
+    desktopImage: heroDesktopImg,
+    mobileImage: heroMobileImg,
+    imageLabel: 'Journey',
+    imageHeight: 240,
+  },
+  {
+    title: 'LP Executiva para Expansão',
+    tags: ['CRO', 'LEADS', 'ACQUISITION'] as const,
+    status: 'pendente' as const,
+    objective: 'A LP precisa concentrar a proposta de valor da expansão e acelerar leitura de qualificação para a próxima conversa.',
+    desktopImage: lpSemanaConsumidorImg,
+    mobileImage: lpSemanaConsumidorMobileImg,
+    imageLabel: 'Landing Page',
+    imageHeight: 240,
+  },
+] satisfies Array<{
+  title: string;
+  tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM'>;
+  status: 'feito' | 'pendente' | 'bloqueado';
+  objective: string;
+  desktopImage?: string;
+  mobileImage?: string;
+  imageLabel: string;
+  imageHeight?: number;
+}>;
 
 const statusCounts = collectStatusCounts(
   ...expansionMetrics.map((item) => [...item.previousActions, ...item.weekActions]),
@@ -265,7 +323,7 @@ const MetricCardView = ({ item, isActive }: { item: MetricCard; isActive: boolea
     }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start' }}>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '12px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
         {item.title}
       </div>
       <TokenTag label={item.dateTag} compact />
@@ -371,35 +429,28 @@ export function Slide8Expansao({ isActive }: Props) {
     <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-            <div style={{ width: '4px', height: '32px', background: clusterColor, borderRadius: '2px' }} />
-            <div style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, color: WHITE, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-              Visão de Expansão MTD
+          <SlideHeroHeader
+            accentColor={clusterColor}
+            title="Visão de Expansão MTD"
+            right={
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
+                <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
+                <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
+              </div>
+            }
+          >
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <TokenTag label="LEADS" compact />
+              <TokenTag label="ACQUISITION" compact />
+              <TokenTag label="CRO" compact />
+              <TokenTag label="CRM" compact />
             </div>
-          </div>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '20px', maxWidth: '860px', lineHeight: 1.6, fontWeight: 300 }}>
-            Expansão opera com volume menor, mas com qualidade de qualificação acima do restante do funil. A leitura aqui é de
-            preparo de pipeline, não de escala cega.
-          </p>
+          </SlideHeroHeader>
         </motion.div>
       </section>
 
-      <section style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <TokenTag label="LEADS" compact />
-          <TokenTag label="ACQUISITION" compact />
-          <TokenTag label="CRO" compact />
-          <TokenTag label="CRM" compact />
-        </div>
-
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-          <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} />
-          <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} />
-          <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} />
-        </div>
-      </section>
-
-      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+      <section style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '20px' }}>
         {expansionMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} />
         ))}
@@ -421,10 +472,10 @@ export function Slide8Expansao({ isActive }: Props) {
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
           <div>
-            <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+            <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
               Leitura executiva
             </div>
-            <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
+            <div style={{ color: WHITE, fontSize: 'clamp(22px, 2.5vw, 30px)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
               A expansão é promissora quando o jogo é qualificação, não volume bruto.
             </div>
           </div>
@@ -471,6 +522,8 @@ export function Slide8Expansao({ isActive }: Props) {
           ))}
         </div>
       </motion.section>
+
+      <ConversionExperienceSection items={conversionExperienceItems} />
 
       <MediaAcquisitionSection
         subtitle="Peças e anúncios que apoiam o funil de expansão, sem perder consistência com Leads e E-commerce."
