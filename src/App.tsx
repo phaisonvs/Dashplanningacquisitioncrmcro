@@ -112,10 +112,10 @@ const resolveSlideIndex = (pathname: string, hash: string) => {
 };
 
 const routeForIndex = (index: number) => {
-  if (index === 0) return joinAppPath('/dashboard');
-  if (index === 1) return joinAppPath('/cover');
+  if (index === 0) return joinAppPath('/#/dashboard');
+  if (index === 1) return joinAppPath('/#/cover');
   const slug = slides[index]?.slug;
-  return slug ? joinAppPath(`/${slug}`) : joinAppPath('/');
+  return slug ? joinAppPath(`/#/${slug}`) : joinAppPath('/#/dashboard');
 };
 
 const canonicalUrlForIndex = (index: number) => `${window.location.origin}${routeForIndex(index)}`;
