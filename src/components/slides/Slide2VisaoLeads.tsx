@@ -4,7 +4,7 @@ import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, RED, CLUSTERS } from '../theme';
 import { ConversionExperienceSection } from './sharedConversionExperience';
 import { SlideHeroHeader, useDeckViewport } from './sharedDeckTypography';
-import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
+import { MediaAcquisitionSection, collectStatusCounts, mediaSlots, type MediaAcquisitionItem } from './sharedMediaAcquisition';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
 import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
 import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
@@ -513,17 +513,18 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
             key={`${row.text}-${index}`}
             style={{
               display: 'flex',
-              alignItems: compact ? 'flex-start' : 'center',
+              alignItems: 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
-              gap: compact ? '10px' : '14px',
+              gap: '12px',
               padding: compact ? '11px 14px' : '13px 18px',
               borderRadius: '8px',
               background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
-              flexDirection: compact ? 'column' : 'row',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
@@ -532,12 +533,11 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
                 style={{
                   paddingLeft: compact ? 0 : '12px',
                   borderLeft: compact ? 'none' : `2px solid ${activeColor}`,
-                  paddingTop: compact ? '2px' : 0,
                   color: activeColor,
                   fontSize: 'var(--text-body)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
-                  alignSelf: compact ? 'flex-start' : 'auto',
+                  flex: '0 0 auto',
                 }}
               >
                 {row.value}
@@ -636,22 +636,23 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
             key={`${row.text}-${index}`}
             style={{
               display: 'flex',
-              alignItems: compact ? 'flex-start' : 'center',
+              alignItems: 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
-              gap: compact ? '10px' : '12px',
+              gap: '12px',
               padding: compact ? '9px 12px' : '10px 14px',
               borderRadius: '8px',
               background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
-              flexDirection: compact ? 'column' : 'row',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
             {hasValue && (
-              <div style={{ color: activeColor, fontSize: 'var(--text-body)', fontWeight: 800, whiteSpace: 'nowrap', alignSelf: compact ? 'flex-start' : 'auto' }}>
+              <div style={{ color: activeColor, fontSize: 'var(--text-body)', fontWeight: 800, whiteSpace: 'nowrap', flex: '0 0 auto' }}>
                 {row.value}
               </div>
             )}
@@ -723,158 +724,74 @@ const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: st
   );
 };
 
-type MediaGalleryItem = {
-  title: string;
-  tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM'>;
-  status: Status;
-  summary: string;
-  image: string;
-  formatLabel: string;
-  aspectRatio: string;
-  accent: string;
-};
-
-const mediaAcquisitionItems: MediaGalleryItem[] = [
+const leadMediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
-    title: 'Facebook Feed - Semana do Consumidor',
-    tags: ['LEADS', 'ACQUISITION'],
+    title: 'KVs de aquisição de leads',
+    description: 'Conjunto de KVs para aquisição de leads com leitura direta e foco em conversão.',
+    tags: ['LEADS', 'CRM'],
     status: 'feito',
-    summary: 'Peça quadrada para feed com leitura direta e chamada sazonal de captação.',
-    image: lpSemanaConsumidorImg,
-    formatLabel: 'Feed 1:1',
-    aspectRatio: '1 / 1',
-    accent: CLUSTERS.ACQUISITION,
+    accent: CLUSTERS.CRM,
+    badgeLabel: 'KVs',
+    media: mediaSlots('https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-prevestimentos_quadrado-1-(1).png?v=202603271510'),
   },
   {
-    title: 'Instagram Story - Chance Única',
-    tags: ['ACQUISITION', 'CRO'],
-    status: 'pendente',
-    summary: 'Formato vertical para story com urgência e CTA forte em poucos segundos.',
-    image: lpChanceUnicaMobileImg,
-    formatLabel: 'Story 9:16',
-    aspectRatio: '9 / 16',
-    accent: CLUSTERS.CRO,
-  },
-  {
-    title: 'Hero de Produto - Feed Square',
-    tags: ['CRO', 'ACQUISITION'],
-    status: 'feito',
-    summary: 'Criativo quadrado para mídia paga com hero limpo e mensagem de conversão.',
-    image: lpChanceUnicaImg,
-    formatLabel: 'Feed 1:1',
-    aspectRatio: '1 / 1',
-    accent: CLUSTERS.CRO,
-  },
-  {
-    title: 'WhatsApp e Captura - Story',
+    title: 'KVs do Mês do Consumidor + ativações em andamento até 31/03',
+    description: 'Atualização de peças do mês do consumidor e ativações em andamento até 31/03.',
     tags: ['CRM', 'LEADS'],
     status: 'feito',
-    summary: 'Peça vertical para remarketing, reforçando contato e captura com menos atrito.',
-    image: lpSemanaConsumidorMobileImg,
-    formatLabel: 'Story 9:16',
-    aspectRatio: '9 / 16',
     accent: CLUSTERS.CRM,
+    badgeLabel: 'KVs',
+    media: mediaSlots(),
+  },
+  {
+    title: 'Atualização de criativos PMAX para pisos e paredes e chuveiros Lorenzetti',
+    description: 'Pacote de PMAX para pisos, paredes e chuveiros Lorenzetti.',
+    tags: ['CRO', 'ACQUISITION'],
+    status: 'feito',
+    accent: CLUSTERS.CRO,
+    badgeLabel: 'PMAX',
+    media: mediaSlots(
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-paredes_quadrado-3.png?v=202603271517',
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-lorenzeti_horizontal-4.png?v=202603271517',
+    ),
+  },
+  {
+    title: 'Criativos “Super Chance Única” (e-commerce) + campanhas relâmpago Deca (oportunidade)',
+    description: 'Criativos de oportunidade para Super Chance Única e campanhas relâmpago Deca.',
+    tags: ['E-COMMERCE', 'ACQUISITION'],
+    status: 'feito',
+    accent: CLUSTERS.ECOMMERCE,
+    badgeLabel: 'E-commerce',
+    media: mediaSlots(
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_tanque_quadrado-1-(1).png?v=202603271517',
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_campanha-rel%C3%A2mpago-deca_quadrado-2.png?v=202603271517',
+    ),
+  },
+  {
+    title: 'KVs diários para a Semana do Consumidor, incluindo campanha dedicada da Docol.',
+    description: 'Sequência diária de KVs para a Semana do Consumidor com campanha dedicada da Docol.',
+    tags: ['LEADS', 'ACQUISITION'],
+    status: 'feito',
+    accent: CLUSTERS.LEADS,
+    badgeLabel: 'KVs',
+    media: mediaSlots(
+      'https://abcdaconstrucao.fbitsstatic.net/media/[abc]-campanha-docol_retrato-4.png?v=202603271510',
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_mc_produtos-foco_retrato-4-1.png?v=202603271517',
+    ),
+  },
+  {
+    title: 'KVs de EXP focado em geolocalização (cidades que queremos entrar e grandes cidades)',
+    description: 'KVs de expansão com foco em geolocalização e praças prioritárias.',
+    tags: ['ACQUISITION', 'CRO'],
+    status: 'feito',
+    accent: CLUSTERS.ACQUISITION,
+    badgeLabel: 'EXP',
+    media: mediaSlots(
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_expans%C3%A3o_quadrado-1-c1-(10).png?v=202603271510',
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_expans%C3%A3o_quadrado-1-c1-(2).png?v=202603271510',
+    ),
   },
 ];
-
-const MediaGalleryCard = ({ item }: { item: MediaGalleryItem }) => (
-  <motion.article
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.45 }}
-    style={{
-      background: 'linear-gradient(180deg, rgba(255,255,255,0.024) 0%, rgba(255,255,255,0.014) 100%)',
-      border: '1px solid rgba(255,255,255,0.05)',
-      borderRadius: '18px',
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '12px',
-      padding: '14px',
-    }}
-  >
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-      <div style={{ minWidth: 0 }}>
-        <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 800, lineHeight: 1.35, letterSpacing: '-0.01em' }}>
-          {item.title}
-        </div>
-        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', lineHeight: 1.4, marginTop: '4px' }}>
-          Peça para campanhas pagas em Facebook e Instagram.
-        </div>
-      </div>
-      <StatusPill status={item.status} />
-    </div>
-
-    <div
-      style={{
-        position: 'relative',
-        aspectRatio: item.aspectRatio,
-        borderRadius: '16px',
-        overflow: 'hidden',
-        border: '1px solid rgba(255,255,255,0.08)',
-        background: 'rgba(255,255,255,0.03)',
-      }}
-    >
-      <img
-        src={item.image}
-        alt={item.title}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center',
-          display: 'block',
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.1) 42%, rgba(0,0,0,0.66) 100%)',
-        }}
-      />
-      <div style={{ position: 'absolute', left: '12px', top: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '5px 9px',
-            borderRadius: '999px',
-            background: 'rgba(0,0,0,0.45)',
-            color: item.accent,
-            border: `1px solid ${item.accent}4d`,
-            fontSize: 'var(--text-chip)',
-            fontWeight: 800,
-            letterSpacing: '0.09em',
-            textTransform: 'uppercase',
-          }}
-        >
-          {item.formatLabel}
-        </span>
-      </div>
-      <div style={{ position: 'absolute', left: '12px', right: '12px', bottom: '12px' }}>
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '8px' }}>
-          {item.tags.map((tag) => (
-            <TokenTag key={`${item.title}-${tag}`} label={tag} compact />
-          ))}
-        </div>
-        <div style={{ color: WHITE, fontSize: 'var(--text-body)', lineHeight: 1.45, fontWeight: 600, maxWidth: '92%' }}>
-          {item.summary}
-        </div>
-      </div>
-    </div>
-
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-        Gallery Asset
-      </div>
-      <div style={{ color: 'rgba(255,255,255,0.52)', fontSize: 'var(--text-meta)', fontWeight: 700 }}>
-        {item.formatLabel}
-      </div>
-    </div>
-  </motion.article>
-);
 
 export function Slide2VisaoLeads({ isActive }: Props) {
   const { isMobile, isCompact } = useDeckViewport();
@@ -956,7 +873,7 @@ export function Slide2VisaoLeads({ isActive }: Props) {
 
       <ConversionExperienceSection items={conversionExperienceItems} />
 
-      <MediaAcquisitionSection />
+      <MediaAcquisitionSection items={leadMediaAcquisitionItems} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
-﻿import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Maximize2, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
+import { AspectRatio } from '../ui/aspect-ratio';
 import { CLUSTERS, WHITE } from '../theme';
 import { useDeckViewport } from './sharedDeckTypography';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
@@ -16,17 +17,47 @@ type StatusItem = {
   status: Status;
 };
 
+export type MediaAsset = {
+  src: string;
+  alt?: string;
+  aspectRatio?: number;
+  formatLabel?: string;
+};
+
+type MediaAssetInput = string | MediaAsset | null | undefined;
+
 export type MediaAcquisitionItem = {
   title: string;
   description: string;
   tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM' | 'E-COMMERCE'>;
   status: Status;
-  image: string;
-  formatLabel: string;
-  aspectRatio: '1 / 1' | '9 / 16';
+  media: Array<MediaAsset | null>;
   accent: string;
   badgeLabel?: string;
 };
+
+const normalizeMediaAsset = (source: MediaAssetInput): MediaAsset | null => {
+  if (!source) {
+    return null;
+  }
+
+  if (typeof source === 'string') {
+    const src = source.trim();
+    return src ? { src } : null;
+  }
+
+  const src = source.src.trim();
+  if (!src) {
+    return null;
+  }
+
+  return {
+    ...source,
+    src,
+  };
+};
+
+export const mediaSlots = (...sources: MediaAssetInput[]): Array<MediaAsset | null> => sources.map(normalizeMediaAsset);
 
 export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
@@ -34,9 +65,12 @@ export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
     description: 'Feed quadrado para mídia paga com leitura direta, oferta sazonal e foco em alcance qualificado.',
     tags: ['LEADS', 'ACQUISITION'],
     status: 'feito',
-    image: lpSemanaConsumidorImg,
-    formatLabel: 'Feed 1:1',
-    aspectRatio: '1 / 1',
+    media: mediaSlots({
+      src: lpSemanaConsumidorImg,
+      alt: 'Facebook Feed - Semana do Consumidor',
+      aspectRatio: 1,
+      formatLabel: 'Feed 1:1',
+    }),
     accent: CLUSTERS.ACQUISITION,
     badgeLabel: 'Feed',
   },
@@ -45,9 +79,12 @@ export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
     description: 'Peça quadrada para reforçar hierarquia visual e credibilidade no topo do funil.',
     tags: ['CRO', 'ACQUISITION'],
     status: 'feito',
-    image: heroDesktopImg,
-    formatLabel: 'Feed 1:1',
-    aspectRatio: '1 / 1',
+    media: mediaSlots({
+      src: heroDesktopImg,
+      alt: 'Hero Feed - Conversão',
+      aspectRatio: 1,
+      formatLabel: 'Feed 1:1',
+    }),
     accent: CLUSTERS.CRO,
     badgeLabel: 'Feed',
   },
@@ -56,9 +93,12 @@ export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
     description: 'Criativo quadrado de remarketing para reforçar urgência comercial e reduzir dispersão.',
     tags: ['ACQUISITION', 'CRM'],
     status: 'pendente',
-    image: lpChanceUnicaImg,
-    formatLabel: 'Feed 1:1',
-    aspectRatio: '1 / 1',
+    media: mediaSlots({
+      src: lpChanceUnicaImg,
+      alt: 'Remarketing Feed - Oferta Relâmpago',
+      aspectRatio: 1,
+      formatLabel: 'Feed 1:1',
+    }),
     accent: CLUSTERS.CRM,
     badgeLabel: 'Feed',
   },
@@ -67,9 +107,12 @@ export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
     description: 'Story vertical com urgência, prova de valor e CTA rápido para absorver intenção alta.',
     tags: ['ACQUISITION', 'CRO'],
     status: 'pendente',
-    image: lpChanceUnicaMobileImg,
-    formatLabel: 'Story 9:16',
-    aspectRatio: '9 / 16',
+    media: mediaSlots({
+      src: lpChanceUnicaMobileImg,
+      alt: 'Instagram Story - Chance Única',
+      aspectRatio: 9 / 16,
+      formatLabel: 'Story 9:16',
+    }),
     accent: CLUSTERS.CRO,
     badgeLabel: 'Story',
   },
@@ -78,9 +121,12 @@ export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
     description: 'Story vertical para contato assistido e captura com menos fricção.',
     tags: ['CRM', 'LEADS'],
     status: 'feito',
-    image: heroMobileImg,
-    formatLabel: 'Story 9:16',
-    aspectRatio: '9 / 16',
+    media: mediaSlots({
+      src: heroMobileImg,
+      alt: 'Instagram Story - WhatsApp & Captura',
+      aspectRatio: 9 / 16,
+      formatLabel: 'Story 9:16',
+    }),
     accent: CLUSTERS.CRM,
     badgeLabel: 'Story',
   },
@@ -89,9 +135,12 @@ export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
     description: 'Peça de feed adicional para fechar a sequência da galeria com variação de mensagem e formato.',
     tags: ['LEADS', 'CRO'],
     status: 'feito',
-    image: lpSemanaConsumidorMobileImg,
-    formatLabel: 'Feed 1:1',
-    aspectRatio: '1 / 1',
+    media: mediaSlots({
+      src: lpSemanaConsumidorMobileImg,
+      alt: 'Instagram Feed - Semana do Consumidor',
+      aspectRatio: 1,
+      formatLabel: 'Feed 1:1',
+    }),
     accent: CLUSTERS.LEADS,
     badgeLabel: 'Feed',
   },
@@ -107,6 +156,210 @@ export const collectStatusCounts = (...groups: ReadonlyArray<ReadonlyArray<Statu
     },
     { feito: 0, pendente: 0, bloqueado: 0 } as Record<Status, number>,
   );
+
+type AspectRatioBucket = {
+  label: '16:9' | '1:1' | '4:5' | '2:3';
+  ratio: number;
+};
+
+type ResolvedMediaAspect = {
+  ratio: number;
+  label: string;
+};
+
+const CANONICAL_ASPECT_BUCKETS: AspectRatioBucket[] = [
+  { label: '16:9', ratio: 16 / 9 },
+  { label: '1:1', ratio: 1 },
+  { label: '4:5', ratio: 4 / 5 },
+  { label: '2:3', ratio: 2 / 3 },
+];
+
+const DISPLAY_ASPECT_BUCKETS: Array<{ label: string; ratio: number }> = [
+  { label: '16:9', ratio: 16 / 9 },
+  { label: '1:1', ratio: 1 },
+  { label: '4:5', ratio: 4 / 5 },
+  { label: '2:3', ratio: 2 / 3 },
+  { label: '9:16', ratio: 9 / 16 },
+];
+
+const mediaAspectCache = new Map<string, ResolvedMediaAspect>();
+const mediaAspectPending = new Map<string, Promise<ResolvedMediaAspect>>();
+
+const normalizeRatio = (value: number, fallback = 1) => (Number.isFinite(value) && value > 0 ? value : fallback);
+
+const pickClosestCanonicalAspect = (ratio: number): AspectRatioBucket => {
+  const normalized = normalizeRatio(ratio);
+
+  return CANONICAL_ASPECT_BUCKETS.reduce((closest, candidate) => {
+    const currentDistance = Math.abs(normalized - closest.ratio);
+    const candidateDistance = Math.abs(normalized - candidate.ratio);
+
+    return candidateDistance < currentDistance ? candidate : closest;
+  }, CANONICAL_ASPECT_BUCKETS[0]);
+};
+
+const formatAspectRatioLabel = (ratio: number) => {
+  const normalized = normalizeRatio(ratio);
+  const displayMatch = DISPLAY_ASPECT_BUCKETS.find((bucket) => Math.abs(bucket.ratio - normalized) < 0.02);
+
+  if (displayMatch) {
+    return displayMatch.label;
+  }
+
+  return pickClosestCanonicalAspect(normalized).label;
+};
+
+const getSourceHintAspectRatio = (src: string) => {
+  const normalizedSource = decodeURIComponent(src.split('?')[0] ?? src).toLowerCase();
+
+  if (normalizedSource.includes('horizontal') || normalizedSource.includes('landscape') || normalizedSource.includes('wide')) {
+    return 16 / 9;
+  }
+
+  if (
+    normalizedSource.includes('quadrado') ||
+    normalizedSource.includes('square') ||
+    normalizedSource.includes('1x1') ||
+    normalizedSource.includes('1-1') ||
+    normalizedSource.includes('1_1') ||
+    normalizedSource.includes('9x9') ||
+    normalizedSource.includes('9-9')
+  ) {
+    return 1;
+  }
+
+  if (
+    normalizedSource.includes('retrato') ||
+    normalizedSource.includes('portrait') ||
+    normalizedSource.includes('vertical') ||
+    normalizedSource.includes('4x5') ||
+    normalizedSource.includes('4-5') ||
+    normalizedSource.includes('4_5')
+  ) {
+    return 4 / 5;
+  }
+
+  if (normalizedSource.includes('2x3') || normalizedSource.includes('2-3') || normalizedSource.includes('2_3')) {
+    return 2 / 3;
+  }
+
+  return null;
+};
+
+const getInitialMediaAspect = (asset: MediaAsset): ResolvedMediaAspect => {
+  if (asset.aspectRatio && Number.isFinite(asset.aspectRatio) && asset.aspectRatio > 0) {
+    const ratio = normalizeRatio(asset.aspectRatio);
+    return {
+      ratio,
+      label: asset.formatLabel ?? formatAspectRatioLabel(ratio),
+    };
+  }
+
+  const cached = mediaAspectCache.get(asset.src);
+  if (cached) {
+    return cached;
+  }
+
+  const hintedRatio = getSourceHintAspectRatio(asset.src);
+  if (hintedRatio) {
+    return {
+      ratio: hintedRatio,
+      label: asset.formatLabel ?? formatAspectRatioLabel(hintedRatio),
+    };
+  }
+
+  return {
+    ratio: 1,
+    label: asset.formatLabel ?? '1:1',
+  };
+};
+
+const probeMediaAspect = (src: string, fallback: ResolvedMediaAspect) => {
+  const cached = mediaAspectCache.get(src);
+  if (cached) {
+    return Promise.resolve(cached);
+  }
+
+  const pending = mediaAspectPending.get(src);
+  if (pending) {
+    return pending;
+  }
+
+  const promise = new Promise<ResolvedMediaAspect>((resolve) => {
+    const image = new Image();
+
+    image.decoding = 'async';
+    image.onload = () => {
+      const naturalRatio = image.naturalWidth > 0 && image.naturalHeight > 0 ? image.naturalWidth / image.naturalHeight : fallback.ratio;
+      const bucket = pickClosestCanonicalAspect(naturalRatio);
+      const resolved = {
+        ratio: bucket.ratio,
+        label: bucket.label,
+      };
+
+      mediaAspectCache.set(src, resolved);
+      mediaAspectPending.delete(src);
+      resolve(resolved);
+    };
+    image.onerror = () => {
+      mediaAspectCache.set(src, fallback);
+      mediaAspectPending.delete(src);
+      resolve(fallback);
+    };
+    image.src = src;
+  });
+
+  mediaAspectPending.set(src, promise);
+  return promise;
+};
+
+const useResolvedMediaAspect = (asset: MediaAsset | null) => {
+  const [resolvedAspect, setResolvedAspect] = useState<ResolvedMediaAspect | null>(() => (asset ? getInitialMediaAspect(asset) : null));
+
+  useEffect(() => {
+    let isActive = true;
+
+    if (!asset) {
+      setResolvedAspect(null);
+      return undefined;
+    }
+
+    const initialAspect = getInitialMediaAspect(asset);
+    setResolvedAspect(initialAspect);
+
+    if (asset.aspectRatio && Number.isFinite(asset.aspectRatio) && asset.aspectRatio > 0) {
+      return undefined;
+    }
+
+    void probeMediaAspect(asset.src, initialAspect).then((nextAspect) => {
+      if (isActive) {
+        setResolvedAspect(nextAspect);
+      }
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, [asset?.aspectRatio, asset?.formatLabel, asset?.src]);
+
+  return resolvedAspect;
+};
+
+const getNavButtonStyle = (isCompact: boolean) =>
+  ({
+    width: isCompact ? '34px' : '38px',
+    height: isCompact ? '34px' : '38px',
+    borderRadius: '999px',
+    border: '1px solid rgba(255,255,255,0.14)',
+    background: 'rgba(0,0,0,0.5)',
+    color: WHITE,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    backdropFilter: 'blur(10px)',
+    boxShadow: '0 12px 28px rgba(0,0,0,0.28)',
+  }) as const;
 
 const tokenStyle = (tag: MediaAcquisitionItem['tags'][number]) => {
   switch (tag) {
@@ -156,48 +409,75 @@ const TokenTag = ({ label, compact = false }: { label: MediaAcquisitionItem['tag
   );
 };
 
-const StatusPill = ({ status }: { status: Status }) => {
-  const palette = {
-    feito: { label: 'Feito', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.08)', border: 'rgba(74, 222, 128, 0.18)' },
-    pendente: { label: 'Pendente', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.08)', border: 'rgba(251, 191, 36, 0.18)' },
-    bloqueado: { label: 'Bloqueado', color: '#F87171', background: 'rgba(248, 113, 113, 0.08)', border: 'rgba(248, 113, 113, 0.18)' },
-  }[status];
-
-  return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '5px',
-        width: 'fit-content',
-        maxWidth: '100%',
-        alignSelf: 'flex-start',
-        flex: '0 0 auto',
-        padding: '4px 8px',
-        borderRadius: '999px',
-        border: `1px solid ${palette.border}`,
-        background: palette.background,
-        color: palette.color,
-        fontSize: 'var(--text-chip)',
-        fontWeight: 700,
-        letterSpacing: '0.08em',
-        lineHeight: 1,
-        textTransform: 'uppercase',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      <span style={{ width: '5px', height: '5px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
-      {palette.label}
-    </span>
-  );
-};
-
 const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; isCompact: boolean }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const mediaAssets = useMemo(() => item.media.map(normalizeMediaAsset).filter((asset): asset is MediaAsset => Boolean(asset)), [item.media]);
+  const hasMedia = mediaAssets.length > 0;
+  const hasMultiple = mediaAssets.length > 1;
+  const activeAsset = mediaAssets[activeIndex] ?? null;
+  const frameAsset = mediaAssets[0] ?? null;
+  const frameAspect = useResolvedMediaAspect(frameAsset);
+  const frameRatio = frameAspect?.ratio ?? frameAsset?.aspectRatio ?? 1;
+
+  useEffect(() => {
+    setActiveIndex((current) => {
+      if (!mediaAssets.length) {
+        return 0;
+      }
+
+      return current >= mediaAssets.length ? 0 : current;
+    });
+  }, [mediaAssets.length]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
+
+  const goToPrevious = () => {
+    if (!hasMultiple) {
+      return;
+    }
+
+    setActiveIndex((current) => (current - 1 + mediaAssets.length) % mediaAssets.length);
+  };
+
+  const goToNext = () => {
+    if (!hasMultiple) {
+      return;
+    }
+
+    setActiveIndex((current) => (current + 1) % mediaAssets.length);
+  };
 
   return (
     <>
       <motion.article
+        layout
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -227,14 +507,48 @@ const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; 
             <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, lineHeight: 1.24, letterSpacing: '-0.01em' }}>
               {item.title}
             </div>
-            <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: 'var(--text-body)', lineHeight: 1.5 }}>
-              {item.description}
-            </div>
           </div>
           <div style={{ alignSelf: isCompact ? 'flex-start' : 'auto' }}>
             <StatusPill status={item.status} />
           </div>
         </div>
+
+        {hasMultiple ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '12px',
+              padding: isCompact ? '0 16px 10px' : '0 18px 12px',
+            }}
+          >
+            <button
+              type="button"
+              aria-label="Imagem anterior"
+              onClick={(event) => {
+                event.stopPropagation();
+                goToPrevious();
+              }}
+              onPointerDown={(event) => event.stopPropagation()}
+              style={getNavButtonStyle(isCompact)}
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              type="button"
+              aria-label="Próxima imagem"
+              onClick={(event) => {
+                event.stopPropagation();
+                goToNext();
+              }}
+              onPointerDown={(event) => event.stopPropagation()}
+              style={getNavButtonStyle(isCompact)}
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        ) : null}
 
         <div
           style={{
@@ -242,77 +556,51 @@ const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; 
             padding: isCompact ? '14px 16px 16px' : '16px 18px 18px',
           }}
         >
-          <button
-            type="button"
-            onClick={() => setIsOpen(true)}
-            aria-label={`Expandir ${item.title}`}
-            style={{
-              position: 'absolute',
-              top: isCompact ? '20px' : '24px',
-              right: isCompact ? '18px' : '30px',
-              zIndex: 3,
-              width: isCompact ? '34px' : '36px',
-              height: isCompact ? '34px' : '36px',
-              borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.12)',
-              background: 'rgba(0,0,0,0.62)',
-              color: WHITE,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 10px 24px rgba(0,0,0,0.24)',
-            }}
-          >
-            <Maximize2 size={16} />
-          </button>
-
-          <div
-            onClick={() => setIsOpen(true)}
-            style={{
-              position: 'relative',
-              aspectRatio: item.aspectRatio,
-              borderRadius: '16px',
-              overflow: 'hidden',
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: 'rgba(255,255,255,0.03)',
-              cursor: 'pointer',
-            }}
-          >
-            <img
-              src={item.image}
-              alt={item.title}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                display: 'block',
-                transform: 'scale(1.01)',
-              }}
-            />
-            <div
+          {hasMedia ? (
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              aria-label={`Expandir ${item.title}`}
               style={{
                 position: 'absolute',
-                inset: 0,
-                background:
-                  item.aspectRatio === '9 / 16'
-                    ? 'linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.16) 45%, rgba(0,0,0,0.72) 100%)'
-                    : 'linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.12) 52%, rgba(0,0,0,0.68) 100%)',
+                top: isCompact ? '20px' : '24px',
+                right: isCompact ? '18px' : '30px',
+                zIndex: 5,
+                width: isCompact ? '34px' : '36px',
+                height: isCompact ? '34px' : '36px',
+                borderRadius: '12px',
+                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'rgba(0,0,0,0.62)',
+                color: WHITE,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 10px 24px rgba(0,0,0,0.24)',
               }}
-            />
-            <div style={{ position: 'absolute', left: '12px', right: '12px', bottom: '12px' }}>
-              <div style={{ color: WHITE, fontSize: 'var(--text-body)', lineHeight: 1.45, fontWeight: 600 }}>
-                {item.badgeLabel}
-              </div>
-            </div>
-          </div>
+            >
+              <Maximize2 size={16} />
+            </button>
+          ) : null}
+
+          <MediaCarouselViewport
+            asset={activeAsset}
+            currentIndex={activeIndex}
+            total={mediaAssets.length}
+            onPrevious={goToPrevious}
+            onNext={goToNext}
+            onActivate={hasMedia ? () => setIsOpen(true) : undefined}
+            isCompact={isCompact}
+            variant="card"
+            frameRatio={frameRatio}
+            ariaLabel={`Mídia do card ${item.title}`}
+          />
         </div>
       </motion.article>
 
       <AnimatePresence>
-        {isOpen && (
+        {isOpen ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -358,12 +646,9 @@ const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; 
                   flexDirection: isCompact ? 'column' : 'row',
                 }}
               >
-                <div style={{ minWidth: 0 }}>
+              <div style={{ minWidth: 0 }}>
                   <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em' }}>
                     {item.title}
-                  </div>
-                  <div style={{ color: 'rgba(255,255,255,0.52)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: '6px', maxWidth: '760px' }}>
-                    {item.description}
                   </div>
                 </div>
                 <button
@@ -386,42 +671,61 @@ const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; 
                 </button>
               </div>
 
-              <div
-                style={{
-                  position: 'relative',
-                  minHeight: 0,
-                  overflow: 'hidden',
-                  borderRadius: '18px',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: '#0c0c0c',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <img
-                  src={item.image}
-                  alt={item.title}
+              {hasMultiple ? (
+                <div
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    display: 'block',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
                   }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {item.tags.map((tag) => (
-                    <TokenTag key={`modal-${item.title}-${tag}`} label={tag} compact={isCompact} />
-                  ))}
+                >
+                  <button
+                    type="button"
+                    aria-label="Imagem anterior"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      goToPrevious();
+                    }}
+                    onPointerDown={(event) => event.stopPropagation()}
+                    style={getNavButtonStyle(isCompact)}
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Próxima imagem"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      goToNext();
+                    }}
+                    onPointerDown={(event) => event.stopPropagation()}
+                    style={getNavButtonStyle(isCompact)}
+                  >
+                    <ChevronRight size={16} />
+                  </button>
                 </div>
+              ) : null}
+
+              <MediaCarouselViewport
+                asset={activeAsset}
+              currentIndex={activeIndex}
+              total={mediaAssets.length}
+              onPrevious={goToPrevious}
+              onNext={goToNext}
+              isCompact={isCompact}
+              variant="modal"
+              frameRatio={frameRatio}
+              modalMaxHeightPx={isCompact ? 420 : 500}
+              ariaLabel={`Visualização ampliada do card ${item.title}`}
+            />
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
                 <StatusPill status={item.status} />
               </div>
             </motion.div>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
     </>
   );
@@ -553,7 +857,260 @@ export const MediaAcquisitionSection = ({
           </div>
         ))}
       </div>
-  </motion.section>
-);
+    </motion.section>
+  );
+};
+
+const StatusPill = ({ status }: { status: Status }) => {
+  const palette = {
+    feito: { label: 'Feito', color: '#4ADE80', background: 'rgba(74, 222, 128, 0.08)', border: 'rgba(74, 222, 128, 0.18)' },
+    pendente: { label: 'Pendente', color: '#FBBF24', background: 'rgba(251, 191, 36, 0.08)', border: 'rgba(251, 191, 36, 0.18)' },
+    bloqueado: { label: 'Bloqueado', color: '#F87171', background: 'rgba(248, 113, 113, 0.08)', border: 'rgba(248, 113, 113, 0.18)' },
+  }[status];
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '5px',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
+        padding: '4px 8px',
+        borderRadius: '999px',
+        border: `1px solid ${palette.border}`,
+        background: palette.background,
+        color: palette.color,
+        fontSize: 'var(--text-chip)',
+        fontWeight: 700,
+        letterSpacing: '0.08em',
+        lineHeight: 1,
+        textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      <span style={{ width: '5px', height: '5px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
+      {palette.label}
+    </span>
+  );
+};
+
+type MediaCarouselViewportProps = {
+  asset: MediaAsset | null;
+  badgeLabel?: string;
+  currentIndex: number;
+  total: number;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  onActivate?: () => void;
+  isCompact: boolean;
+  variant: 'card' | 'modal';
+  frameRatio: number;
+  modalMaxHeightPx?: number;
+  ariaLabel: string;
+};
+
+const MediaCarouselViewport = ({
+  asset,
+  badgeLabel,
+  currentIndex,
+  total,
+  onPrevious,
+  onNext,
+  onActivate,
+  isCompact,
+  variant,
+  frameRatio,
+  modalMaxHeightPx,
+  ariaLabel,
+}: MediaCarouselViewportProps) => {
+  const resolvedAspect = useResolvedMediaAspect(asset);
+  const frameLabel = asset?.formatLabel ?? resolvedAspect?.label ?? badgeLabel ?? 'Mídia';
+  const hasMultiple = total > 1 && Boolean(onPrevious && onNext);
+  const widthCap = variant === 'modal' ? Math.round((modalMaxHeightPx ?? (isCompact ? 420 : 500)) * normalizeRatio(frameRatio)) : null;
+  const swipeStartX = useRef<number | null>(null);
+  const swipeTriggered = useRef(false);
+
+  const handleActivate = () => {
+    if (!onActivate) {
+      return;
+    }
+
+    if (swipeTriggered.current) {
+      swipeTriggered.current = false;
+      return;
+    }
+
+    onActivate();
+  };
+
+  const handlePointerDown = (event: { pointerType: string; button: number; clientX: number }) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return;
+    }
+
+    swipeStartX.current = event.clientX;
+    swipeTriggered.current = false;
+  };
+
+  const handlePointerUp = (event: { clientX: number }) => {
+    if (swipeStartX.current == null || !hasMultiple) {
+      swipeStartX.current = null;
+      return;
+    }
+
+    const delta = event.clientX - swipeStartX.current;
+    swipeStartX.current = null;
+
+    if (Math.abs(delta) > 42) {
+      swipeTriggered.current = true;
+
+      if (delta < 0) {
+        onNext?.();
+      } else {
+        onPrevious?.();
+      }
+    }
+  };
+
+  const handlePointerCancel = () => {
+    swipeStartX.current = null;
+  };
+
+  const handleKeyDown = (event: { key: string; preventDefault: () => void }) => {
+    if (event.key === 'ArrowLeft' && hasMultiple) {
+      event.preventDefault();
+      onPrevious?.();
+      return;
+    }
+
+    if (event.key === 'ArrowRight' && hasMultiple) {
+      event.preventDefault();
+      onNext?.();
+      return;
+    }
+
+    if ((event.key === 'Enter' || event.key === ' ') && onActivate) {
+      event.preventDefault();
+      onActivate();
+    }
+  };
+
+  const pillStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: isCompact ? '5px 9px' : '6px 10px',
+    borderRadius: '999px',
+    border: '1px solid rgba(255,255,255,0.12)',
+    background: 'rgba(0,0,0,0.48)',
+    color: WHITE,
+    fontSize: 'var(--text-chip)',
+    fontWeight: 700,
+    letterSpacing: '0.08em',
+    lineHeight: 1,
+    textTransform: 'uppercase',
+    backdropFilter: 'blur(10px)',
+  } as const;
+
+  return (
+    <motion.div layout style={{ width: variant === 'modal' && widthCap ? `min(100%, ${widthCap}px)` : '100%' }}>
+      <AspectRatio ratio={frameRatio} style={{ width: '100%' }}>
+        <div
+          role="group"
+          tabIndex={hasMultiple || Boolean(onActivate) ? 0 : -1}
+          aria-label={ariaLabel}
+          onClick={handleActivate}
+          onKeyDown={handleKeyDown}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onPointerLeave={handlePointerCancel}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+            borderRadius: variant === 'modal' ? '18px' : '16px',
+            border: '1px solid rgba(255,255,255,0.08)',
+            background: asset ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)',
+            cursor: hasMultiple ? 'grab' : onActivate ? 'pointer' : 'default',
+            touchAction: 'pan-y',
+            userSelect: 'none',
+          }}
+        >
+          {asset ? (
+            <>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.img
+                  key={asset.src}
+                  src={asset.src}
+                  alt={asset.alt ?? frameLabel}
+                  initial={{ opacity: 0, scale: 1.015 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.995 }}
+                  transition={{ duration: 0.26, ease: 'easeOut' }}
+                  loading="lazy"
+                  decoding="async"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    objectPosition: 'center',
+                    display: 'block',
+                  }}
+                />
+              </AnimatePresence>
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    variant === 'modal'
+                      ? 'linear-gradient(180deg, rgba(0,0,0,0.01) 0%, rgba(0,0,0,0.06) 46%, rgba(0,0,0,0.62) 100%)'
+                      : 'linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.12) 48%, rgba(0,0,0,0.72) 100%)',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '12px',
+                  left: '12px',
+                  right: '12px',
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between',
+                  gap: '10px',
+                  pointerEvents: 'none',
+                }}
+              >
+                <span style={pillStyle}>{frameLabel}</span>
+              </div>
+            </>
+          ) : (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: isCompact ? '18px' : '24px',
+              }}
+            >
+              <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, lineHeight: 1.3, textAlign: 'center' }}>
+                Sem imagens vinculadas
+              </div>
+            </div>
+          )}
+        </div>
+      </AspectRatio>
+
+    </motion.div>
+  );
 };
 

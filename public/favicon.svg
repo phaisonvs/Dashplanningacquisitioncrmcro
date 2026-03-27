@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Dash Planning">
+  <defs>
+    <linearGradient id="g" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7DD3FC"/>
+      <stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#0B1220"/>
+  <circle cx="32" cy="32" r="20" fill="url(#g)" opacity="0.92"/>
+  <path d="M22 38V24h10.2c4.8 0 8 2.7 8 6.9S37 38 32.2 38H22Zm6-4h4.1c2.3 0 3.8-1.3 3.8-3.1s-1.5-3-3.8-3H28v6.1Z" fill="#08101A"/>
+</svg>

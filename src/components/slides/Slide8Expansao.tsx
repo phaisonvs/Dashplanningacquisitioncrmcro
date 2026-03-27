@@ -368,17 +368,18 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
             key={`${row.text}-${index}`}
             style={{
               display: 'flex',
-              alignItems: compact ? 'flex-start' : 'center',
+              alignItems: 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
-              gap: compact ? '10px' : '14px',
+              gap: '12px',
               padding: compact ? '11px 14px' : '13px 18px',
               borderRadius: '10px',
               background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
               border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
-              flexDirection: compact ? 'column' : 'row',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
@@ -387,12 +388,11 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
                 style={{
                   paddingLeft: compact ? 0 : '12px',
                   borderLeft: compact ? 'none' : `2px solid ${activeColor}`,
-                  paddingTop: compact ? '2px' : 0,
                   color: activeColor,
                   fontSize: 'var(--text-body)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
-                  alignSelf: compact ? 'flex-start' : 'auto',
+                  flex: '0 0 auto',
                 }}
               >
                 {row.value}
