@@ -291,7 +291,7 @@ export function ImageViewer({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '80px 40px 40px',
+            padding: '24px',
             animation: 'fadeIn 0.2s ease'
           }}
           onClick={() => setIsExpanded(false)}
@@ -439,7 +439,7 @@ export function ImageViewer({
                 {/* Screen with fixed width and internal scroll */}
                 <div style={{
                   width: '375px',
-                  maxHeight: 'calc(90vh - 100px)',
+                  height: 'calc(90vh - 120px)',
                   borderRadius: '32px',
                   overflow: 'hidden',
                   background: '#fff'

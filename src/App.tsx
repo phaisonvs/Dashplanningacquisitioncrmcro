@@ -62,8 +62,38 @@ slides.forEach((slide, index) => {
   values.forEach((value) => slideAliases.set(value, index));
 });
 
+const appBasePath = (() => {
+  const rawBase = import.meta.env.BASE_URL ?? '/';
+  if (!rawBase || rawBase === '/') return '/';
+
+  const normalized = rawBase.replace(/^\/+/, '').replace(/\/+$/, '');
+  return `/${normalized}/`;
+})();
+
+const joinAppPath = (path: string) => {
+  const cleanPath = path.replace(/^\/+/, '');
+  if (appBasePath === '/') {
+    return cleanPath ? `/${cleanPath}` : '/';
+  }
+
+  return cleanPath ? `${appBasePath}${cleanPath}` : appBasePath;
+};
+
+const stripAppBasePath = (pathname: string) => {
+  if (appBasePath === '/') return pathname;
+
+  const lowerPath = pathname.toLowerCase();
+  const lowerBase = appBasePath.toLowerCase();
+  const lowerBaseWithoutTrailingSlash = appBasePath.slice(0, -1).toLowerCase();
+
+  if (lowerPath === lowerBaseWithoutTrailingSlash) return '';
+  if (lowerPath.startsWith(lowerBase)) return pathname.slice(appBasePath.length);
+
+  return pathname;
+};
+
 const normalizeRouteKey = (pathname: string, hash: string) => {
-  const pathKey = pathname.replace(/^\/+/, '').replace(/\/+$/, '').trim().toLowerCase();
+  const pathKey = stripAppBasePath(pathname).replace(/^\/+/, '').replace(/\/+$/, '').trim().toLowerCase();
   if (pathKey) return pathKey;
 
   const rawHash = hash.startsWith('#') ? hash.slice(1) : hash;
@@ -82,10 +112,10 @@ const resolveSlideIndex = (pathname: string, hash: string) => {
 };
 
 const routeForIndex = (index: number) => {
-  if (index === 0) return '/dashboard';
-  if (index === 1) return '/cover';
+  if (index === 0) return joinAppPath('/dashboard');
+  if (index === 1) return joinAppPath('/cover');
   const slug = slides[index]?.slug;
-  return slug ? `/${slug}` : '/';
+  return slug ? joinAppPath(`/${slug}`) : joinAppPath('/');
 };
 
 const canonicalUrlForIndex = (index: number) => `${window.location.origin}${routeForIndex(index)}`;
@@ -577,7 +607,9 @@ export default function App() {
           }}
         >
           {showAdvanceBadge && (
-            <span
+            <motion.span
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.15, repeat: Infinity, ease: 'easeInOut' }}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -594,7 +626,7 @@ export default function App() {
               }}
             >
               AVANÇAR
-            </span>
+            </motion.span>
           )}
           <motion.span
             animate={{ x: [0, 4, 0] }}

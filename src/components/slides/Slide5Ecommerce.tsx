@@ -846,7 +846,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
   const clusterColor = CLUSTERS.ECOMMERCE;
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '60px' }}>
       
       {/* 1. Hero */}
       <section>
@@ -871,7 +871,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
           </SlideHeroHeader>
         </motion.div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginTop: '16px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginTop: '28px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px' }}>
             {topMetrics.map((item) => (
               <MetricCardView key={item.title} item={item} isActive={isActive} />

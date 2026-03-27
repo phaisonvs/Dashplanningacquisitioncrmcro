@@ -50,7 +50,7 @@ export function SlideHeroHeader({
               {subtitle}
             </div>
           ) : null}
-          {children ? <div style={{ marginTop: subtitle ? '14px' : '16px' }}>{children}</div> : null}
+          {children ? <div style={{ marginTop: subtitle ? '24px' : '28px' }}>{children}</div> : null}
         </div>
       </div>
       {right}

@@ -421,6 +421,17 @@ export const MediaAcquisitionSection = ({
     [],
   );
 
+  const itemsByColumn = useMemo(() => {
+    const totalColumns = 4;
+    const columns = Array.from({ length: totalColumns }, () => [] as MediaAcquisitionItem[]);
+
+    items.forEach((item, index) => {
+      columns[index % totalColumns].push(item);
+    });
+
+    return columns;
+  }, [items]);
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
@@ -433,7 +444,7 @@ export const MediaAcquisitionSection = ({
         padding: '26px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '24px',
+        gap: '32px',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap' }}>
@@ -475,27 +486,34 @@ export const MediaAcquisitionSection = ({
         </div>
       </div>
 
-    <div
-      style={{
-        columnWidth: '320px',
-        columnGap: '18px',
-      }}
-    >
-      {items.map((item) => (
-        <div
-          key={item.title}
-          style={{
-            breakInside: 'avoid',
-            WebkitColumnBreakInside: 'avoid',
-            marginBottom: '18px',
-            display: 'inline-block',
-            width: '100%',
-          }}
-        >
-          <ExpandableMediaCard item={item} />
-        </div>
-      ))}
-    </div>
+      <div
+        style={{
+          width: '100%',
+          minWidth: 0,
+          alignSelf: 'stretch',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+          gap: '14px',
+        }}
+      >
+        {itemsByColumn.map((columnItems, columnIndex) => (
+          <div
+            key={`media-column-${columnIndex}`}
+            style={{
+              minWidth: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '18px',
+            }}
+          >
+            {columnItems.map((item) => (
+              <div key={item.title} style={{ minWidth: 0, height: 'fit-content' }}>
+                <ExpandableMediaCard item={item} />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
   </motion.section>
 );
 };

@@ -1,12 +1,13 @@
 
-  import { defineConfig } from 'vite';
-  import react from '@vitejs/plugin-react';
-  import tailwindcss from '@tailwindcss/vite';
-  import path from 'path';
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'path';
 
-  export default defineConfig({
-    plugins: [react(), tailwindcss()],
-    resolve: {
+export default defineConfig({
+  base: '/Dashplanningacquisitioncrmcro/',
+  plugins: [react(), tailwindcss()],
+  resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
         'vaul@1.1.2': 'vaul',
@@ -57,13 +58,13 @@
         '@radix-ui/react-accordion@1.2.3': '@radix-ui/react-accordion',
         '@': path.resolve(__dirname, './src'),
       },
-    },
-    build: {
-      target: 'esnext',
-      outDir: 'build',
-    },
-    server: {
-      port: 3000,
+  },
+  build: {
+    target: 'esnext',
+    outDir: 'dist',
+  },
+  server: {
+    port: 3000,
       open: true,
     },
   });

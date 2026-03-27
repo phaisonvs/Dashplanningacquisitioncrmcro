@@ -426,7 +426,7 @@ export function Slide8Expansao({ isActive }: Props) {
   const clusterColor = CLUSTERS.EXPANSAO;
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
+    <div style={{ minHeight: '100vh', background: BG, padding: '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: '60px' }}>
       <section>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <SlideHeroHeader

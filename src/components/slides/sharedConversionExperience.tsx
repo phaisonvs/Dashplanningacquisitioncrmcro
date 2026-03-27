@@ -193,7 +193,7 @@ export function ConversionExperienceSection({
         padding: '22px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '22px',
+        gap: '32px',
       }}
     >
       <SlideSectionHeader
@@ -229,7 +229,7 @@ export function ConversionExperienceSection({
         }
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '22px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '22px' }}>
         {items.map((item) => (
           <EvidenceCard key={item.title} item={item} />
         ))}

@@ -869,7 +869,7 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         padding: '140px clamp(28px, 5vw, 72px) 80px',
         display: 'flex',
         flexDirection: 'column',
-        gap: '40px',
+        gap: '60px',
       }}
     >
       <section>
@@ -915,7 +915,7 @@ export function Slide2VisaoLeads({ isActive }: Props) {
           padding: '22px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '22px',
+          gap: '32px',
         }}
       >
         <SectionTitle
