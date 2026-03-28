@@ -1,6 +1,6 @@
 ﻿import { motion } from 'motion/react';
 import { AnimatedNumber } from '../AnimatedNumber';
-import { BG, WHITE, GREEN, CLUSTERS } from '../theme';
+import { BG, WHITE, CLUSTERS } from '../theme';
 import { SlideHeroHeader, useDeckViewport } from './sharedDeckTypography';
 
 interface Props {
@@ -66,8 +66,8 @@ const summaryCards: SummaryCard[] = [
   {
     cluster: 'LEADS',
     color: CLUSTERS.LEADS,
-    title: 'Leads',
-    insight: 'A maior alavanca continua sendo reduzir a perda entre orçamento e pedido, enquanto a mídia é redistribuída para praças sem entrada.',
+    title: 'Conversão no meio do funil',
+    insight: 'O gargalo mais valioso segue entre orçamento e pedido. A maior alavanca continua sendo reduzir perda no meio do funil enquanto a mídia cobre praças sem entrada.',
     actions: [
       'Recuperar conversão de orçamentos → pedidos',
       'Redistribuir mídia para lojas com 0 entradas',
@@ -77,8 +77,8 @@ const summaryCards: SummaryCard[] = [
   {
     cluster: 'E-COMMERCE',
     color: CLUSTERS.ECOMMERCE,
-    title: 'E-commerce',
-    insight: 'O ganho mais direto está em eficiência de mídia, UX de catálogo e redução de atrito logístico no fechamento.',
+    title: 'Eficiência de mídia e UX',
+    insight: 'ROAS e UX precisam caminhar juntos para destravar ganho real. Catálogo, filtros e atrito logístico seguem como alavancas de curto prazo.',
     actions: [
       'Aumentar eficiência de campanhas (ROAS)',
       'Reestruturar UX do e-commerce (catálogo + filtros)',
@@ -89,8 +89,8 @@ const summaryCards: SummaryCard[] = [
   {
     cluster: 'EXPANSÃO',
     color: CLUSTERS.EXPANSAO,
-    title: 'Expansão',
-    insight: 'A frente é pequena em volume, mas saudável em qualificação. O trabalho aqui é criar pipeline mais profundo e previsível.',
+    title: 'Qualificação antes de volume',
+    insight: 'A expansão funciona melhor quando o pipeline é mais profundo e previsível. Aqui, a qualidade da intenção vale mais do que o volume bruto.',
     actions: [
       'Estratégia "Oportunidade por Praça" (Gatilho Escassez)',
       'Ativação de estratégia LinkedIn Ads (Perfis B2B)',
@@ -160,6 +160,60 @@ export function Slide9Top8({ isActive }: Props) {
       </section>
 
       <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
+        <motion.article
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          style={{
+            gridColumn: isMobile ? 'auto' : '1 / -1',
+            background: `${clusterColor}10`,
+            border: `1px solid ${clusterColor}28`,
+            borderRadius: '18px',
+            padding: isCompact ? '18px' : '28px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: isCompact ? '16px' : '18px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
+            <div>
+              <div style={{ color: clusterColor, fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                Impacto estimado
+              </div>
+              <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '8px' }}>
+                Potencial consolidado das oito ações.
+              </div>
+            </div>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                padding: '6px 10px',
+                borderRadius: '999px',
+                border: `1px solid ${clusterColor}33`,
+                background: `${clusterColor}12`,
+                color: clusterColor,
+                fontSize: 'var(--text-chip)',
+                fontWeight: 800,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Report Closed
+            </span>
+          </div>
+
+          <div>
+            {impacts.map((item, index) => (
+              <ImpactRow key={item.label} item={item} index={index} isActive={isActive} compact={isCompact} />
+            ))}
+          </div>
+
+          <div style={{ color: 'rgba(255,255,255,0.62)', fontSize: 'var(--text-body)', lineHeight: 1.55 }}>
+            Base direcional para a próxima rodada de execução. As oito ações só capturam o incremental esperado quando entram como sistema.
+          </div>
+        </motion.article>
+
         {summaryCards.map((card) => (
           <motion.article
             key={card.cluster}
@@ -182,7 +236,7 @@ export function Slide9Top8({ isActive }: Props) {
                 <div style={{ color: card.color, fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
                   {card.cluster}
                 </div>
-                <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginTop: '6px' }}>
+                <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.12, letterSpacing: '-0.02em', marginTop: '6px' }}>
                   {card.title}
                 </div>
               </div>
@@ -216,114 +270,6 @@ export function Slide9Top8({ isActive }: Props) {
             </div>
           </motion.article>
         ))}
-      </section>
-
-      <section style={{ display: 'grid', gridTemplateColumns: isCompact ? '1fr' : '1.25fr 0.75fr', gap: isCompact ? '16px' : '20px', alignItems: 'stretch' }}>
-        <motion.article
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: '18px',
-            padding: isCompact ? '18px' : '28px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: isCompact ? '16px' : '18px',
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
-            <div>
-              <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                Leitura do analista
-              </div>
-              <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
-                O que move o resultado aqui é menos barulho e mais precisão de alocação.
-              </div>
-            </div>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: '6px 10px',
-                borderRadius: '999px',
-                border: `1px solid ${clusterColor}33`,
-                background: `${clusterColor}12`,
-                color: clusterColor,
-                fontSize: 'var(--text-chip)',
-                fontWeight: 800,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Report Closed
-            </span>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, minmax(0, 1fr))', gap: isCompact ? '12px' : '14px' }}>
-            {[
-              'O gargalo mais valioso está no meio do funil, não no topo.',
-              'ROAS e UX precisam caminhar juntos para destravar ganho real.',
-              'Expansão funciona melhor quando o pipeline é mais profundo e previsível.',
-              'As oito ações têm retorno incremental, mas só se forem executadas como sistema.',
-            ].map((item) => (
-              <div
-                key={item}
-                style={{
-                  background: 'rgba(0,0,0,0.22)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  borderRadius: '14px',
-                padding: isCompact ? '14px' : '16px',
-                display: 'flex',
-                gap: '10px',
-                alignItems: 'flex-start',
-                }}
-              >
-                <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: GREEN, marginTop: '7px', flexShrink: 0 }} />
-                <div style={{ color: 'rgba(255,255,255,0.76)', fontSize: 'var(--text-body)', lineHeight: 1.55 }}>
-                  {item}
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.article>
-
-        <motion.article
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          style={{
-            background: `${clusterColor}10`,
-            border: `1px solid ${clusterColor}28`,
-            borderRadius: '18px',
-            padding: isCompact ? '18px' : '28px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            gap: isCompact ? '10px' : '12px',
-          }}
-        >
-          <div>
-            <div style={{ color: clusterColor, fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-              Impacto estimado
-            </div>
-            <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '8px' }}>
-              Potencial consolidado das oito ações.
-            </div>
-          </div>
-
-          <div>
-            {impacts.map((item, index) => (
-              <ImpactRow key={item.label} item={item} index={index} isActive={isActive} compact={isCompact} />
-            ))}
-          </div>
-
-          <div style={{ color: 'rgba(255,255,255,0.62)', fontSize: 'var(--text-body)', lineHeight: 1.55 }}>
-            Base direcional para a próxima rodada de execução. O slide fecha a leitura, mas a execução continua nas páginas
-            já espelhadas no report.
-          </div>
-        </motion.article>
       </section>
 
       <div

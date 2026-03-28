@@ -754,49 +754,6 @@ const frontEvidenceItems: EvidenceItem[] = [
   },
 ];
 
-const mediaAcquisitionItems: EvidenceItem[] = [
-  {
-    title: 'LP Interna Semana do Consumidor',
-    tags: ['LEADS', 'CRO', 'E-COMMERCE'],
-    status: 'feito',
-    objective: 'Versão consolidada das peças de aquisição com foco em tráfego pago, clareza de oferta e conversão.',
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
-    imageLabel: 'Landing Page',
-    imageHeight: 280,
-  },
-  {
-    title: 'LP Interna Chance Única',
-    tags: ['LEADS', 'CRO', 'E-COMMERCE'],
-    status: 'pendente',
-    objective: 'Uma segunda camada de oferta para absorver intenção alta e sustentar a captura qualificada.',
-    desktopImage: lpChanceUnicaImg,
-    mobileImage: lpChanceUnicaMobileImg,
-    imageLabel: 'Landing Page',
-    imageHeight: 280,
-  },
-  {
-    title: 'Hero Section de Conversão',
-    tags: ['CRO', 'E-COMMERCE'],
-    status: 'feito',
-    objective: 'Hero pensada para reforçar mídia, hierarquia visual e leitura imediata da proposta de valor.',
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
-    imageLabel: 'Hero Section',
-    imageHeight: 280,
-  },
-  {
-    title: 'WhatsApp Floating e captura',
-    tags: ['CRM', 'CRO', 'LEADS'],
-    status: 'feito',
-    objective: 'Camada de captura assistida para transformar tráfego em lead e alimentar o CRM com menos atrito.',
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
-    imageLabel: 'Landing Page',
-    imageHeight: 280,
-  },
-];
-
 const ObjectiveBlock = ({ text, compact = false }: { text: string; compact?: boolean }) => (
   <div
     style={{

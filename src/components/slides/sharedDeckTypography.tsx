@@ -42,6 +42,16 @@ type SlideSectionHeaderProps = {
   right?: ReactNode;
 };
 
+type SlideEvidenceHeaderProps = {
+  accentColor: string;
+  title: ReactNode;
+  subtitle?: ReactNode;
+  badge?: ReactNode;
+  eyebrow?: ReactNode;
+  right?: ReactNode;
+  titleMaxWidth?: string;
+};
+
 export function SlideHeroHeader({
   accentColor,
   title,
@@ -124,6 +134,72 @@ export function SlideSectionHeader({ accentColor, title, subtitle, right }: Slid
           </div>
           {subtitle ? (
             <div style={{ color: 'rgba(255,255,255,0.44)', fontSize: 'var(--text-meta)', lineHeight: 1.4, marginTop: isCompact ? '4px' : '5px' }}>
+              {subtitle}
+            </div>
+          ) : null}
+        </div>
+      </div>
+      {right ? (
+        <div style={{ display: 'flex', width: isCompact ? '100%' : 'auto', justifyContent: isCompact ? 'flex-start' : 'flex-end', flexWrap: 'wrap', gap: isCompact ? '6px' : '8px' }}>
+          {right}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+export function SlideEvidenceHeader({
+  accentColor,
+  title,
+  subtitle,
+  badge,
+  eyebrow = 'Evidências da frente',
+  right,
+  titleMaxWidth = '920px',
+}: SlideEvidenceHeaderProps) {
+  const { isCompact } = useDeckViewport();
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: isCompact ? 'stretch' : 'flex-start',
+        gap: isCompact ? '14px' : '18px',
+        flexDirection: isCompact ? 'column' : 'row',
+        flexWrap: 'wrap',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: isCompact ? '10px' : '12px', minWidth: 0, width: isCompact ? '100%' : 'auto' }}>
+        <div style={{ width: '3px', height: isCompact ? '20px' : '24px', background: accentColor, borderRadius: '999px', flexShrink: 0, marginTop: '2px' }} />
+        <div style={{ minWidth: 0, maxWidth: isCompact ? '100%' : titleMaxWidth, width: '100%' }}>
+          <div
+            style={{
+              color: 'rgba(255,255,255,0.42)',
+              fontSize: 'var(--text-meta)',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            {eyebrow}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isCompact ? '8px' : '10px', flexWrap: 'wrap', marginTop: isCompact ? '5px' : '6px' }}>
+            <div
+              style={{
+                color: WHITE,
+                fontSize: 'var(--text-section)',
+                fontWeight: SLIDE_SECTION_TITLE_WEIGHT,
+                letterSpacing: '-0.03em',
+                lineHeight: isCompact ? 1.08 : 1.12,
+              }}
+            >
+              {title}
+            </div>
+            {badge ? <div style={{ flex: '0 0 auto' }}>{badge}</div> : null}
+          </div>
+          {subtitle ? (
+            <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: isCompact ? '6px' : '7px', maxWidth: '780px' }}>
               {subtitle}
             </div>
           ) : null}

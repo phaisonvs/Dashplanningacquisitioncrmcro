@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react';
 import { AspectRatio } from '../ui/aspect-ratio';
 import { CLUSTERS, WHITE } from '../theme';
-import { useDeckViewport } from './sharedDeckTypography';
+import { SlideEvidenceHeader, useDeckViewport } from './sharedDeckTypography';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
 import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
 import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
@@ -345,7 +345,7 @@ const useResolvedMediaAspect = (asset: MediaAsset | null) => {
   return resolvedAspect;
 };
 
-const getNavButtonStyle = (isCompact: boolean) =>
+export const getMediaCarouselNavButtonStyle = (isCompact: boolean) =>
   ({
     width: isCompact ? '34px' : '38px',
     height: isCompact ? '34px' : '38px',
@@ -360,6 +360,53 @@ const getNavButtonStyle = (isCompact: boolean) =>
     backdropFilter: 'blur(10px)',
     boxShadow: '0 12px 28px rgba(0,0,0,0.28)',
   }) as const;
+
+const MediaCarouselNavControls = ({
+  isCompact,
+  onPrevious,
+  onNext,
+  ariaLabelPrefix = 'Imagem',
+}: {
+  isCompact: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
+  ariaLabelPrefix?: string;
+}) => (
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: isCompact ? '12px' : '14px',
+      padding: isCompact ? '4px 16px 10px' : '6px 18px 12px',
+    }}
+  >
+    <button
+      type="button"
+      aria-label={`${ariaLabelPrefix} anterior`}
+      onClick={(event) => {
+        event.stopPropagation();
+        onPrevious();
+      }}
+      onPointerDown={(event) => event.stopPropagation()}
+      style={getMediaCarouselNavButtonStyle(isCompact)}
+    >
+      <ChevronLeft size={16} />
+    </button>
+    <button
+      type="button"
+      aria-label={`${ariaLabelPrefix} próxima`}
+      onClick={(event) => {
+        event.stopPropagation();
+        onNext();
+      }}
+      onPointerDown={(event) => event.stopPropagation()}
+      style={getMediaCarouselNavButtonStyle(isCompact)}
+    >
+      <ChevronRight size={16} />
+    </button>
+  </div>
+);
 
 const tokenStyle = (tag: MediaAcquisitionItem['tags'][number]) => {
   switch (tag) {
@@ -513,42 +560,7 @@ const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; 
           </div>
         </div>
 
-        {hasMultiple ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px',
-              padding: isCompact ? '0 16px 10px' : '0 18px 12px',
-            }}
-          >
-            <button
-              type="button"
-              aria-label="Imagem anterior"
-              onClick={(event) => {
-                event.stopPropagation();
-                goToPrevious();
-              }}
-              onPointerDown={(event) => event.stopPropagation()}
-              style={getNavButtonStyle(isCompact)}
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              type="button"
-              aria-label="Próxima imagem"
-              onClick={(event) => {
-                event.stopPropagation();
-                goToNext();
-              }}
-              onPointerDown={(event) => event.stopPropagation()}
-              style={getNavButtonStyle(isCompact)}
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-        ) : null}
+        {hasMultiple ? <MediaCarouselNavControls isCompact={isCompact} onPrevious={goToPrevious} onNext={goToNext} /> : null}
 
         <div
           style={{
@@ -586,7 +598,6 @@ const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; 
 
           <MediaCarouselViewport
             asset={activeAsset}
-            currentIndex={activeIndex}
             total={mediaAssets.length}
             onPrevious={goToPrevious}
             onNext={goToNext}
@@ -671,54 +682,19 @@ const ExpandableMediaCard = ({ item, isCompact }: { item: MediaAcquisitionItem; 
                 </button>
               </div>
 
-              {hasMultiple ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '12px',
-                  }}
-                >
-                  <button
-                    type="button"
-                    aria-label="Imagem anterior"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      goToPrevious();
-                    }}
-                    onPointerDown={(event) => event.stopPropagation()}
-                    style={getNavButtonStyle(isCompact)}
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Próxima imagem"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      goToNext();
-                    }}
-                    onPointerDown={(event) => event.stopPropagation()}
-                    style={getNavButtonStyle(isCompact)}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-              ) : null}
+              {hasMultiple ? <MediaCarouselNavControls isCompact={isCompact} onPrevious={goToPrevious} onNext={goToNext} /> : null}
 
               <MediaCarouselViewport
                 asset={activeAsset}
-              currentIndex={activeIndex}
-              total={mediaAssets.length}
-              onPrevious={goToPrevious}
-              onNext={goToNext}
-              isCompact={isCompact}
-              variant="modal"
-              frameRatio={frameRatio}
-              modalMaxHeightPx={isCompact ? 420 : 500}
-              ariaLabel={`Visualização ampliada do card ${item.title}`}
-            />
+                total={mediaAssets.length}
+                onPrevious={goToPrevious}
+                onNext={goToNext}
+                isCompact={isCompact}
+                variant="modal"
+                frameRatio={frameRatio}
+                modalMaxHeightPx={isCompact ? 420 : 500}
+                ariaLabel={`Visualização ampliada do card ${item.title}`}
+              />
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
                 <StatusPill status={item.status} />
@@ -735,25 +711,17 @@ export const MediaAcquisitionSection = ({
   title = 'Mídias Acquisition',
   subtitle = 'Leitura visual das peças e frentes que alimentam aquisição e qualidade de lead.',
   items = mediaAcquisitionItems,
-  badges = ['ACQUISITION', 'CRO'],
 }: {
   title?: string;
   subtitle?: string;
   items?: MediaAcquisitionItem[];
-  badges?: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM' | 'E-COMMERCE'>;
 }) => {
-  const badgeColors = useMemo(
-    () => ({
-      LEADS: { color: '#7DD3FC', background: 'rgba(125, 211, 252, 0.08)', border: 'rgba(125, 211, 252, 0.22)' },
-      ACQUISITION: { color: '#A78BFA', background: 'rgba(167, 139, 250, 0.08)', border: 'rgba(167, 139, 250, 0.22)' },
-      CRO: { color: '#60A5FA', background: 'rgba(96, 165, 250, 0.08)', border: 'rgba(96, 165, 250, 0.22)' },
-      CRM: { color: '#2DD4BF', background: 'rgba(45, 212, 191, 0.08)', border: 'rgba(45, 212, 191, 0.22)' },
-      'E-COMMERCE': { color: CLUSTERS.ECOMMERCE, background: 'rgba(252, 165, 165, 0.08)', border: 'rgba(252, 165, 165, 0.22)' },
-    }),
-    [],
-  );
-
   const { isMobile, isCompact } = useDeckViewport();
+  const sectionBadgePalette = {
+    color: '#A78BFA',
+    background: 'rgba(167, 139, 250, 0.08)',
+    border: 'rgba(167, 139, 250, 0.22)',
+  };
 
   const itemsByColumn = useMemo(() => {
     const totalColumns = isMobile ? 1 : isCompact ? 2 : 4;
@@ -781,53 +749,30 @@ export const MediaAcquisitionSection = ({
         gap: isCompact ? '24px' : '32px',
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: isCompact ? 'stretch' : 'flex-start',
-          gap: '16px',
-          flexWrap: 'wrap',
-          flexDirection: isCompact ? 'column' : 'row',
-        }}
-      >
-        <div>
-          <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Evidências da frente
-          </div>
-          <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
-            {title}
-          </div>
-          <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: '6px', maxWidth: '780px' }}>
-            {subtitle}
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
-          {badges.map((badge) => {
-            const palette = badgeColors[badge];
-            return (
-              <span
-                key={badge}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  padding: '6px 10px',
-                  borderRadius: '999px',
-                  border: `1px solid ${palette.border}`,
-                  background: palette.background,
-                  color: palette.color,
-                  fontSize: 'var(--text-chip)',
-                  fontWeight: 700,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {badge}
-              </span>
-            );
-          })}
-        </div>
-      </div>
+      <SlideEvidenceHeader
+        accentColor={CLUSTERS.ACQUISITION}
+        title={title}
+        subtitle={subtitle}
+        badge={
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '6px 10px',
+              borderRadius: '999px',
+              border: `1px solid ${sectionBadgePalette.border}`,
+              background: sectionBadgePalette.background,
+              color: sectionBadgePalette.color,
+              fontSize: 'var(--text-chip)',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            ACQUISITION
+          </span>
+        }
+      />
 
       <div
         style={{
@@ -900,7 +845,6 @@ const StatusPill = ({ status }: { status: Status }) => {
 type MediaCarouselViewportProps = {
   asset: MediaAsset | null;
   badgeLabel?: string;
-  currentIndex: number;
   total: number;
   onPrevious?: () => void;
   onNext?: () => void;
@@ -915,7 +859,6 @@ type MediaCarouselViewportProps = {
 const MediaCarouselViewport = ({
   asset,
   badgeLabel,
-  currentIndex,
   total,
   onPrevious,
   onNext,
@@ -998,6 +941,10 @@ const MediaCarouselViewport = ({
     }
   };
 
+  const useStoryCrop = variant === 'card' && frameLabel === 'Story 9:16';
+  const imageFit = useStoryCrop ? 'cover' : 'contain';
+  const imagePosition = useStoryCrop ? 'center top' : 'center';
+
   const pillStyle = {
     display: 'inline-flex',
     alignItems: 'center',
@@ -1059,8 +1006,8 @@ const MediaCarouselViewport = ({
                     inset: 0,
                     width: '100%',
                     height: '100%',
-                    objectFit: 'contain',
-                    objectPosition: 'center',
+                    objectFit: imageFit,
+                    objectPosition: imagePosition,
                     display: 'block',
                   }}
                 />

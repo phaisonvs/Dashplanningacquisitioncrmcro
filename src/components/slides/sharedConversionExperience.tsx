@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { CLUSTERS, WHITE } from '../theme';
 import { ImageViewer } from './ImageViewer';
-import { SlideSectionHeader, SLIDE_META_WEIGHT, useDeckViewport } from './sharedDeckTypography';
+import { SlideEvidenceHeader, useDeckViewport } from './sharedDeckTypography';
 
 export type ConversionExperienceItem = {
   title: string;
@@ -18,8 +18,13 @@ type ConversionExperienceSectionProps = {
   items: ConversionExperienceItem[];
   title?: string;
   subtitle?: string;
-  badges?: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM' | 'E-COMMERCE'>;
 };
+
+type EvidenceTag = ConversionExperienceItem['tags'][number];
+const EVIDENCE_TAG_ORDER: EvidenceTag[] = ['CRO', 'ACQUISITION', 'LEADS', 'CRM', 'E-COMMERCE'];
+
+const orderEvidenceTags = (tags: ConversionExperienceItem['tags']) =>
+  [...tags].sort((left, right) => EVIDENCE_TAG_ORDER.indexOf(left) - EVIDENCE_TAG_ORDER.indexOf(right));
 
 const tokenStyle = (tag: ConversionExperienceItem['tags'][number]) => {
   switch (tag) {
@@ -155,12 +160,12 @@ const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: isCompact ? '16px' : '20px', padding: isCompact ? '20px' : '26px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '14px', flexDirection: 'row', flexWrap: 'nowrap' }}>
-          <div style={{ display: 'flex', alignItems: isCompact ? 'flex-start' : 'center', gap: isCompact ? '8px' : '10px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
+          <div style={{ display: 'flex', minWidth: 0, flex: '1 1 auto', alignItems: 'flex-start', gap: isCompact ? '6px' : '8px', flexDirection: 'column' }}>
             <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 700, marginBottom: '0', lineHeight: 1.25 }}>
               {item.title}
             </div>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              {item.tags.map((tag) => (
+              {orderEvidenceTags(item.tags).map((tag) => (
                 <TokenTag key={`${item.title}-${tag}`} label={tag} compact={isCompact} />
               ))}
             </div>
@@ -189,8 +194,7 @@ const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
 export function ConversionExperienceSection({
   items,
   title = 'Conversão & Experiência',
-  subtitle,
-  badges = ['CRO'],
+  subtitle = 'Leitura visual das peças e frentes que alimentam conversão e experiência.',
 }: ConversionExperienceSectionProps) {
   const { isMobile, isCompact } = useDeckViewport();
 
@@ -209,36 +213,28 @@ export function ConversionExperienceSection({
         gap: isCompact ? '24px' : '32px',
       }}
     >
-      <SlideSectionHeader
+      <SlideEvidenceHeader
         accentColor={CLUSTERS.CRO}
         title={title}
         subtitle={subtitle}
-        right={
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
-            {badges.map((badge) => {
-              const palette = tokenStyle(badge as ConversionExperienceItem['tags'][number]);
-              return (
-                <span
-                  key={badge}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    padding: '5px 9px',
-                    borderRadius: '999px',
-                    border: `1px solid ${palette.border}`,
-                    background: palette.background,
-                    color: palette.color,
-                    fontSize: 'var(--text-chip)',
-                    fontWeight: SLIDE_META_WEIGHT,
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {badge}
-                </span>
-              );
-            })}
-          </div>
+        badge={
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '5px 9px',
+              borderRadius: '999px',
+              border: `1px solid ${tokenStyle('CRO').border}`,
+              background: tokenStyle('CRO').background,
+              color: tokenStyle('CRO').color,
+              fontSize: 'var(--text-chip)',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+            }}
+          >
+            CRO
+          </span>
         }
       />
 

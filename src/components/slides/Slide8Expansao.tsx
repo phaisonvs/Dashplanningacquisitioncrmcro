@@ -478,78 +478,9 @@ export function Slide8Expansao({ isActive }: Props) {
         ))}
       </section>
 
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        style={{
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          borderRadius: '20px',
-          padding: isCompact ? '18px' : '26px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: isCompact ? '18px' : '22px',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
-          <div>
-            <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-              Leitura executiva
-            </div>
-            <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '6px' }}>
-              A expansão é promissora quando o jogo é qualificação, não volume bruto.
-            </div>
-          </div>
-          <TokenTag label="EXPANSÃO" compact />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
-          {[
-            {
-              title: 'Onde está o ganho',
-              text: 'A frente já demonstra qualificação suficiente para escalar com critério, principalmente quando o tráfego é hiper segmentado.',
-              tone: 'positive' as const,
-            },
-            {
-              title: 'Onde está o risco',
-              text: 'Sem diversificação de canais, a operação fica sujeita a pouca profundidade de pipeline e baixo fechamento no curto prazo.',
-              tone: 'negative' as const,
-            },
-            {
-              title: 'O próximo passo',
-              text: 'Combinar LinkedIn, CRM e uma LP executiva para transformar intenção em oportunidade real com velocidade comercial.',
-              tone: 'positive' as const,
-            },
-          ].map((item) => (
-            <div
-              key={item.title}
-              style={{
-                background: item.tone === 'positive' ? 'rgba(74, 222, 128, 0.06)' : 'rgba(255, 82, 82, 0.08)',
-                border: `1px solid ${item.tone === 'positive' ? 'rgba(74, 222, 128, 0.18)' : 'rgba(255, 82, 82, 0.18)'}`,
-                borderRadius: '14px',
-                padding: isCompact ? '16px' : '20px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: isCompact ? '8px' : '10px',
-              }}
-            >
-            <div style={{ color: item.tone === 'positive' ? GREEN : RED, fontSize: 'var(--text-body)', fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              {item.title}
-            </div>
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
-              {item.text}
-              </div>
-            </div>
-          ))}
-        </div>
-      </motion.section>
-
       <ConversionExperienceSection items={conversionExperienceItems} />
 
-      <MediaAcquisitionSection
-        subtitle="Peças e anúncios que apoiam o funil de expansão, sem perder consistência com Leads e E-commerce."
-      />
+      <MediaAcquisitionSection />
     </div>
   );
 }
