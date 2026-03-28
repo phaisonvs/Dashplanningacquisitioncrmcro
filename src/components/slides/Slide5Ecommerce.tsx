@@ -1,9 +1,15 @@
-﻿import { motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { CLUSTERS, BG, CARD_BG, CARD_BORDER, WHITE, GREEN, RED } from '../theme';
 import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
 import { ConversionExperienceSection } from './sharedConversionExperience';
-import { SlideHeroHeader, useDeckViewport } from './sharedDeckTypography';
+import {
+  DeckPill,
+  SlideHeroHeader,
+  deckCardPresets,
+  deckPillPresets,
+  useDeckViewport,
+} from './sharedDeckTypography';
 import { ImageViewer } from './ImageViewer';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
 import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
@@ -182,64 +188,13 @@ const TokenTag = ({ label, compact = false }: { label: string; compact?: boolean
     border: 'rgba(255,255,255,0.08)',
   };
 
-  return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 'fit-content',
-        maxWidth: '100%',
-        alignSelf: 'flex-start',
-        flex: '0 0 auto',
-        padding: compact ? '4px 10px' : '5px 12px',
-        borderRadius: '6px',
-        border: `1px solid ${palette.border}`,
-        background: palette.background,
-        color: palette.color,
-        fontSize: 'var(--text-meta)',
-        fontWeight: 800,
-        letterSpacing: '0.09em',
-        lineHeight: 1,
-        textTransform: 'uppercase',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {label}
-    </span>
-  );
+  return <DeckPill label={label} compact={compact} preset={deckPillPresets.tokenMeta} palette={palette} />;
 };
 
 const StatusPill = ({ status }: { status: Status }) => {
   const palette = statusPalette[status];
 
-  return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '5px',
-        width: 'fit-content',
-        maxWidth: '100%',
-        alignSelf: 'flex-start',
-        flex: '0 0 auto',
-        padding: '4px 8px',
-        borderRadius: '999px',
-        border: `1px solid ${palette.border}`,
-        background: palette.background,
-        color: palette.color,
-        fontSize: 'var(--text-chip)',
-        fontWeight: 800,
-        letterSpacing: '0.08em',
-        lineHeight: 1,
-        textTransform: 'uppercase',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      <span style={{ width: '5px', height: '5px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
-      {palette.label}
-    </span>
-  );
+  return <DeckPill label={palette.label} palette={palette} compact preset={deckPillPresets.status} style={{ fontWeight: 800 }} />;
 };
 
 const StatusCounter = ({ status, count, isActive }: { status: Status; count: number; isActive: boolean }) => {
@@ -309,15 +264,7 @@ const GoogleShoppingBadge = () => (
 );
 
 const ActionCardView = ({ actionItem, variant = 'week', compact = false }: { actionItem: ActionCard; variant?: 'previous' | 'week'; compact?: boolean }) => (
-  <div
-    style={{
-      background: variant === 'previous' ? 'rgba(255,255,255,0.012)' : CARD_BG,
-      border: `1px solid ${variant === 'previous' ? 'rgba(255,255,255,0.04)' : CARD_BORDER}`,
-      borderRadius: '14px',
-      padding: compact ? '16px' : '18px 20px',
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)',
-    }}
-  >
+  <div style={deckCardPresets.action(variant, compact, 'solid')}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: compact ? '10px' : '12px', flexDirection: 'row', flexWrap: 'nowrap' }}>
       <TokenTag label={actionItem.cluster} compact />
       <StatusPill status={actionItem.status} />
@@ -333,16 +280,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
-    style={{
-      background: 'rgba(255,255,255,0.018)',
-      border: '1px solid rgba(255,255,255,0.05)',
-      borderRadius: '16px',
-      padding: compact ? '22px' : '30px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: compact ? '18px' : '24px',
-      minHeight: '100%',
-    }}
+    style={deckCardPresets.metric(compact, "default", "subtle")}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
       <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
@@ -476,15 +414,7 @@ const MediaEfficiencyCardView = ({ isActive, compact = false }: { isActive: bool
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
-    style={{
-      background: 'rgba(255,255,255,0.018)',
-      border: '1px solid rgba(255,255,255,0.05)',
-      borderRadius: '16px',
-      padding: compact ? '22px' : '30px',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: compact ? '18px' : '24px',
-    }}
+    style={{ ...deckCardPresets.metric(compact, "default", "subtle"), minHeight: undefined }}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: compact ? 'stretch' : 'center', flexWrap: 'wrap', flexDirection: compact ? 'column' : 'row' }}>
       <div style={{ color: 'rgba(255,255,255,0.46)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
@@ -794,12 +724,7 @@ const EvidenceCardView = ({ item, compact = false }: { item: EvidenceItem; compa
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
-    style={{
-      background: 'rgba(255,255,255,0.022)',
-      border: '1px solid rgba(255,255,255,0.05)',
-      borderRadius: '14px',
-      overflow: 'hidden',
-    }}
+    style={deckCardPresets.surface(compact)}
   >
     <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? '16px' : '20px', padding: compact ? '20px' : '26px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '14px', flexDirection: 'row', flexWrap: 'nowrap' }}>

@@ -1,5 +1,6 @@
-import { useEffect, useState, type ReactNode } from 'react';
-import { WHITE } from '../theme';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { CARD_BG, CARD_BORDER, CLUSTERS, WHITE } from '../theme';
 
 export const SLIDE_TITLE_WEIGHT = 700;
 export const SLIDE_SECTION_TITLE_WEIGHT = 700;
@@ -25,6 +26,418 @@ export function useDeckViewport() {
 
   return { width, isMobile, isTablet, isCompact };
 }
+
+type ResponsiveValue = string | { compact: string; regular: string };
+
+const resolveResponsiveValue = (value: ResponsiveValue, isCompact: boolean) =>
+  typeof value === 'string' ? value : isCompact ? value.compact : value.regular;
+
+export type DeckStatus = 'feito' | 'pendente' | 'bloqueado';
+
+export type DeckPalette = {
+  color: string;
+  background: string;
+  border: string;
+};
+
+const FALLBACK_PILL_PALETTE: DeckPalette = {
+  color: 'rgba(255,255,255,0.72)',
+  background: 'rgba(255,255,255,0.03)',
+  border: 'rgba(255,255,255,0.08)',
+};
+
+export const deckTagPalettes: Record<string, DeckPalette> = {
+  LEADS: {
+    color: '#7DD3FC',
+    background: 'rgba(125, 211, 252, 0.08)',
+    border: 'rgba(125, 211, 252, 0.22)',
+  },
+  ACQUISITION: {
+    color: '#A78BFA',
+    background: 'rgba(167, 139, 250, 0.08)',
+    border: 'rgba(167, 139, 250, 0.22)',
+  },
+  CRO: {
+    color: '#60A5FA',
+    background: 'rgba(96, 165, 250, 0.08)',
+    border: 'rgba(96, 165, 250, 0.22)',
+  },
+  CRM: {
+    color: '#2DD4BF',
+    background: 'rgba(45, 212, 191, 0.08)',
+    border: 'rgba(45, 212, 191, 0.22)',
+  },
+  'E-COMMERCE': {
+    color: CLUSTERS.ECOMMERCE,
+    background: 'rgba(252, 165, 165, 0.08)',
+    border: 'rgba(252, 165, 165, 0.22)',
+  },
+  EXPANSAO: {
+    color: CLUSTERS.EXPANSAO,
+    background: 'rgba(253, 186, 116, 0.08)',
+    border: 'rgba(253, 186, 116, 0.22)',
+  },
+  ESTRATEGIA: {
+    color: CLUSTERS.ESTRATEGIA,
+    background: 'rgba(254, 240, 138, 0.08)',
+    border: 'rgba(254, 240, 138, 0.22)',
+  },
+};
+
+export const getDeckTagPalette = (label: string): DeckPalette =>
+  deckTagPalettes[label] ?? FALLBACK_PILL_PALETTE;
+
+export const deckStatusPalettes: Record<
+  DeckStatus,
+  { label: string; color: string; background: string; border: string }
+> = {
+  feito: {
+    label: 'Feito',
+    color: '#4ADE80',
+    background: 'rgba(74, 222, 128, 0.08)',
+    border: 'rgba(74, 222, 128, 0.18)',
+  },
+  pendente: {
+    label: 'Pendente',
+    color: '#FBBF24',
+    background: 'rgba(251, 191, 36, 0.08)',
+    border: 'rgba(251, 191, 36, 0.18)',
+  },
+  bloqueado: {
+    label: 'Bloqueado',
+    color: '#F87171',
+    background: 'rgba(248, 113, 113, 0.08)',
+    border: 'rgba(248, 113, 113, 0.18)',
+  },
+};
+
+export type DeckPillPreset = {
+  padding: ResponsiveValue;
+  borderRadius: ResponsiveValue;
+  letterSpacing: ResponsiveValue;
+  fontSize: string;
+  fontWeight: number;
+  includeDot?: boolean;
+  dotSize?: string;
+  gap?: ResponsiveValue;
+  uppercase?: boolean;
+};
+
+export const deckPillPresets = {
+  tokenMeta: {
+    padding: { compact: '4px 10px', regular: '5px 12px' },
+    borderRadius: '6px',
+    letterSpacing: '0.09em',
+    fontSize: 'var(--text-meta)',
+    fontWeight: 800,
+  },
+  tokenChip: {
+    padding: { compact: '6px 10px', regular: '8px 13px' },
+    borderRadius: '999px',
+    letterSpacing: '0.09em',
+    fontSize: 'var(--text-chip)',
+    fontWeight: 800,
+  },
+  mediaToken: {
+    padding: { compact: '4px 8px', regular: '5px 10px' },
+    borderRadius: '999px',
+    letterSpacing: { compact: '0.08em', regular: '0.09em' },
+    fontSize: 'var(--text-chip)',
+    fontWeight: 700,
+  },
+  conversionToken: {
+    padding: { compact: '4px 8px', regular: '4px 9px' },
+    borderRadius: '999px',
+    letterSpacing: { compact: '0.07em', regular: '0.08em' },
+    fontSize: 'var(--text-chip)',
+    fontWeight: 700,
+  },
+  status: {
+    padding: '4px 8px',
+    borderRadius: '999px',
+    letterSpacing: '0.08em',
+    fontSize: 'var(--text-chip)',
+    fontWeight: 700,
+    includeDot: true,
+    gap: '5px',
+  },
+  statusTight: {
+    padding: '3px 8px',
+    borderRadius: '999px',
+    letterSpacing: '0.07em',
+    fontSize: 'var(--text-chip)',
+    fontWeight: 700,
+    includeDot: true,
+    gap: '5px',
+  },
+} as const satisfies Record<string, DeckPillPreset>;
+
+type DeckPillProps = {
+  label: ReactNode;
+  compact?: boolean;
+  preset?: DeckPillPreset;
+  palette?: DeckPalette;
+  style?: CSSProperties;
+};
+
+export function DeckPill({
+  label,
+  compact = false,
+  preset = deckPillPresets.tokenMeta,
+  palette,
+  style,
+}: DeckPillProps) {
+  const resolvedPalette =
+    palette ?? (typeof label === 'string' ? getDeckTagPalette(label) : FALLBACK_PILL_PALETTE);
+
+  return (
+    <span
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 'fit-content',
+        maxWidth: '100%',
+        alignSelf: 'flex-start',
+        flex: '0 0 auto',
+        gap: preset.includeDot ? resolveResponsiveValue(preset.gap ?? '5px', compact) : 0,
+        padding: resolveResponsiveValue(preset.padding, compact),
+        borderRadius: resolveResponsiveValue(preset.borderRadius, compact),
+        border: `1px solid ${resolvedPalette.border}`,
+        background: resolvedPalette.background,
+        color: resolvedPalette.color,
+        fontSize: preset.fontSize,
+        fontWeight: preset.fontWeight,
+        letterSpacing: resolveResponsiveValue(preset.letterSpacing, compact),
+        lineHeight: 1,
+        textTransform: preset.uppercase === false ? 'none' : 'uppercase',
+        whiteSpace: 'nowrap',
+        ...style,
+      }}
+    >
+      {preset.includeDot ? (
+        <span
+          style={{
+            width: preset.dotSize ?? '5px',
+            height: preset.dotSize ?? '5px',
+            borderRadius: '999px',
+            background: resolvedPalette.color,
+            flexShrink: 0,
+          }}
+        />
+      ) : null}
+      {label}
+    </span>
+  );
+}
+
+export function DeckStatusPill({
+  status,
+  compact = false,
+  preset = deckPillPresets.status,
+  style,
+}: {
+  status: DeckStatus;
+  compact?: boolean;
+  preset?: DeckPillPreset;
+  style?: CSSProperties;
+}) {
+  const palette = deckStatusPalettes[status];
+
+  return <DeckPill label={palette.label} palette={palette} compact={compact} preset={preset} style={style} />;
+}
+
+type DeckCardShellPreset = {
+  background: string;
+  border: string;
+  borderRadius: ResponsiveValue;
+  padding: ResponsiveValue;
+  gap: ResponsiveValue;
+  display: CSSProperties['display'];
+  flexDirection: CSSProperties['flexDirection'];
+  boxShadow?: string;
+  minHeight?: string;
+  overflow?: CSSProperties['overflow'];
+  alignItems?: CSSProperties['alignItems'];
+  justifyContent?: CSSProperties['justifyContent'];
+};
+
+const createDeckCardStyle = (
+  compact: boolean,
+  preset: DeckCardShellPreset,
+): CSSProperties => ({
+  background: preset.background,
+  border: preset.border,
+  borderRadius: resolveResponsiveValue(preset.borderRadius, compact),
+  padding: resolveResponsiveValue(preset.padding, compact),
+  gap: resolveResponsiveValue(preset.gap, compact),
+  display: preset.display,
+  flexDirection: preset.flexDirection,
+  boxShadow: preset.boxShadow,
+  minHeight: preset.minHeight,
+  overflow: preset.overflow,
+  alignItems: preset.alignItems,
+  justifyContent: preset.justifyContent,
+});
+
+export const deckCardPresets = {
+  section: (compact: boolean, variant: 'default' | 'wide' = 'default') =>
+    createDeckCardStyle(compact, {
+      background: 'rgba(255,255,255,0.02)',
+      border: '1px solid rgba(255,255,255,0.05)',
+      borderRadius: variant === 'wide' ? '20px' : '18px',
+      padding: variant === 'wide' ? { compact: '20px', regular: '26px' } : { compact: '18px', regular: '22px' },
+      gap: variant === 'wide' ? { compact: '24px', regular: '32px' } : { compact: '24px', regular: '32px' },
+      display: 'flex',
+      flexDirection: 'column',
+    }),
+  surface: (compact: boolean, tone: 'default' | 'subtle' = 'default') =>
+    createDeckCardStyle(compact, {
+      background: tone === 'subtle' ? 'rgba(255,255,255,0.018)' : 'rgba(255,255,255,0.022)',
+      border: '1px solid rgba(255,255,255,0.05)',
+      borderRadius: '14px',
+      padding: compact ? '20px' : '26px',
+      gap: compact ? '16px' : '20px',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+    }),
+  metric: (compact: boolean, size: 'default' | 'tight' = 'default', tone: 'default' | 'subtle' = 'default') =>
+    createDeckCardStyle(compact, {
+      background: tone === 'subtle' ? 'rgba(255,255,255,0.018)' : 'rgba(255,255,255,0.02)',
+      border: '1px solid rgba(255,255,255,0.05)',
+      borderRadius: '16px',
+      padding: size === 'tight' ? (compact ? '16px' : '18px') : compact ? '22px' : '30px',
+      gap: size === 'tight' ? (compact ? '14px' : '16px') : compact ? '18px' : '24px',
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100%',
+    }),
+  action: (
+    variant: 'previous' | 'week',
+    compact: boolean,
+    surface: 'glass' | 'solid' = 'glass',
+  ) =>
+    createDeckCardStyle(compact, {
+      background:
+        surface === 'solid'
+          ? variant === 'previous'
+            ? 'rgba(255,255,255,0.012)'
+            : CARD_BG
+          : variant === 'previous'
+            ? 'rgba(255,255,255,0.018)'
+            : 'rgba(20,20,20,0.88)',
+      border:
+        surface === 'solid'
+          ? `1px solid ${variant === 'previous' ? 'rgba(255,255,255,0.04)' : CARD_BORDER}`
+          : `1px solid ${variant === 'previous' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.08)'}`,
+      borderRadius: '14px',
+      padding: compact ? '16px' : '18px',
+      gap: '0px',
+      display: 'block',
+      flexDirection: 'column',
+      boxShadow:
+        surface === 'solid'
+          ? 'inset 0 1px 0 rgba(255,255,255,0.02)'
+          : variant === 'previous'
+            ? 'inset 0 1px 0 rgba(255,255,255,0.02)'
+            : 'inset 0 1px 0 rgba(255,255,255,0.03)',
+    }),
+  mediaCard: (compact: boolean) =>
+    createDeckCardStyle(compact, {
+      background:
+        'linear-gradient(180deg, rgba(255,255,255,0.032) 0%, rgba(255,255,255,0.018) 100%)',
+      border: '1px solid rgba(255,255,255,0.07)',
+      borderRadius: compact ? '18px' : '20px',
+      padding: '0px',
+      gap: '2px',
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100%',
+      overflow: 'hidden',
+      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.02)',
+    }),
+  carouselNavRail: (compact: boolean) =>
+    ({
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: compact ? '12px' : '14px',
+      padding: compact ? '4px 16px 10px' : '6px 18px 6px',
+    }) as CSSProperties,
+  carouselNavButton: (compact: boolean) =>
+    ({
+      width: compact ? '34px' : '38px',
+      height: compact ? '34px' : '38px',
+      borderRadius: '999px',
+      border: '1px solid rgba(255,255,255,0.14)',
+      background: 'rgba(0,0,0,0.5)',
+      color: WHITE,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      backdropFilter: 'blur(10px)',
+      boxShadow: '0 12px 28px rgba(0,0,0,0.28)',
+    }) as CSSProperties,
+  carouselExpandButton: (compact: boolean) =>
+    ({
+      width: compact ? '34px' : '36px',
+      height: compact ? '34px' : '36px',
+      borderRadius: '12px',
+      border: '1px solid rgba(255,255,255,0.12)',
+      background: 'rgba(0,0,0,0.62)',
+      color: WHITE,
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      backdropFilter: 'blur(10px)',
+      boxShadow: '0 10px 24px rgba(0,0,0,0.24)',
+    }) as CSSProperties,
+} as const;
+
+export const getMediaCarouselNavButtonStyle = (isCompact: boolean) =>
+  deckCardPresets.carouselNavButton(isCompact);
+
+export const MediaCarouselNavControls = ({
+  isCompact,
+  onPrevious,
+  onNext,
+  ariaLabelPrefix = 'Imagem',
+}: {
+  isCompact: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
+  ariaLabelPrefix?: string;
+}) => (
+  <div style={deckCardPresets.carouselNavRail(isCompact)}>
+    <button
+      type="button"
+      aria-label={`${ariaLabelPrefix} anterior`}
+      onClick={(event) => {
+        event.stopPropagation();
+        onPrevious();
+      }}
+      onPointerDown={(event) => event.stopPropagation()}
+      style={deckCardPresets.carouselNavButton(isCompact)}
+    >
+      <ChevronLeft size={16} />
+    </button>
+    <button
+      type="button"
+      aria-label={`${ariaLabelPrefix} prÃ³xima`}
+      onClick={(event) => {
+        event.stopPropagation();
+        onNext();
+      }}
+      onPointerDown={(event) => event.stopPropagation()}
+      style={deckCardPresets.carouselNavButton(isCompact)}
+    >
+      <ChevronRight size={16} />
+    </button>
+  </div>
+);
 
 type SlideHeroHeaderProps = {
   accentColor: string;
