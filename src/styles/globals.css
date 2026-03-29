@@ -2,21 +2,15 @@
 
 :root {
   --font-family: 'Satoshi', sans-serif;
-  --font-size: 12px;
-  --font-9: 7px;
-  --font-10: 8px;
-  --font-11: 9px;
-  --font-12: 10px;
-  --font-14: 12px;
-  --font-16: 14px;
-  --font-20: 18px;
-  --text-chip: var(--font-9);
-  --text-meta: var(--font-10);
-  --text-label: var(--font-11);
-  --text-body: var(--font-12);
-  --text-body-lg: var(--font-14);
-  --text-section: clamp(var(--font-16), 1.8vw, var(--font-20));
-  --text-hero: clamp(20px, 3vw, 32px);
+  --tracking-copy: 0.012em;
+  --tracking-label: 0.09em;
+  --tracking-title: -0.018em;
+  --tracking-display: -0.024em;
+  --rotulo: clamp(7px, 0.875vw, 8px);
+  --paragrafo: clamp(10px, 10px, 10px);
+  --paragrafo-grande: clamp(12px, 12px, 12px);
+  --titulo-secao: clamp(14px, 1.8vw, 18px);
+  --titulo-pagina: clamp(20px, 3vw, 32px);
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
   --card: #ffffff;
@@ -142,8 +136,9 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-family);
-    font-size: var(--font-14);
+    font-size: var(--paragrafo-grande);
     line-height: 1.45;
+    letter-spacing: var(--tracking-copy);
   }
 }
 
@@ -153,59 +148,65 @@
 @layer base {
   :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
     h1 {
-      font-size: var(--text-hero);
+      font-size: var(--titulo-pagina);
       font-weight: var(--font-weight-medium);
       line-height: 1.15;
-      letter-spacing: -0.03em;
+      letter-spacing: var(--tracking-display);
     }
 
     h2 {
-      font-size: var(--text-section);
+      font-size: var(--titulo-secao);
       font-weight: var(--font-weight-medium);
       line-height: 1.2;
-      letter-spacing: -0.025em;
+      letter-spacing: var(--tracking-title);
     }
 
     h3 {
-      font-size: var(--text-body-lg);
+      font-size: var(--paragrafo-grande);
       font-weight: var(--font-weight-medium);
       line-height: 1.25;
+      letter-spacing: var(--tracking-copy);
     }
 
     h4 {
-      font-size: var(--text-body);
+      font-size: var(--paragrafo);
       font-weight: var(--font-weight-medium);
       line-height: 1.3;
+      letter-spacing: var(--tracking-copy);
     }
 
     p {
-      font-size: var(--text-body);
+      font-size: var(--paragrafo);
       font-weight: var(--font-weight-normal);
       line-height: 1.45;
+      letter-spacing: var(--tracking-copy);
     }
 
     label {
-      font-size: var(--text-body);
+      font-size: var(--rotulo);
       font-weight: var(--font-weight-medium);
       line-height: 1.3;
+      letter-spacing: var(--tracking-label);
     }
 
     button {
-      font-size: var(--text-body);
+      font-size: var(--paragrafo);
       font-weight: var(--font-weight-medium);
       line-height: 1.3;
+      letter-spacing: var(--tracking-copy);
     }
 
     input {
-      font-size: var(--text-body);
+      font-size: var(--paragrafo);
       font-weight: var(--font-weight-normal);
       line-height: 1.3;
+      letter-spacing: var(--tracking-copy);
     }
   }
 }
 
 html {
-  font-size: var(--font-size);
+  font-size: 12px;
   scrollbar-width: thin;
   scrollbar-color: rgba(92, 92, 92, 0.92) rgba(16, 16, 16, 0.22);
 }

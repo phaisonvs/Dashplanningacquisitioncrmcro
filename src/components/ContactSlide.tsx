@@ -3,20 +3,20 @@ import { ArrowRight, Mail, Globe, Phone, Twitter, Linkedin } from 'lucide-react'
 
 export function ContactSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-green-950/40 to-neutral-900 overflow-hidden">
+    <div data-ui="legacy-contato-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-green-950/40 to-neutral-900 overflow-hidden">
       {/* Background gradient effects */}
       <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-green-500/20 to-transparent blur-3xl" />
       <div className="absolute top-1/3 right-0 w-1/3 h-1/3 bg-green-400/10 blur-3xl" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-contato-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Header */}
-        <div className="text-white/40 text-sm tracking-wide">
+        <div data-ui="legacy-contato-slide-cabecalho" className="text-white/40 text-sm tracking-wide">
           Pitch Deck
         </div>
 
         {/* Main Content */}
-        <div className="space-y-12 max-w-3xl">
+        <div data-ui="legacy-contato-slide-principal" className="space-y-12 max-w-3xl">
           <div className="space-y-4">
             <h2 className="text-6xl tracking-tight text-white">
               BANKING MADE SIMPLE,<br />
@@ -28,7 +28,7 @@ export function ContactSlide() {
           </div>
 
           {/* Value Proposition */}
-          <div className="flex items-start gap-3 text-white/80 group cursor-pointer max-w-xl">
+          <div data-ui="legacy-contato-slide-proposta" className="flex items-start gap-3 text-white/80 group cursor-pointer max-w-xl">
             <ArrowRight className="w-5 h-5 mt-1 flex-shrink-0 group-hover:translate-x-1 transition-transform" />
             <div>
               <p className="text-white/70 text-sm">Our business model combines</p>
@@ -39,7 +39,7 @@ export function ContactSlide() {
           </div>
 
           {/* Contact Information */}
-          <div className="grid grid-cols-2 gap-8 max-w-2xl">
+          <div data-ui="legacy-contato-slide-contatos" className="grid grid-cols-2 gap-8 max-w-2xl">
             {/* Address */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export function ContactSlide() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 text-white/70">
+        <div data-ui="legacy-contato-slide-rodape" className="flex items-center gap-2 text-white/70">
           <div className="w-1 h-1 bg-green-400 rounded-full" />
           <span className="text-sm tracking-wide">Pocketswap</span>
         </div>

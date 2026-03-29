@@ -3,15 +3,15 @@ import { TrendingUp, Users, DollarSign, Globe } from 'lucide-react';
 
 export function MetricsSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-green-950/30 overflow-hidden">
+    <div data-ui="legacy-metricas-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-green-950/30 overflow-hidden">
       {/* Background gradient effects */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-green-500/10 to-transparent" />
       <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-tr from-green-400/10 to-transparent blur-3xl" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-metricas-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Header */}
-        <div className="space-y-4">
+        <div data-ui="legacy-metricas-slide-cabecalho" className="space-y-4">
           <h2 className="text-5xl tracking-tight text-white max-w-2xl">
             BANKING MADE SIMPLE,<br />
             IN DEMAND
@@ -22,7 +22,7 @@ export function MetricsSlide() {
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-2 gap-8 max-w-4xl">
+        <div data-ui="legacy-metricas-slide-metricas" className="grid grid-cols-2 gap-8 max-w-4xl">
           {/* Metric 1 - Users */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
@@ -97,7 +97,7 @@ export function MetricsSlide() {
         </div>
 
         {/* Bottom Section */}
-        <div className="flex items-center justify-between">
+        <div data-ui="legacy-metricas-slide-rodape" className="flex items-center justify-between">
           <p className="text-white/60 text-sm max-w-md">
             Trusted by millions of users globally, powering the future of modern banking.
           </p>

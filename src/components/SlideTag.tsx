@@ -8,13 +8,14 @@ interface Props {
 export function SlideTag({ label, highlight }: Props) {
   return (
     <span
+      data-ui="slide-tag"
       style={{
         border: `1px solid ${highlight ? 'rgba(255, 239, 0, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
         background: highlight ? 'rgba(255, 239, 0, 0.05)' : 'transparent',
         color: highlight ? YELLOW : 'rgba(255, 255, 255, 0.4)',
         padding: '4px 12px',
         borderRadius: '999px',
-        fontSize: 'var(--text-chip)',
+        fontSize: 'var(--rotulo)',
         fontWeight: 700,
         letterSpacing: '0.1em',
         textTransform: 'uppercase' as const,

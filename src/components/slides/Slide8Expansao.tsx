@@ -144,8 +144,8 @@ const conversionExperienceItems = [
     tags: ['ACQUISITION', 'LEADS', 'CRM'] as const,
     status: 'feito' as const,
     objective: 'A frente combina sinal de escassez territorial com qualificação comercial para gerar pipeline mais profundo e previsível.',
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
+    desktopImageLink: lpSemanaConsumidorImg,
+    mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
     imageHeight: 240,
   },
@@ -154,8 +154,8 @@ const conversionExperienceItems = [
     tags: ['ACQUISITION', 'CRO'] as const,
     status: 'pendente' as const,
     objective: 'A ativação de B2B precisa aumentar a densidade do topo com segmentação mais precisa e mensagem executiva.',
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
+    desktopImageLink: heroDesktopImg,
+    mobileImageLink: heroMobileImg,
     imageLabel: 'Creative',
     imageHeight: 240,
   },
@@ -164,8 +164,8 @@ const conversionExperienceItems = [
     tags: ['CRM', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'A régua comercial em janelas curtas mantém o lead aquecido e reduz perda entre intenção e oportunidade.',
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
+    desktopImageLink: heroDesktopImg,
+    mobileImageLink: heroMobileImg,
     imageLabel: 'Journey',
     imageHeight: 240,
   },
@@ -174,8 +174,8 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS', 'ACQUISITION'] as const,
     status: 'pendente' as const,
     objective: 'A LP precisa concentrar a proposta de valor da expansão e acelerar leitura de qualificação para a próxima conversa.',
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
+    desktopImageLink: lpSemanaConsumidorImg,
+    mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
     imageHeight: 240,
   },
@@ -184,6 +184,8 @@ const conversionExperienceItems = [
   tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM'>;
   status: 'feito' | 'pendente' | 'bloqueado';
   objective: string;
+  desktopImageLink?: string;
+  mobileImageLink?: string;
   desktopImage?: string;
   mobileImage?: string;
   imageLabel: string;
@@ -239,6 +241,7 @@ const StatusCounter = ({
   return (
     <div
       /* Edita Contador de Status */
+      data-ui="contador-status-expansao"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -249,11 +252,11 @@ const StatusCounter = ({
         border: '1px solid rgba(255,255,255,0.08)',
       }}
     >
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: 'var(--text-body)', fontWeight: 700, lineHeight: 1 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: 'var(--paragrafo)', fontWeight: 700, lineHeight: 1 }}>
         <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
         {palette.label}
       </span>
-      <span style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 800, lineHeight: 1 }}>
+      <span style={{ color: WHITE, fontSize: 'var(--paragrafo-grande)', fontWeight: 800, lineHeight: 1 }}>
         <AnimatedNumber target={count} isActive={isActive} duration={900} />
       </span>
     </div>
@@ -261,12 +264,12 @@ const StatusCounter = ({
 };
 
 const ActionCardView = ({ actionItem, variant = 'week', compact = false }: { actionItem: ActionCard; variant?: 'previous' | 'week'; compact?: boolean }) => (
-  <div style={deckCardPresets.action(variant, compact)}>
+  <div data-ui="card-acao-expansao" style={deckCardPresets.action(variant, compact)}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: compact ? '10px' : '12px', flexDirection: 'row', flexWrap: 'nowrap' }}>
       <TokenTag label={actionItem.cluster} compact />
       <StatusPill status={actionItem.status} />
     </div>
-    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
+    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: 'var(--paragrafo)', lineHeight: 1.55, fontWeight: 500 }}>
       {actionItem.text}
     </div>
   </div>
@@ -274,19 +277,20 @@ const ActionCardView = ({ actionItem, variant = 'week', compact = false }: { act
 
 const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard; isActive: boolean; compact?: boolean }) => (
   <motion.article
+    data-ui="card-metrica-expansao"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
     style={deckCardPresets.metric(compact)}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--paragrafo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         {item.title}
       </div>
       <TokenTag label={item.dateTag} compact />
     </div>
 
-    <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
+    <div style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
       <AnimatedNumber
         target={item.value.target}
         prefix={item.value.prefix}
@@ -306,6 +310,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
           <div
             key={`${row.text}-${index}`}
             /* Edita Linha de Comparacao */
+            data-ui="linha-comparacao-expansao"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -319,7 +324,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
               flexWrap: 'nowrap',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--paragrafo)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
@@ -329,7 +334,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
                   paddingLeft: compact ? 0 : '12px',
                   borderLeft: compact ? 'none' : `2px solid ${activeColor}`,
                   color: activeColor,
-                  fontSize: 'var(--text-body)',
+                  fontSize: 'var(--paragrafo)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
                   flex: '0 0 auto',
@@ -344,14 +349,14 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.bullets.map((row, index) => (
           <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.45 }}>
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--paragrafo)', lineHeight: 1.45 }}>
               {row.text}
             </div>
           </div>
@@ -360,7 +365,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         Ações da semana anterior
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -371,7 +376,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         Ação na semana
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -388,14 +393,14 @@ export function Slide8Expansao({ isActive }: Props) {
   const { isMobile, isCompact } = useDeckViewport();
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, padding: isMobile ? '108px 16px 48px' : isCompact ? '124px 24px 64px' : '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: isCompact ? '40px' : '60px' }}>
-      <section>
+    <div data-ui="expansao-root" style={{ minHeight: '100vh', background: BG, padding: isMobile ? '108px 16px 48px' : isCompact ? '124px 24px 64px' : '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: isCompact ? '40px' : '60px' }}>
+      <section data-ui="expansao-hero">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <SlideHeroHeader
             accentColor={clusterColor}
             title="Visão de Expansão MTD"
             right={
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                 <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} compact={isCompact} />
                 <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} compact={isCompact} />
                 <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} compact={isCompact} />
@@ -412,15 +417,19 @@ export function Slide8Expansao({ isActive }: Props) {
         </motion.div>
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
+      <section data-ui="expansao-metricas" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
         {expansionMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
-      <ConversionExperienceSection items={conversionExperienceItems} />
+      <div data-ui="expansao-secao-evidencias">
+        <ConversionExperienceSection items={conversionExperienceItems} />
+      </div>
 
-      <MediaAcquisitionSection />
+      <div data-ui="expansao-secao-midias">
+        <MediaAcquisitionSection />
+      </div>
     </div>
   );
 }

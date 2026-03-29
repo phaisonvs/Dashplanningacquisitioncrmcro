@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function HeroSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-green-950 overflow-hidden">
+    <div data-ui="legacy-hero-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-green-950 overflow-hidden">
       {/* Background Gradient Orbs */}
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-green-500/30 rounded-full blur-3xl" />
       <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-green-400/20 rounded-full blur-3xl" />
@@ -14,9 +14,9 @@ export function HeroSlide() {
       <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-gradient-to-br from-green-200/30 to-white/20 rounded-full blur-sm transform -rotate-12" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-hero-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Header */}
-        <div className="flex items-center gap-2 text-white/70">
+        <div data-ui="legacy-hero-slide-cabecalho" className="flex items-center gap-2 text-white/70">
           <div className="w-1 h-1 bg-green-400 rounded-full" />
           <span className="text-sm tracking-wide">Pocketswap</span>
         </div>
@@ -43,7 +43,7 @@ export function HeroSlide() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 text-white/70">
+        <div data-ui="legacy-hero-slide-rodape" className="flex items-center gap-2 text-white/70">
           <div className="w-1 h-1 bg-green-400 rounded-full" />
           <span className="text-sm tracking-wide">Pocketswap</span>
         </div>

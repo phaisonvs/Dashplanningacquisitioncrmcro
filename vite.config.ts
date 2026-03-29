@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
-export default defineConfig({
-  base: '/Dashplanningacquisitioncrmcro/',
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/Dashplanningacquisitioncrmcro/' : '/',
   plugins: [react(), tailwindcss()],
   resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
@@ -67,4 +67,4 @@ export default defineConfig({
     port: 3000,
       open: true,
     },
-  });
+  }));

@@ -1,4 +1,4 @@
-﻿import { motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, CLUSTERS } from '../theme';
 import { SlideHeroHeader, useDeckViewport } from './sharedDeckTypography';
@@ -36,6 +36,7 @@ const TokenTag = ({ label, compact = false }: { label: HeroToken; compact?: bool
 
   return (
     <span
+      data-ui="fechamento-rotulo"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -49,9 +50,9 @@ const TokenTag = ({ label, compact = false }: { label: HeroToken; compact?: bool
         border: `1px solid ${palette.border}`,
         background: palette.background,
         color: palette.color,
-        fontSize: 'var(--text-chip)',
+        fontSize: 'var(--rotulo)',
         fontWeight: 700,
-        letterSpacing: compact ? '0.08em' : '0.09em',
+        letterSpacing: 'var(--tracking-label)',
         lineHeight: 1,
         textTransform: 'uppercase',
         whiteSpace: 'nowrap',
@@ -108,6 +109,7 @@ const impacts: ImpactItem[] = [
 const ImpactRow = ({ item, isActive, index, compact = false }: { item: ImpactItem; isActive: boolean; index: number; compact?: boolean }) => (
   <div
     /* Edita Linha de Impacto */
+    data-ui="fechamento-linha-impacto"
     style={{
       display: 'flex',
       alignItems: compact ? 'stretch' : 'flex-start',
@@ -119,10 +121,10 @@ const ImpactRow = ({ item, isActive, index, compact = false }: { item: ImpactIte
     }}
   >
     <div>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--rotulo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         {item.sub}
       </div>
-      <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.3, letterSpacing: '-0.02em', marginTop: '8px' }}>
+      <div style={{ color: WHITE, fontSize: 'var(--titulo-secao)', fontWeight: 700, lineHeight: 1.3, letterSpacing: 'var(--tracking-title)', marginTop: '8px' }}>
         {item.label}
       </div>
     </div>
@@ -130,10 +132,10 @@ const ImpactRow = ({ item, isActive, index, compact = false }: { item: ImpactIte
     <div
       style={{
         color: index === 0 ? CLUSTERS.LEADS : index === 1 ? CLUSTERS.ECOMMERCE : CLUSTERS.EXPANSAO,
-        fontSize: compact ? 'var(--text-section)' : 'var(--text-hero)',
+        fontSize: compact ? 'var(--titulo-secao)' : 'var(--titulo-pagina)',
         fontWeight: 800,
         lineHeight: 1,
-        letterSpacing: '-0.03em',
+        letterSpacing: 'var(--tracking-display)',
       }}
     >
       +<AnimatedNumber target={item.value} suffix={item.suffix} isActive={isActive} duration={3000} />
@@ -146,8 +148,8 @@ export function Slide9Top8({ isActive }: Props) {
   const { isMobile, isCompact } = useDeckViewport();
 
   return (
-    <div style={{ minHeight: '100vh', background: BG, padding: isMobile ? '108px 16px 48px' : isCompact ? '124px 24px 64px' : '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: isCompact ? '40px' : '60px' }}>
-      <section>
+    <div data-ui="fechamento-root" style={{ minHeight: '100vh', background: BG, padding: isMobile ? '108px 16px 48px' : isCompact ? '124px 24px 64px' : '140px clamp(40px, 8vw, 100px) 80px', display: 'flex', flexDirection: 'column', gap: isCompact ? '40px' : '60px' }}>
+      <section data-ui="fechamento-hero">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <SlideHeroHeader accentColor={clusterColor} title="Fechamento Semanal">
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -160,8 +162,9 @@ export function Slide9Top8({ isActive }: Props) {
         </motion.div>
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
+      <section data-ui="fechamento-impacto" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(3, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
         <motion.article
+          data-ui="fechamento-card-impacto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
@@ -178,10 +181,10 @@ export function Slide9Top8({ isActive }: Props) {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
             <div>
-              <div style={{ color: clusterColor, fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              <div style={{ color: clusterColor, fontSize: 'var(--paragrafo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
                 Impacto estimado
               </div>
-              <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.03em', marginTop: '8px' }}>
+              <div style={{ color: WHITE, fontSize: 'var(--titulo-secao)', fontWeight: 700, lineHeight: 1.15, letterSpacing: 'var(--tracking-title)', marginTop: '8px' }}>
                 Potencial consolidado das oito ações.
               </div>
             </div>
@@ -194,9 +197,9 @@ export function Slide9Top8({ isActive }: Props) {
                 border: `1px solid ${clusterColor}33`,
                 background: `${clusterColor}12`,
                 color: clusterColor,
-                fontSize: 'var(--text-chip)',
+                fontSize: 'var(--rotulo)',
                 fontWeight: 800,
-                letterSpacing: '0.12em',
+                letterSpacing: 'var(--tracking-label)',
                 textTransform: 'uppercase',
               }}
             >
@@ -210,7 +213,7 @@ export function Slide9Top8({ isActive }: Props) {
             ))}
           </div>
 
-          <div style={{ color: 'rgba(255,255,255,0.62)', fontSize: 'var(--text-body)', lineHeight: 1.55 }}>
+          <div style={{ color: 'rgba(255,255,255,0.62)', fontSize: 'var(--paragrafo)', lineHeight: 1.55 }}>
             Base direcional para a próxima rodada de execução. As oito ações só capturam o incremental esperado quando entram como sistema.
           </div>
         </motion.article>
@@ -218,6 +221,7 @@ export function Slide9Top8({ isActive }: Props) {
         {summaryCards.map((card) => (
           <motion.article
             key={card.cluster}
+            data-ui="fechamento-card-resumo"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
@@ -234,17 +238,17 @@ export function Slide9Top8({ isActive }: Props) {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '12px', flexDirection: isCompact ? 'column' : 'row' }}>
               <div>
-                <div style={{ color: card.color, fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                <div style={{ color: card.color, fontSize: 'var(--paragrafo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
                   {card.cluster}
                 </div>
-                <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, lineHeight: 1.12, letterSpacing: '-0.02em', marginTop: '6px' }}>
+                <div style={{ color: WHITE, fontSize: 'var(--titulo-secao)', fontWeight: 700, lineHeight: 1.12, letterSpacing: 'var(--tracking-title)', marginTop: '6px' }}>
                   {card.title}
                 </div>
               </div>
               <div style={{ width: '10px', height: '10px', borderRadius: '999px', background: card.color, marginTop: '6px' }} />
             </div>
 
-            <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: 'var(--text-body-lg)', lineHeight: 1.6 }}>
+            <div style={{ color: 'rgba(255,255,255,0.72)', fontSize: 'var(--paragrafo-grande)', lineHeight: 1.6 }}>
               {card.insight}
             </div>
 
@@ -260,7 +264,7 @@ export function Slide9Top8({ isActive }: Props) {
                     background: 'rgba(0,0,0,0.24)',
                     border: '1px solid rgba(255,255,255,0.08)',
                     color: WHITE,
-                    fontSize: 'var(--text-meta)',
+                    fontSize: 'var(--rotulo)',
                     fontWeight: 700,
                     lineHeight: 1.35,
                   }}
@@ -275,13 +279,14 @@ export function Slide9Top8({ isActive }: Props) {
 
       <div
         /* Edita Rodape de Encerramento */
+        data-ui="fechamento-rodape"
         style={{
           padding: isCompact ? '16px 18px' : '18px 22px',
           borderRadius: '14px',
           border: '1px solid rgba(255,255,255,0.06)',
           background: 'rgba(255,255,255,0.02)',
           color: 'rgba(255,255,255,0.58)',
-          fontSize: 'var(--text-body)',
+          fontSize: 'var(--paragrafo)',
           lineHeight: 1.6,
         }}
       >

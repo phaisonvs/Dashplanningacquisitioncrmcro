@@ -3,21 +3,21 @@ import { Lock, Coins, TrendingUp, Shield, Zap, DollarSign } from 'lucide-react';
 
 export function FeaturesSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 overflow-hidden">
+    <div data-ui="legacy-features-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 overflow-hidden">
       {/* Subtle background effects */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-features-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Header */}
-        <div className="space-y-4">
+        <div data-ui="legacy-features-slide-cabecalho" className="space-y-4">
           <h2 className="text-6xl tracking-tight text-white max-w-3xl">
             EASY TODAY, SMARTER TOMORROW.
           </h2>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-4 gap-4 max-w-6xl">
+        <div data-ui="legacy-features-slide-cards" className="grid grid-cols-4 gap-4 max-w-6xl">
           {/* Feature Card 1 */}
           <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-xl p-6 border border-white/5 hover:border-green-500/30 transition-all group">
             <div className="space-y-4">
@@ -111,7 +111,7 @@ export function FeaturesSlide() {
         </div>
 
         {/* Footer */}
-        <div className="text-white/60 text-sm">
+        <div data-ui="legacy-features-slide-rodape" className="text-white/60 text-sm">
           Built for everyone, from individuals to businesses.
         </div>
       </div>

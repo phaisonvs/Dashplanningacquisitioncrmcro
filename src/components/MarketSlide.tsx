@@ -3,14 +3,14 @@ import { TrendingUp, DollarSign } from 'lucide-react';
 
 export function MarketSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 overflow-hidden">
+    <div data-ui="legacy-mercado-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-green-500/5 to-transparent" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-mercado-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Header */}
-        <div className="space-y-2">
+        <div data-ui="legacy-mercado-slide-cabecalho" className="space-y-2">
           <div className="flex items-center gap-3">
             <TrendingUp className="w-6 h-6 text-green-400" />
             <span className="text-green-400/90 text-sm tracking-wider uppercase">Market Opportunity</span>
@@ -21,9 +21,9 @@ export function MarketSlide() {
         </div>
 
         {/* Main Content - Split Layout */}
-        <div className="grid grid-cols-2 gap-16">
+        <div data-ui="legacy-mercado-slide-principal" className="grid grid-cols-2 gap-16">
           {/* Left Side - TAM SAM SOM */}
-          <div className="space-y-8">
+          <div data-ui="legacy-mercado-slide-tamanho" className="space-y-8">
             <div className="space-y-6">
               {/* TAM */}
               <div className="space-y-3">
@@ -58,7 +58,7 @@ export function MarketSlide() {
           </div>
 
           {/* Right Side - Market Stats */}
-          <div className="space-y-6">
+          <div data-ui="legacy-mercado-slide-estatisticas" className="space-y-6">
             <div className="bg-neutral-800/50 border border-white/10 rounded-xl p-8">
               <div className="flex items-center gap-4 mb-4">
                 <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
@@ -95,7 +95,7 @@ export function MarketSlide() {
         </div>
 
         {/* Footer */}
-        <div className="text-white/50 text-sm">
+        <div data-ui="legacy-mercado-slide-rodape" className="text-white/50 text-sm">
           Source: McKinsey Global Banking Report, World Bank Financial Inclusion Data
         </div>
       </div>

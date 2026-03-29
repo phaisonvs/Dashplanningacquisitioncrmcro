@@ -1,9 +1,28 @@
 # Typography
 
 - Treat `12px` as the base body size for the deck and keep the overall rhythm compact by default.
-- Use the shared text tokens from `src/styles/globals.css` for sizing: `--text-chip`, `--text-meta`, `--text-body`, `--text-body-lg`, `--text-section`, and `--text-hero`.
-- Prefer smaller letter-spacing, tighter padding, and shorter line-heights for headers, chips, pills, labels, and helper text.
+- Use the shared typography tokens from `src/styles/globals.css` for sizing: `--rotulo`, `--paragrafo`, `--paragrafo-grande`, `--titulo-secao`, and `--titulo-pagina`.
+- Prefer smaller letter-spacing, tighter padding, and shorter line-heights for headers, chips, pills, rótulos, and helper text.
 - Only exceed the shared compact scale when a slide truly needs emphasis, and keep that emphasis restrained.
+
+## UI Mapping
+
+- Use `data-ui` on editable wrappers so the IDE search can jump straight to the block you want to change.
+- Keep the existing `/* Edita ... */` comments as a human-readable guide, but treat `data-ui` as the searchable source of truth.
+- Prefer kebab-case names in Portuguese without accents, for example:
+  - `capa-rotulo`
+  - `capa-titulo-pagina`
+  - `secao-evidencias-aquisicao`
+  - `card-evidencia`
+  - `midia-modal-overlay`
+  - `dashboard-grid-semanas`
+- Use the same pattern for shared wrappers and page sections:
+  - `cabecalho-hero`
+  - `cabecalho-secao`
+  - `cabecalho-evidencia`
+  - `nav-carrossel-midia`
+  - `placeholder-upload`
+- Reserve `id` for anchors or true DOM identity. Do not replace `data-slot` in the UI primitives.
 
 **Add your own guidelines here**
 <!--

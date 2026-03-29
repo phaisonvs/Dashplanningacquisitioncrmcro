@@ -1,4 +1,4 @@
-﻿import { motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 import { BG, WHITE, YELLOW } from '../theme';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
@@ -41,6 +41,7 @@ const dashboardTags = [
 
 const TagPill = ({ label, color, background, border, compact = false }: (typeof dashboardTags)[number] & { compact?: boolean }) => (
   <span
+    data-ui="dashboard-tag"
     style={{
       display: 'inline-flex',
       alignItems: 'center',
@@ -54,7 +55,7 @@ const TagPill = ({ label, color, background, border, compact = false }: (typeof 
       border: `1px solid ${border}`,
       background,
       color,
-      fontSize: 'var(--text-chip)',
+      fontSize: 'var(--rotulo)',
       fontWeight: 800,
       letterSpacing: '0.1em',
       lineHeight: 1,
@@ -72,22 +73,23 @@ const WeekCard = ({ week, onClick, compact = false }: { week: WeekItem; onClick?
 
   return (
     <div
+      data-ui="dashboard-card-semana"
       onClick={onClick}
       style={{
         background: isActive ? `${YELLOW}14` : isCompleted ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.03)',
         border: `1px solid ${isActive ? `${YELLOW}55` : isCompleted ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.06)'}`,
         borderRadius: '14px',
-        padding: compact ? '16px' : '18px 20px',
+        padding: compact ? '14px 14px' : '18px 20px',
         display: 'flex',
-        alignItems: compact ? 'stretch' : 'center',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        gap: compact ? '12px' : '16px',
-        minHeight: compact ? 'auto' : '92px',
+        gap: compact ? '10px' : '16px',
+        minHeight: compact ? '76px' : '92px',
         transition: 'transform 0.24s ease, border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease',
         boxShadow: isActive ? `0 12px 32px ${YELLOW}12` : 'none',
         cursor: isActive ? 'pointer' : 'default',
         opacity: isCompleted ? 0.7 : 1,
-        flexDirection: compact ? 'column' : 'row',
+        flexDirection: 'row',
       }}
       onMouseEnter={(e) => {
         if (!isActive) {
@@ -110,11 +112,11 @@ const WeekCard = ({ week, onClick, compact = false }: { week: WeekItem; onClick?
         e.currentTarget.style.transform = 'translateY(0)';
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', minWidth: 0 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? '5px' : '7px', minWidth: 0, flex: '1 1 auto' }}>
         <div
           style={{
             color: isActive ? YELLOW : isCompleted ? 'rgba(255,255,255,0.44)' : WHITE,
-            fontSize: compact ? 'var(--text-body)' : 'var(--text-body-lg)',
+            fontSize: compact ? 'var(--paragrafo)' : 'var(--paragrafo-grande)',
             fontWeight: 800,
             letterSpacing: '-0.01em',
             lineHeight: 1.15,
@@ -125,7 +127,7 @@ const WeekCard = ({ week, onClick, compact = false }: { week: WeekItem; onClick?
         <div
           style={{
             color: isCompleted ? 'rgba(255,255,255,0.34)' : 'rgba(255,255,255,0.56)',
-            fontSize: 'var(--text-body)',
+            fontSize: 'var(--paragrafo)',
             fontWeight: 400,
             lineHeight: 1.35,
           }}
@@ -134,14 +136,15 @@ const WeekCard = ({ week, onClick, compact = false }: { week: WeekItem; onClick?
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0, alignSelf: compact ? 'flex-start' : 'auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, alignSelf: 'center' }}>
         <div
+          data-ui="dashboard-status-semana"
           style={{
-            fontSize: 'var(--text-chip)',
+            fontSize: 'var(--rotulo)',
             fontWeight: 800,
             textTransform: 'uppercase',
             letterSpacing: '0.11em',
-            padding: compact ? '5px 9px' : '6px 10px',
+            padding: compact ? '4px 8px' : '6px 10px',
             borderRadius: '999px',
             background: isActive ? YELLOW : isCompleted ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.05)',
             color: isActive ? '#000' : isCompleted ? 'rgba(255,255,255,0.38)' : 'rgba(255,255,255,0.5)',
@@ -153,7 +156,7 @@ const WeekCard = ({ week, onClick, compact = false }: { week: WeekItem; onClick?
 
         {isActive ? (
           <div style={{ color: YELLOW, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ChevronRight size={22} />
+            <ChevronRight size={compact ? 18 : 22} />
           </div>
         ) : null}
       </div>
@@ -173,6 +176,7 @@ const WeekColumn = ({
   compact?: boolean;
 }) => (
   <motion.section
+    data-ui="dashboard-coluna-semanas"
     initial={{ opacity: 0, y: 18 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
@@ -180,14 +184,15 @@ const WeekColumn = ({
       display: 'flex',
       flexDirection: 'column',
       minHeight: 0,
-      gap: compact ? '12px' : '16px',
+      gap: compact ? '10px' : '16px',
     }}
   >
     <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: '12px' }}>
       <div
+        data-ui="dashboard-titulo-coluna"
         style={{
           color: WHITE,
-          fontSize: 'var(--text-section)',
+          fontSize: compact ? 'var(--paragrafo-grande)' : 'var(--titulo-secao)',
           fontWeight: 800,
           letterSpacing: compact ? '0.08em' : '0.09em',
           textTransform: 'uppercase',
@@ -197,7 +202,7 @@ const WeekColumn = ({
       </div>
     </div>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? '10px' : '12px', minHeight: 0 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: compact ? '8px' : '12px', minHeight: 0 }}>
       {weeks.map((week) => (
         <WeekCard
           key={week.week}
@@ -215,9 +220,10 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
 
   return (
     <div
+      data-ui="dashboard-root"
       style={{
         width: '100vw',
-        height: '100vh',
+        minHeight: '100vh',
         boxSizing: 'border-box',
         background: BG,
         overflow: 'hidden',
@@ -225,6 +231,7 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
       }}
     >
       <div
+        data-ui="dashboard-fundo"
         style={{
           position: 'absolute',
           inset: 0,
@@ -248,25 +255,27 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
       </div>
 
       <div
+        data-ui="dashboard-conteudo"
         style={{
           position: 'relative',
           zIndex: 1,
           width: '100%',
-          height: '100%',
+          minHeight: '100vh',
           display: 'grid',
-          gridTemplateRows: 'auto 1fr',
-          gap: isCompact ? '16px' : 'clamp(18px, 2.2vh, 28px)',
-          padding: isMobile ? '96px 16px 18px' : isCompact ? 'calc(90px + 14px) 20px 20px' : 'calc(100px + clamp(22px, 2.6vw, 34px)) clamp(24px, 3.4vw, 48px) clamp(22px, 3vw, 36px)',
+          gridTemplateRows: isMobile ? 'auto auto' : 'auto 1fr',
+          gap: isCompact ? '14px' : 'clamp(18px, 2.2vh, 28px)',
+          padding: isMobile ? '88px 14px 24px' : isCompact ? 'calc(84px + 12px) 18px 22px' : 'calc(100px + clamp(22px, 2.6vw, 34px)) clamp(24px, 3.4vw, 48px) clamp(22px, 3vw, 36px)',
         }}
       >
-        <section style={{ display: 'flex', flexDirection: 'column', gap: isCompact ? '12px' : '14px', maxWidth: 'min(1120px, 100%)' }}>
+        <section data-ui="dashboard-cabecalho" style={{ display: 'flex', flexDirection: 'column', gap: isCompact ? '10px' : '14px', maxWidth: 'min(1120px, 100%)' }}>
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: isCompact ? '10px' : '14px', flexWrap: 'wrap' }}>
+            <div data-ui="dashboard-rotulo" style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: isCompact ? '8px' : '14px', flexWrap: 'wrap' }}>
               <div style={{ width: '4px', height: '30px', background: YELLOW, borderRadius: '999px' }} />
               <div
+                data-ui="dashboard-rotulo-texto"
                 style={{
                   color: 'rgba(255,255,255,0.42)',
-                  fontSize: 'var(--text-meta)',
+                  fontSize: 'var(--rotulo)',
                   fontWeight: 800,
                   letterSpacing: '0.28em',
                   textTransform: 'uppercase',
@@ -277,10 +286,10 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '12px 14px' }}>
-              <div style={{ fontSize: 'var(--text-hero)', fontWeight: 800, color: WHITE, letterSpacing: '-0.03em', lineHeight: 1 }}>
+              <div data-ui="dashboard-titulo" style={{ fontSize: 'var(--titulo-pagina)', fontWeight: 800, color: WHITE, letterSpacing: '-0.03em', lineHeight: 1 }}>
                 Dashboard
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              <div data-ui="dashboard-tags" style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '6px' : '8px' }}>
                 {dashboardTags.map((tag) => (
                   <TagPill key={tag.label} {...tag} compact={isCompact} />
                 ))}
@@ -288,9 +297,10 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
             </div>
 
             <div
+              data-ui="dashboard-descricao"
               style={{
                 color: 'rgba(255,255,255,0.58)',
-                fontSize: 'var(--text-body-lg)',
+                fontSize: 'var(--paragrafo-grande)',
                 maxWidth: '760px',
                 lineHeight: 1.55,
                 marginTop: '12px',
@@ -303,10 +313,11 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
         </section>
 
         <div
+          data-ui="dashboard-grid-semanas"
           style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 1fr) minmax(0, 1fr)',
-            gap: isCompact ? '16px' : 'clamp(22px, 3vw, 42px)',
+            gap: isCompact ? '14px' : 'clamp(22px, 3vw, 42px)',
             minHeight: 0,
             alignItems: 'stretch',
           }}
@@ -318,4 +329,3 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
     </div>
   );
 }
-

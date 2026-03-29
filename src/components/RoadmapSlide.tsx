@@ -3,14 +3,14 @@ import { Calendar, CheckCircle2, Circle, Target } from 'lucide-react';
 
 export function RoadmapSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 overflow-hidden">
+    <div data-ui="legacy-roadmap-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-roadmap-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Header */}
-        <div className="space-y-2">
+        <div data-ui="legacy-roadmap-slide-cabecalho" className="space-y-2">
           <div className="flex items-center gap-3">
             <Calendar className="w-6 h-6 text-green-400" />
             <span className="text-green-400/90 text-sm tracking-wider uppercase">Product Roadmap</span>
@@ -21,12 +21,12 @@ export function RoadmapSlide() {
         </div>
 
         {/* Timeline */}
-        <div className="relative max-w-6xl mx-auto">
+        <div data-ui="legacy-roadmap-slide-cronograma" className="relative max-w-6xl mx-auto">
           {/* Timeline line */}
           <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-green-400 via-green-400/50 to-white/20" />
 
           {/* Timeline items */}
-          <div className="grid grid-cols-4 gap-8 relative">
+          <div data-ui="legacy-roadmap-slide-itens" className="grid grid-cols-4 gap-8 relative">
             {/* Q1 2024 */}
             <div className="space-y-4">
               <div className="flex flex-col items-center">
@@ -138,7 +138,7 @@ export function RoadmapSlide() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 text-white/70">
+        <div data-ui="legacy-roadmap-slide-rodape" className="flex items-center gap-2 text-white/70">
           <div className="w-1 h-1 bg-green-400 rounded-full" />
           <span className="text-sm tracking-wide">Pocketswap</span>
         </div>

@@ -2,14 +2,14 @@ import React from 'react';
 
 export function BarriersSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 overflow-hidden">
+    <div data-ui="legacy-barreiras-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 overflow-hidden">
       {/* Subtle gradient overlay */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-green-500/5 to-transparent" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-barreiras-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Top Section - Cards Preview */}
-        <div className="flex gap-4 justify-center items-start">
+        <div data-ui="legacy-barreiras-slide-cartoes" className="flex gap-4 justify-center items-start">
           <div className="w-48 h-32 bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-lg p-6 border border-white/5">
             <p className="text-white/90 text-sm mb-1">Hidden</p>
             <p className="text-white/90 text-sm">Fees</p>
@@ -28,7 +28,7 @@ export function BarriersSlide() {
         </div>
 
         {/* Main Content */}
-        <div className="space-y-12">
+        <div data-ui="legacy-barreiras-slide-principal" className="space-y-12">
           <h2 className="text-6xl tracking-tight text-white max-w-xl">
             BARRIERS TO<br />
             MODERN BANKING
@@ -61,7 +61,7 @@ export function BarriersSlide() {
         </div>
 
         {/* Bottom Text */}
-        <div className="text-white/50 text-sm max-w-md">
+        <div data-ui="legacy-barreiras-slide-rodape" className="text-white/50 text-sm max-w-md">
           <p>Current state of global banking.</p>
           <p className="mt-2">A massive opportunity for innovation...</p>
         </div>

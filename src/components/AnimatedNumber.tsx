@@ -45,10 +45,10 @@ export function AnimatedNumber({
       : Math.round(value).toLocaleString('pt-BR');
 
   return (
-    <>
+    <span data-ui="numero-animado">
       {prefix}
       {display}
       {suffix}
-    </>
+    </span>
   );
 }

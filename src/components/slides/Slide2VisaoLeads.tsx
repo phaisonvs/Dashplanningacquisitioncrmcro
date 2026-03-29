@@ -300,8 +300,8 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS', 'ACQUISITION'] as const,
     status: 'feito' as const,
     objective: 'Integramos o CTA "Falar com especialista" para capturar dados dos usuários usando o formulário de WhatsApp floating.',
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
+    desktopImageLink: lpSemanaConsumidorImg,
+    mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
     imageHeight: 240,
   },
@@ -310,8 +310,8 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'Dados de usuários chegavam com valores indevidos devido aos erros de máscaras dos inputs: Nome aceitava números, E-mail aceitava fora do padrão @(provedor).com.br e Telefone aceitava letras.',
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
+    desktopImageLink: heroDesktopImg,
+    mobileImageLink: heroMobileImg,
     imageLabel: 'Formulário',
     imageHeight: 240,
   },
@@ -320,8 +320,8 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'Ao considerarmos o custo alto para cotações de frete, ajustamos para que a jornada priorizasse contato assistido nas páginas de categoria de Pisos e Revestimentos.',
-    desktopImage: lpChanceUnicaImg,
-    mobileImage: lpChanceUnicaMobileImg,
+    desktopImageLink: lpChanceUnicaImg,
+    mobileImageLink: lpChanceUnicaMobileImg,
     imageLabel: 'Categoria',
     imageHeight: 240,
   },
@@ -330,6 +330,8 @@ const conversionExperienceItems = [
   tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM'>;
   status: 'feito' | 'pendente' | 'bloqueado';
   objective: string;
+  desktopImageLink?: string;
+  mobileImageLink?: string;
   desktopImage?: string;
   mobileImage?: string;
   imageLabel: string;
@@ -383,6 +385,7 @@ const StatusCounter = ({
 
   return (
     <div
+      data-ui="contador-status-leads"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -393,11 +396,11 @@ const StatusCounter = ({
         border: '1px solid rgba(255,255,255,0.08)',
       }}
     >
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: 'var(--text-body)', fontWeight: 700, lineHeight: 1 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: palette.color, fontSize: 'var(--paragrafo)', fontWeight: 700, lineHeight: 1 }}>
         <span style={{ width: '6px', height: '6px', borderRadius: '999px', background: palette.color, flexShrink: 0 }} />
         {palette.label}
       </span>
-      <span style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 800, lineHeight: 1 }}>
+      <span style={{ color: WHITE, fontSize: 'var(--paragrafo-grande)', fontWeight: 800, lineHeight: 1 }}>
         <AnimatedNumber target={count} isActive={isActive} duration={900} />
       </span>
     </div>
@@ -405,12 +408,12 @@ const StatusCounter = ({
 };
 
 const ActionCardView = ({ action, variant = 'week', compact = false }: { action: ActionCard; variant?: 'previous' | 'week'; compact?: boolean }) => (
-  <div style={deckCardPresets.action(variant, compact)}>
+  <div data-ui="card-acao-leads" style={deckCardPresets.action(variant, compact)}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: compact ? '10px' : '12px', flexDirection: 'row', flexWrap: 'nowrap' }}>
       <TokenTag label={action.cluster} compact />
       <StatusPill status={action.status} />
     </div>
-    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: 'var(--text-body)', lineHeight: 1.55, fontWeight: 500 }}>
+    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: 'var(--paragrafo)', lineHeight: 1.55, fontWeight: 500 }}>
       {action.text}
     </div>
   </div>
@@ -418,19 +421,20 @@ const ActionCardView = ({ action, variant = 'week', compact = false }: { action:
 
 const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard; isActive: boolean; compact?: boolean }) => (
   <motion.article
+    data-ui="card-metrica-leads"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
     style={deckCardPresets.metric(compact)}
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--text-body)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--paragrafo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         {item.title}
       </div>
       <TokenTag label={item.dateTag} compact />
     </div>
 
-    <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
+    <div style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
       <AnimatedNumber
         target={item.value.target}
         prefix={item.value.prefix}
@@ -450,6 +454,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
           <div
             key={`${row.text}-${index}`}
             /* Edita Linha de Comparacao */
+            data-ui="linha-comparacao-leads"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -463,7 +468,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
               flexWrap: 'nowrap',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--paragrafo)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
@@ -473,7 +478,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
                   paddingLeft: compact ? 0 : '12px',
                   borderLeft: compact ? 'none' : `2px solid ${activeColor}`,
                   color: activeColor,
-                  fontSize: 'var(--text-body)',
+                  fontSize: 'var(--paragrafo)',
                   fontWeight: 800,
                   whiteSpace: 'nowrap',
                   flex: '0 0 auto',
@@ -488,14 +493,14 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--rotulo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.bullets.map((row, index) => (
           <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.45 }}>
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--paragrafo)', lineHeight: 1.45 }}>
               {row.text}
             </div>
           </div>
@@ -504,7 +509,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         Ações da semana anterior
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -515,7 +520,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         Ação na semana
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -529,6 +534,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
 
 const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelStage; isActive: boolean; compact?: boolean }) => (
   <motion.article
+    data-ui="card-funil-leads"
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
@@ -536,17 +542,17 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
   >
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
       <div>
-        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-chip)', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+        <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
           {stage.title}
         </div>
-        <div style={{ color: WHITE, fontSize: 'var(--text-body-lg)', fontWeight: 800, letterSpacing: '-0.01em', textTransform: 'uppercase', marginTop: '5px' }}>
+        <div style={{ color: WHITE, fontSize: 'var(--paragrafo-grande)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginTop: '5px' }}>
           {stage.label}
         </div>
       </div>
       <TokenTag label={stage.dateTag} compact />
     </div>
 
-    <div style={{ fontSize: 'var(--text-hero)', lineHeight: 1, fontWeight: 800, letterSpacing: '-0.03em', color: WHITE }}>
+    <div style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
       <AnimatedNumber
         target={stage.value.target}
         prefix={stage.value.prefix}
@@ -565,6 +571,7 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
         return (
           <div
             key={`${row.text}-${index}`}
+            data-ui="linha-comparacao-funil-leads"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -578,12 +585,12 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
               flexWrap: 'nowrap',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--text-body)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--paragrafo)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
             {hasValue && (
-              <div style={{ color: activeColor, fontSize: 'var(--text-body)', fontWeight: 800, whiteSpace: 'nowrap', flex: '0 0 auto' }}>
+              <div style={{ color: activeColor, fontSize: 'var(--paragrafo)', fontWeight: 800, whiteSpace: 'nowrap', flex: '0 0 auto' }}>
                 {row.value}
               </div>
             )}
@@ -593,14 +600,14 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
     </div>
 
     <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {stage.bullets.map((row, index) => (
           <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--text-body)', lineHeight: 1.45 }}>
+            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--paragrafo)', lineHeight: 1.45 }}>
               {row.text}
             </div>
           </div>
@@ -609,7 +616,7 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         Ações da semana anterior
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -620,7 +627,7 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
     </div>
 
     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--text-meta)', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         Ação na semana
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -636,21 +643,21 @@ const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: st
   const { isCompact } = useDeckViewport();
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
+    <div data-ui="cabecalho-secao-leads" style={{ display: 'flex', justifyContent: 'space-between', alignItems: isCompact ? 'stretch' : 'flex-start', gap: '16px', flexWrap: 'wrap', flexDirection: isCompact ? 'column' : 'row' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: isCompact ? '100%' : 'auto' }}>
         <div style={{ width: '4px', height: '28px', background: CLUSTERS.LEADS, borderRadius: '2px' }} />
         <div>
-          <div style={{ color: WHITE, fontSize: 'var(--text-section)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+          <div style={{ color: WHITE, fontSize: 'var(--titulo-secao)', fontWeight: 700, letterSpacing: 'var(--tracking-title)', lineHeight: 1.1 }}>
             {title}
           </div>
           {subtitle ? (
-            <div style={{ color: 'rgba(255,255,255,0.44)', fontSize: 'var(--text-body)', lineHeight: 1.5, marginTop: '6px' }}>
+            <div style={{ color: 'rgba(255,255,255,0.44)', fontSize: 'var(--paragrafo)', lineHeight: 1.5, marginTop: '6px' }}>
               {subtitle}
             </div>
           ) : null}
         </div>
       </div>
-      {right ? <div style={{ display: 'flex', width: isCompact ? '100%' : 'auto', justifyContent: isCompact ? 'flex-start' : 'flex-end', flexWrap: 'wrap', gap: '8px' }}>{right}</div> : null}
+      {right ? <div style={{ display: 'flex', width: isCompact ? '100%' : 'auto', justifyContent: 'flex-end', flexWrap: 'wrap', gap: '8px' }}>{right}</div> : null}
     </div>
   );
 };
@@ -658,68 +665,38 @@ const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: st
 const leadMediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
     title: 'KVs de aquisição de leads',
-    description: 'Conjunto de KVs para aquisição de leads com leitura direta e foco em conversão.',
-    tags: ['LEADS', 'CRM'],
-    status: 'feito',
-    accent: CLUSTERS.CRM,
-    badgeLabel: 'KVs',
-    media: mediaSlots('https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-prevestimentos_quadrado-1-(1).png?v=202603271510'),
-  },
-  {
-    title: 'KVs do Mês do Consumidor + ativações em andamento até 31/03',
-    description: 'Atualização de peças do mês do consumidor e ativações em andamento até 31/03.',
-    tags: ['CRM', 'LEADS'],
-    status: 'feito',
-    accent: CLUSTERS.CRM,
-    badgeLabel: 'KVs',
-    media: mediaSlots(),
-  },
-  {
-    title: 'Atualização de criativos PMAX para pisos e paredes e chuveiros Lorenzetti',
-    description: 'Pacote de PMAX para pisos, paredes e chuveiros Lorenzetti.',
-    tags: ['CRO', 'ACQUISITION'],
-    status: 'feito',
-    accent: CLUSTERS.CRO,
-    badgeLabel: 'PMAX',
-    media: mediaSlots(
-      'https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-paredes_quadrado-3.png?v=202603271517',
-      'https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-lorenzeti_horizontal-4.png?v=202603271517',
-    ),
-  },
-  {
-    title: 'Criativos “Super Chance Única” (e-commerce) + campanhas relâmpago Deca (oportunidade)',
-    description: 'Criativos de oportunidade para Super Chance Única e campanhas relâmpago Deca.',
-    tags: ['E-COMMERCE', 'ACQUISITION'],
-    status: 'feito',
-    accent: CLUSTERS.ECOMMERCE,
-    badgeLabel: 'E-commerce',
-    media: mediaSlots(
-      'https://abcdaconstrucao.fbitsstatic.net/media/abc_tanque_quadrado-1-(1).png?v=202603271517',
-      'https://abcdaconstrucao.fbitsstatic.net/media/abc_campanha-rel%C3%A2mpago-deca_quadrado-2.png?v=202603271517',
-    ),
-  },
-  {
-    title: 'KVs diários para a Semana do Consumidor, incluindo campanha dedicada da Docol.',
-    description: 'Sequência diária de KVs para a Semana do Consumidor com campanha dedicada da Docol.',
-    tags: ['LEADS', 'ACQUISITION'],
-    status: 'feito',
-    accent: CLUSTERS.LEADS,
-    badgeLabel: 'KVs',
-    media: mediaSlots(
-      'https://abcdaconstrucao.fbitsstatic.net/media/[abc]-campanha-docol_retrato-4.png?v=202603271510',
-      'https://abcdaconstrucao.fbitsstatic.net/media/abc_mc_produtos-foco_retrato-4-1.png?v=202603271517',
-    ),
-  },
-  {
-    title: 'KVs de EXP focado em geolocalização (cidades que queremos entrar e grandes cidades)',
-    description: 'KVs de expansão com foco em geolocalização e praças prioritárias.',
-    tags: ['ACQUISITION', 'CRO'],
+    description: 'Validar a leitura inicial dos KVs de aquisição com foco em volume qualificado de leads.',
+    objectiveKpis: ['Leads', 'ROAS'],
+    tags: ['LEADS', 'ACQUISITION', 'CRO'],
     status: 'feito',
     accent: CLUSTERS.ACQUISITION,
-    badgeLabel: 'EXP',
+    badgeLabel: 'KVs',
     media: mediaSlots(
-      'https://abcdaconstrucao.fbitsstatic.net/media/abc_expans%C3%A3o_quadrado-1-c1-(10).png?v=202603271510',
-      'https://abcdaconstrucao.fbitsstatic.net/media/abc_expans%C3%A3o_quadrado-1-c1-(2).png?v=202603271510',
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-prevestimentos_quadrado-1-(1).png?v=202603271510',
+    ),
+  },
+  {
+    title: 'KVs de aquisição de leads',
+    description: 'Testar uma variação de KV com reforço de oferta e clareza de conversão.',
+    objectiveKpis: ['Receita', 'Pedidos'],
+    tags: ['LEADS', 'ACQUISITION', 'CRO'],
+    status: 'feito',
+    accent: CLUSTERS.ACQUISITION,
+    badgeLabel: 'KVs',
+    media: mediaSlots(
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-prevestimentos_quadrado-2.png?v=202603271646',
+    ),
+  },
+  {
+    title: 'KVs de aquisição de leads',
+    description: 'Comparar uma terceira leitura de KV priorizando escala e eficiência na captação.',
+    objectiveKpis: ['Investimento', 'Conversão'],
+    tags: ['LEADS', 'ACQUISITION', 'CRO'],
+    status: 'feito',
+    accent: CLUSTERS.ACQUISITION,
+    badgeLabel: 'KVs',
+    media: mediaSlots(
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-prevestimentos_quadrado-3-(1).png?v=202603271646',
     ),
   },
 ];
@@ -729,6 +706,7 @@ export function Slide2VisaoLeads({ isActive }: Props) {
 
   return (
     <div
+      data-ui="leads-root"
       style={{
         minHeight: '100vh',
         background: BG,
@@ -738,13 +716,13 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         gap: isCompact ? '40px' : '60px',
       }}
     >
-      <section>
+      <section data-ui="leads-hero">
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <SlideHeroHeader
             accentColor={CLUSTERS.LEADS}
             title="Visão Leads MTD"
             right={
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end', marginTop: isCompact ? '0' : '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end', marginTop: isCompact ? '0' : '8px' }}>
                 <StatusCounter status="feito" count={statusCounts.feito} isActive={isActive} compact={isCompact} />
                 <StatusCounter status="pendente" count={statusCounts.pendente} isActive={isActive} compact={isCompact} />
                 <StatusCounter status="bloqueado" count={statusCounts.bloqueado} isActive={isActive} compact={isCompact} />
@@ -761,23 +739,23 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         </motion.div>
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
+      <section data-ui="leads-metricas-principais" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
         {primaryMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
-      <section style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
+      <section data-ui="leads-metricas-secundarias" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
         {secondaryMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
-      <section style={deckCardPresets.section(isCompact)}>
+      <section data-ui="leads-funil" style={deckCardPresets.section(isCompact)}>
         <SectionTitle
           title="Cadastro → Orçamento → Pedido"
           right={
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: isCompact ? 'flex-start' : 'flex-end' }}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
               <TokenTag label="CRO" compact />
               <TokenTag label="LEADS" compact />
               <TokenTag label="ACQUISITION" compact />
@@ -785,16 +763,21 @@ export function Slide2VisaoLeads({ isActive }: Props) {
           }
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
+        <div data-ui="leads-grid-funil" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
           {funnelStages.map((stage) => (
             <FunnelCardView key={stage.label} stage={stage} isActive={isActive} compact={isCompact} />
           ))}
         </div>
       </section>
 
-      <ConversionExperienceSection items={conversionExperienceItems} />
+      <div data-ui="leads-secao-evidencias">
+        <ConversionExperienceSection items={conversionExperienceItems} />
+      </div>
 
-      <MediaAcquisitionSection items={leadMediaAcquisitionItems} />
+      <div data-ui="leads-secao-midias">
+        <MediaAcquisitionSection items={leadMediaAcquisitionItems} />
+      </div>
     </div>
   );
 }
+

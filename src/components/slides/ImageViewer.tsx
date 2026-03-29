@@ -5,6 +5,8 @@ import { useDeckViewport } from './sharedDeckTypography';
 
 interface ImageViewerProps {
   id: string;
+  desktopImageLink?: string;
+  mobileImageLink?: string;
   desktopImage?: string;
   mobileImage?: string;
   alt: string;
@@ -14,30 +16,179 @@ interface ImageViewerProps {
   fullWidth?: boolean;
 }
 
-export function ImageViewer({ 
-  desktopImage, 
-  mobileImage, 
-  alt, 
-  width = 160, 
+type ViewMode = "desktop" | "mobile";
+
+type PhoneFrameProps = {
+  image: string;
+  alt: string;
+  compact: boolean;
+  modal?: boolean;
+  widthClassName?: string;
+};
+
+const PhoneFrame = ({
+  image,
+  alt,
+  compact,
+  modal = false,
+  widthClassName,
+}: PhoneFrameProps) => {
+  const shellWidth = modal
+    ? compact
+      ? "clamp(290px, 90vw, 420px)"
+      : "clamp(320px, 34vw, 460px)"
+    : compact
+      ? "clamp(248px, 84vw, 360px)"
+      : "clamp(224px, 28vw, 320px)";
+
+  return (
+    <div
+      className={widthClassName}
+      style={{
+        width: shellWidth,
+        maxWidth: "100%",
+        margin: "0 auto",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          aspectRatio: "9 / 19.5",
+          borderRadius: compact ? "34px" : "40px",
+          padding: compact ? "12px" : "14px",
+          background:
+            "linear-gradient(145deg, rgba(61,61,61,0.98) 0%, rgba(18,18,18,0.98) 52%, rgba(72,72,72,0.96) 100%)",
+          boxShadow:
+            modal
+              ? "0 34px 90px rgba(0,0,0,0.72)"
+              : "0 20px 52px rgba(0,0,0,0.55)",
+          border: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: compact ? "11px" : "13px",
+            borderRadius: compact ? "26px" : "32px",
+            background: "#0b0b0b",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: compact ? "9px" : "11px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: compact ? "88px" : "104px",
+            height: compact ? "20px" : "22px",
+            borderRadius: "0 0 16px 16px",
+            background: "#0b0b0b",
+            zIndex: 2,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: compact ? "12px" : "14px",
+            borderRadius: compact ? "24px" : "30px",
+            overflow: "hidden",
+            background: "#ffffff",
+            display: "flex",
+            alignItems: "stretch",
+            justifyContent: "stretch",
+            zIndex: 1,
+          }}
+        >
+          <img
+            data-ui="visualizador-imagem-mobile"
+            src={image}
+            alt={alt}
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "block",
+              objectFit: "contain",
+              objectPosition: "center top",
+              background: "#ffffff",
+            }}
+          />
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: compact ? "11px" : "13px",
+            transform: "translateX(-50%)",
+            width: compact ? "92px" : "110px",
+            height: compact ? "4px" : "5px",
+            borderRadius: "999px",
+            background: "rgba(255,255,255,0.16)",
+            zIndex: 3,
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export function ImageViewer({
+  id,
+  desktopImageLink,
+  mobileImageLink,
+  desktopImage,
+  mobileImage,
+  alt,
+  width = 160,
   height = 100,
-  label = 'Screenshot',
-  fullWidth = false
+  label = "Screenshot",
+  fullWidth = false,
 }: ImageViewerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [viewMode, setViewMode] = useState<ViewMode>("desktop");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { isMobile, isCompact } = useDeckViewport();
+  const viewerUiId = id
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
-  const hasMultipleVersions = desktopImage && mobileImage;
-  const currentImage = viewMode === 'desktop' ? desktopImage : mobileImage;
-  const containerWidth = fullWidth ? '100%' : isCompact ? '100%' : `${width}px`;
+  const resolvedDesktopImageLink = desktopImageLink ?? desktopImage ?? "";
+  const resolvedMobileImageLink = mobileImageLink ?? mobileImage ?? "";
+  const hasDesktopImage = Boolean(resolvedDesktopImageLink);
+  const hasMobileImage = Boolean(resolvedMobileImageLink);
+  const hasAnyImage = hasDesktopImage || hasMobileImage;
+  const hasOnlyMobileImage = hasMobileImage && !hasDesktopImage;
+  const hasOnlyDesktopImage = hasDesktopImage && !hasMobileImage;
+
+  const activeViewMode: ViewMode =
+    hasOnlyMobileImage
+      ? "mobile"
+      : hasOnlyDesktopImage
+        ? "desktop"
+        : viewMode;
+  const currentImageLink =
+    activeViewMode === "desktop"
+      ? resolvedDesktopImageLink || resolvedMobileImageLink
+      : resolvedMobileImageLink || resolvedDesktopImageLink;
+  const containerWidth = fullWidth ? "100%" : isCompact ? "100%" : `${width}px`;
   const containerHeight = fullWidth
-    ? isMobile
-      ? `clamp(${Math.max(190, Math.round(height * 0.72))}px, 56vw, ${Math.max(height + 40, 320)}px)`
-      : isCompact
-        ? `clamp(${Math.max(220, Math.round(height * 0.82))}px, 34vw, ${Math.max(height + 80, 420)}px)`
-        : `${height}px`
+    ? hasOnlyMobileImage
+      ? isMobile
+        ? `clamp(${Math.max(380, Math.round(height * 1.25))}px, 82vw, ${Math.max(height + 240, 720)}px)`
+        : isCompact
+          ? `clamp(${Math.max(360, Math.round(height * 1.18))}px, 56vw, ${Math.max(height + 220, 660)}px)`
+          : `clamp(${Math.max(320, Math.round(height * 1.1))}px, 38vw, ${Math.max(height + 180, 560)}px)`
+      : isMobile
+        ? `clamp(${Math.max(190, Math.round(height * 0.72))}px, 56vw, ${Math.max(height + 40, 320)}px)`
+        : isCompact
+          ? `clamp(${Math.max(220, Math.round(height * 0.82))}px, 34vw, ${Math.max(height + 80, 420)}px)`
+          : `${height}px`
     : `${height}px`;
 
   // Auto-reset scroll after 10 seconds of inactivity (only when not expanded)
@@ -72,101 +223,183 @@ export function ImageViewer({
     };
   }, [isExpanded]);
 
-  if (!currentImage) {
+  useEffect(() => {
+    if (!hasAnyImage) {
+      setViewMode("desktop");
+      return;
+    }
+
+    if (hasOnlyMobileImage) {
+      setViewMode("mobile");
+      return;
+    }
+
+    if (hasOnlyDesktopImage) {
+      setViewMode("desktop");
+    }
+  }, [hasAnyImage, hasOnlyDesktopImage, hasOnlyMobileImage]);
+
+  if (!hasAnyImage) {
     return (
-      <div 
-          style={{
-            width: containerWidth,
-            minWidth: containerWidth,
-            height: containerHeight, 
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 'var(--text-chip)',
-            color: 'rgba(255,255,255,0.3)',
-            textAlign: 'center',
-            padding: '8px'
+      <div
+        data-ui="visualizador-imagem-vazio"
+        style={{
+          width: containerWidth,
+          minWidth: containerWidth,
+          height: containerHeight,
+          background: "rgba(255,255,255,0.02)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: "12px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: "8px",
+          fontSize: "var(--rotulo)",
+          color: "rgba(255,255,255,0.38)",
+          textAlign: "center",
+          padding: "12px",
         }}
       >
-        {label}
+        <div style={{ color: WHITE, fontSize: "var(--paragrafo-grande)", fontWeight: 700, lineHeight: 1.3 }}>
+          {label}
+        </div>
+        <div style={{ maxWidth: "240px", lineHeight: 1.45 }}>
+          Adicione um link imagem desktop ou um link imagem mobile.
+        </div>
       </div>
     );
   }
 
   return (
     <>
-      <div style={{ 
-        position: 'relative', 
-        width: containerWidth,
-        display: 'flex',
-        flexDirection: 'column',
-        minWidth: containerWidth,
-        flex: fullWidth ? 1 : undefined
-      }}>
-        {/* Toggle Desktop/Mobile - Only show if both versions exist */}
-        {hasMultipleVersions && (
-          <div style={{ 
-            display: 'flex', 
-            gap: '4px', 
-            marginBottom: '6px',
-            background: 'rgba(0,0,0,0.4)',
-            padding: '3px',
-            borderRadius: '999px',
-            border: '1px solid rgba(255,255,255,0.05)',
-            width: 'fit-content'
-          }}>
-            <button
-              onClick={() => setViewMode('desktop')}
+      <div
+        data-ui={viewerUiId ? `visualizador-imagem-${viewerUiId}` : "visualizador-imagem"}
+        style={{
+          position: "relative",
+          width: containerWidth,
+          display: "flex",
+          flexDirection: "column",
+          minWidth: containerWidth,
+          flex: fullWidth ? 1 : undefined,
+          gap: "8px",
+        }}
+      >
+        {hasAnyImage ? (
+          <div
+            data-ui="visualizador-imagem-alternancia"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "6px",
+              width: "fit-content",
+              maxWidth: "100%",
+            }}
+          >
+            <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '5px 10px',
-                background: viewMode === 'desktop' ? 'rgba(255,255,255,0.12)' : 'transparent',
-                border: viewMode === 'desktop' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-                borderRadius: '999px',
-                color: viewMode === 'desktop' ? WHITE : 'rgba(255,255,255,0.5)',
-                fontSize: 'var(--text-chip)',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                display: "inline-flex",
+                gap: "4px",
+                background: "rgba(0,0,0,0.4)",
+                padding: "3px",
+                borderRadius: "999px",
+                border: "1px solid rgba(255,255,255,0.05)",
+                width: "fit-content",
+                maxWidth: "100%",
+                flexWrap: "wrap",
               }}
             >
-              <Monitor size={14} />
-              Desktop
-            </button>
-            <button
-              onClick={() => setViewMode('mobile')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '5px 10px',
-                background: viewMode === 'mobile' ? 'rgba(255,255,255,0.12)' : 'transparent',
-                border: viewMode === 'mobile' ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent',
-                borderRadius: '999px',
-                color: viewMode === 'mobile' ? WHITE : 'rgba(255,255,255,0.5)',
-                fontSize: 'var(--text-chip)',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <Smartphone size={14} />
-              Mobile
-            </button>
+              <button
+                type="button"
+                onClick={() => hasDesktopImage && setViewMode("desktop")}
+                disabled={!hasDesktopImage}
+                data-ui="visualizador-imagem-botao-desktop"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "5px 10px",
+                  background:
+                    activeViewMode === "desktop"
+                      ? "rgba(255,255,255,0.12)"
+                      : "transparent",
+                  border:
+                    activeViewMode === "desktop"
+                      ? "1px solid rgba(255,255,255,0.2)"
+                      : "1px solid transparent",
+                  borderRadius: "999px",
+                  color:
+                    activeViewMode === "desktop"
+                      ? WHITE
+                      : "rgba(255,255,255,0.5)",
+                  opacity: hasDesktopImage ? 1 : 0.42,
+                  fontSize: "var(--rotulo)",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "var(--tracking-label)",
+                  cursor: hasDesktopImage ? "pointer" : "not-allowed",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <Monitor size={14} />
+                Desktop
+              </button>
+              <button
+                type="button"
+                onClick={() => hasMobileImage && setViewMode("mobile")}
+                disabled={!hasMobileImage}
+                data-ui="visualizador-imagem-botao-mobile"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "5px 10px",
+                  background:
+                    activeViewMode === "mobile"
+                      ? "rgba(255,255,255,0.12)"
+                      : "transparent",
+                  border:
+                    activeViewMode === "mobile"
+                      ? "1px solid rgba(255,255,255,0.2)"
+                      : "1px solid transparent",
+                  borderRadius: "999px",
+                  color:
+                    activeViewMode === "mobile"
+                      ? WHITE
+                      : "rgba(255,255,255,0.5)",
+                  opacity: hasMobileImage ? 1 : 0.42,
+                  fontSize: "var(--rotulo)",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "var(--tracking-label)",
+                  cursor: hasMobileImage ? "pointer" : "not-allowed",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <Smartphone size={14} />
+                Mobile
+              </button>
+            </div>
+
+            {(!hasDesktopImage || !hasMobileImage) && (
+              <div
+                style={{
+                  color: "rgba(255,255,255,0.45)",
+                  fontSize: "var(--rotulo)",
+                  lineHeight: 1.45,
+                }}
+              >
+                {!hasDesktopImage ? "Sem link imagem desktop." : null}
+                {!hasDesktopImage && !hasMobileImage ? " " : null}
+                {!hasMobileImage ? "Sem link imagem mobile." : null}
+              </div>
+            )}
           </div>
-        )}
+        ) : null}
 
         {/* Image Container */}
         <div
+          data-ui="visualizador-imagem-viewport"
           ref={scrollContainerRef}
           onScroll={handleScroll}
           onClick={() => setIsExpanded(true)}
@@ -182,62 +415,20 @@ export function ImageViewer({
             background: 'rgba(0,0,0,0.4)',
             WebkitOverflowScrolling: 'touch',
             display: 'flex',
-            alignItems: 'flex-start',
+            alignItems: activeViewMode === "mobile" ? "center" : "flex-start",
             justifyContent: 'center',
-            padding: isCompact ? '14px' : viewMode === 'mobile' ? '20px' : '0',
-            cursor: 'pointer'
+            padding: isCompact ? '14px' : activeViewMode === "mobile" ? '20px' : '0',
+            cursor: "pointer",
           }}
           className="image-viewer-scroll image-viewer-container"
         >
-          {viewMode === 'mobile' ? (
-            // Mobile Mockup
-            <div style={{
-              width: isCompact ? 'clamp(240px, 84vw, 375px)' : 'fit-content',
-              maxWidth: '100%',
-              background: '#1a1a1a',
-              borderRadius: isCompact ? 'clamp(22px, 6vw, 28px)' : '28px',
-              padding: isCompact ? 'clamp(8px, 2vw, 10px)' : '10px',
-              boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-              border: `${isCompact ? 'clamp(4px, 1.2vw, 6px)' : '6px'} solid #2a2a2a`,
-              position: 'relative'
-            }}>
-              {/* Notch */}
-              <div style={{
-                position: 'absolute',
-                top: isCompact ? '8px' : '10px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: isCompact ? 'clamp(72px, 24vw, 96px)' : '96px',
-                height: isCompact ? 'clamp(16px, 5vw, 20px)' : '20px',
-                background: '#1a1a1a',
-                borderRadius: isCompact ? '0 0 12px 12px' : '0 0 14px 14px',
-                zIndex: 10
-              }} />
-              
-              {/* Screen */}
-              <div style={{
-                width: '100%',
-                height: isCompact ? 'clamp(280px, 62vh, 560px)' : 'calc(90vh - 120px)',
-                borderRadius: isCompact ? 'clamp(18px, 5vw, 24px)' : '24px',
-                overflow: 'hidden',
-                background: '#fff'
-              }}>
-                <img
-                  src={currentImage}
-                  alt={alt}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'block',
-                    objectFit: 'contain'
-                  }}
-                />
-              </div>
-            </div>
+          {activeViewMode === "mobile" ? (
+            <PhoneFrame image={currentImageLink} alt={alt} compact={isCompact} />
           ) : (
             // Desktop View
             <img
-              src={currentImage}
+              data-ui="visualizador-imagem-desktop"
+              src={currentImageLink}
               alt={alt}
               style={{
                 width: '100%',
@@ -250,6 +441,7 @@ export function ImageViewer({
 
           {/* Expand indicator - Always visible with sticky position */}
           <div 
+            data-ui="visualizador-imagem-expandir"
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(true);
@@ -288,209 +480,216 @@ export function ImageViewer({
 
       {/* Modal/Popup when expanded */}
       {isExpanded && (
-        <div 
+        <div
+          data-ui="visualizador-imagem-modal-overlay"
           style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0,0,0,0.95)',
-            backdropFilter: 'blur(10px)',
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.95)",
+            backdropFilter: "blur(10px)",
             zIndex: 9999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-              padding: isCompact ? '14px' : '24px',
-            animation: 'fadeIn 0.2s ease'
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: isCompact ? "14px" : "24px",
+            animation: "fadeIn 0.2s ease",
           }}
           onClick={() => setIsExpanded(false)}
         >
-          {/* Close Button */}
           <button
+            type="button"
             onClick={() => setIsExpanded(false)}
+            data-ui="visualizador-imagem-modal-fechar"
             style={{
-              position: 'absolute',
-              top: isCompact ? '12px' : '20px',
-              right: isCompact ? '12px' : '20px',
-              background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              borderRadius: '8px',
-              padding: isCompact ? '8px' : '10px',
+              position: "absolute",
+              top: isCompact ? "12px" : "20px",
+              right: isCompact ? "12px" : "20px",
+              background: "rgba(255,255,255,0.1)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "10px",
+              padding: isCompact ? "8px" : "10px",
               color: WHITE,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontSize: isCompact ? 'var(--text-chip)' : 'var(--text-body-lg)',
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: isCompact ? "var(--rotulo)" : "var(--paragrafo-grande)",
               fontWeight: 600,
-              transition: 'all 0.2s ease',
-              zIndex: 10001
+              transition: "all 0.2s ease",
+              zIndex: 10001,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+              e.currentTarget.style.background = "rgba(255,255,255,0.15)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+              e.currentTarget.style.background = "rgba(255,255,255,0.1)";
             }}
           >
             <X size={20} />
             Fechar
           </button>
 
-          {/* Toggle Desktop/Mobile in Modal */}
-          {hasMultipleVersions && (
-            <div style={{ 
-              position: 'absolute',
-              top: isCompact ? '12px' : '20px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex', 
-              gap: '4px', 
-              background: 'rgba(0,0,0,0.6)',
-              padding: isCompact ? '4px' : '5px',
-              borderRadius: '999px',
-              border: '1px solid rgba(255,255,255,0.15)',
-              zIndex: 10001
-            }}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setViewMode('desktop');
-                }}
+          {hasAnyImage ? (
+            <div
+              data-ui="visualizador-imagem-modal-alternancia"
+              style={{
+                position: "absolute",
+                top: isCompact ? "12px" : "20px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "6px",
+                zIndex: 10001,
+              }}
+            >
+              <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: isCompact ? '5px 10px' : '6px 12px',
-                  background: viewMode === 'desktop' ? 'rgba(255,255,255,0.15)' : 'transparent',
-                  border: viewMode === 'desktop' ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-                  borderRadius: '999px',
-                  color: WHITE,
-                  fontSize: 'var(--text-chip)',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  display: "inline-flex",
+                  gap: "4px",
+                  background: "rgba(0,0,0,0.6)",
+                  padding: isCompact ? "4px" : "5px",
+                  borderRadius: "999px",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                  flexWrap: "wrap",
+                  maxWidth: "min(92vw, 100%)",
                 }}
               >
-                <Monitor size={14} />
-                Desktop
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setViewMode('mobile');
-                }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: isCompact ? '5px 10px' : '6px 12px',
-                  background: viewMode === 'mobile' ? 'rgba(255,255,255,0.15)' : 'transparent',
-                  border: viewMode === 'mobile' ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
-                  borderRadius: '999px',
-                  color: WHITE,
-                  fontSize: 'var(--text-chip)',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <Smartphone size={14} />
-                Mobile
-              </button>
-            </div>
-          )}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (hasDesktopImage) {
+                      setViewMode("desktop");
+                    }
+                  }}
+                  disabled={!hasDesktopImage}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: isCompact ? "5px 10px" : "6px 12px",
+                    background:
+                      activeViewMode === "desktop"
+                        ? "rgba(255,255,255,0.15)"
+                        : "transparent",
+                    border:
+                      activeViewMode === "desktop"
+                        ? "1px solid rgba(255,255,255,0.3)"
+                        : "1px solid transparent",
+                    borderRadius: "999px",
+                    color: WHITE,
+                    fontSize: "var(--rotulo)",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "var(--tracking-label)",
+                    cursor: hasDesktopImage ? "pointer" : "not-allowed",
+                    opacity: hasDesktopImage ? 1 : 0.42,
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <Monitor size={14} />
+                  Desktop
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (hasMobileImage) {
+                      setViewMode("mobile");
+                    }
+                  }}
+                  disabled={!hasMobileImage}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: isCompact ? "5px 10px" : "6px 12px",
+                    background:
+                      activeViewMode === "mobile"
+                        ? "rgba(255,255,255,0.15)"
+                        : "transparent",
+                    border:
+                      activeViewMode === "mobile"
+                        ? "1px solid rgba(255,255,255,0.3)"
+                        : "1px solid transparent",
+                    borderRadius: "999px",
+                    color: WHITE,
+                    fontSize: "var(--rotulo)",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "var(--tracking-label)",
+                    cursor: hasMobileImage ? "pointer" : "not-allowed",
+                    opacity: hasMobileImage ? 1 : 0.42,
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  <Smartphone size={14} />
+                  Mobile
+                </button>
+              </div>
 
-          {/* Modal Content */}
-          <div 
+              {(!hasDesktopImage || !hasMobileImage) && (
+                <div
+                  style={{
+                    color: "rgba(255,255,255,0.45)",
+                    fontSize: "var(--rotulo)",
+                    lineHeight: 1.45,
+                    textAlign: "center",
+                    maxWidth: "280px",
+                  }}
+                >
+                  {!hasDesktopImage ? "Sem link imagem desktop." : null}
+                  {!hasDesktopImage && !hasMobileImage ? " " : null}
+                  {!hasMobileImage ? "Sem link imagem mobile." : null}
+                </div>
+              )}
+            </div>
+          ) : null}
+
+          <div
+            data-ui="visualizador-imagem-modal"
             onClick={(e) => e.stopPropagation()}
             className="image-viewer-scroll image-viewer-modal-scroll"
             style={{
-              width: '100%',
-              height: '100%',
-              overflowY: 'auto',
-              overflowX: 'hidden',
-              display: 'flex',
-              alignItems: 'flex-start',
-              justifyContent: 'center',
-              paddingTop: isCompact ? '12px' : '20px'
+              width: "100%",
+              height: "100%",
+              overflowY: "auto",
+              overflowX: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingTop: isCompact ? "72px" : "88px",
             }}
           >
-            {viewMode === 'mobile' ? (
-              // Mobile Mockup in Modal
-              <div style={{
-                width: isCompact ? 'clamp(240px, 84vw, 375px)' : 'fit-content',
-                maxWidth: '100%',
-                background: '#1a1a1a',
-                borderRadius: isCompact ? 'clamp(22px, 6vw, 32px)' : '48px',
-                padding: isCompact ? 'clamp(10px, 2vw, 14px)' : '16px',
-                boxShadow: '0 30px 80px rgba(0,0,0,0.8)',
-                border: `${isCompact ? 'clamp(4px, 1.4vw, 8px)' : '12px'} solid #2a2a2a`,
-                position: 'relative',
-                margin: '0 auto'
-              }}>
-                {/* Notch */}
-                <div style={{
-                  position: 'absolute',
-                  top: isCompact ? '10px' : '16px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  width: isCompact ? 'clamp(90px, 28vw, 160px)' : '160px',
-                  height: isCompact ? 'clamp(20px, 6vw, 32px)' : '32px',
-                  background: '#1a1a1a',
-                  borderRadius: isCompact ? '0 0 14px 14px' : '0 0 20px 20px',
-                  zIndex: 10
-                }} />
-                
-                {/* Screen with fixed width and internal scroll */}
-                <div style={{
-                  width: '100%',
-                  height: isCompact ? 'clamp(280px, 62vh, 560px)' : 'calc(90vh - 120px)',
-                  borderRadius: isCompact ? 'clamp(18px, 5vw, 28px)' : '32px',
-                  overflow: 'hidden',
-                  background: '#fff'
-                }}>
-                  <div style={{
-                    width: '100%',
-                    height: '100%',
-                    overflowY: 'auto',
-                    overflowX: 'hidden'
-                  }}
-                  className="image-viewer-scroll image-viewer-modal-image-scroll"
-                  >
-                    <img
-                      src={currentImage}
-                      alt={alt}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        display: 'block'
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
+            {activeViewMode === "mobile" ? (
+              <PhoneFrame
+                image={currentImageLink}
+                alt={alt}
+                compact={isCompact}
+                modal
+                widthClassName="image-viewer-modal-phone-frame"
+              />
             ) : (
-              // Desktop View in Modal - Full scrollable image
-              <div style={{
-                maxWidth: '1200px',
-                width: '100%',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
-              }}>
+              <div
+                style={{
+                  maxWidth: "1200px",
+                  width: "100%",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                  margin: "0 auto",
+                }}
+              >
                 <img
-                  src={currentImage}
+                  data-ui="visualizador-imagem-modal-desktop"
+                  src={currentImageLink}
                   alt={alt}
                   style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block'
+                    width: "100%",
+                    height: "auto",
+                    display: "block",
                   }}
                 />
               </div>

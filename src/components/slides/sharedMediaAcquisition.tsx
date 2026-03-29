@@ -37,7 +37,8 @@ type MediaAssetInput = string | MediaAsset | null | undefined;
 export type MediaAcquisitionItem = {
   title: string;
   description: string;
-  tags: Array<"LEADS" | "ACQUISITION" | "CRO" | "CRM" | "E-COMMERCE">;
+  tags: Array<"KPIs" | "LEADS" | "ACQUISITION" | "CRO" | "CRM" | "E-COMMERCE">;
+  objectiveKpis?: string[];
   status: Status;
   media: Array<MediaAsset | null>;
   accent: string;
@@ -68,6 +69,126 @@ const normalizeMediaAsset = (source: MediaAssetInput): MediaAsset | null => {
 export const mediaSlots = (
   ...sources: MediaAssetInput[]
 ): Array<MediaAsset | null> => sources.map(normalizeMediaAsset);
+
+type MediaTag = MediaAcquisitionItem["tags"][number];
+
+const MEDIA_TAG_ORDER: MediaTag[] = [
+  "KPIs",
+  "LEADS",
+  "ACQUISITION",
+  "CRO",
+  "CRM",
+  "E-COMMERCE",
+];
+
+const orderMediaTags = (tags: MediaAcquisitionItem["tags"]) =>
+  [...tags].sort(
+    (left, right) =>
+      MEDIA_TAG_ORDER.indexOf(left) - MEDIA_TAG_ORDER.indexOf(right),
+  );
+
+const MediaTagPill = ({
+  tag,
+  compact = false,
+}: {
+  tag: MediaTag;
+  compact?: boolean;
+}) => (
+  <DeckPill
+    label={tag}
+    compact={compact}
+    preset={
+      tag === "KPIs" ? deckPillPresets.tokenChip : deckPillPresets.tokenMeta
+    }
+    style={tag === "KPIs" ? { textTransform: "none" } : undefined}
+  />
+);
+
+const ObjectiveBlock = ({
+  text,
+  accent,
+  kpis = [],
+  compact = false,
+}: {
+  text: string;
+  accent: string;
+  kpis?: string[];
+  compact?: boolean;
+}) => (
+  <div
+    data-ui="bloco-objetivo-frente"
+    style={{
+      background: "rgba(255,255,255,0.018)",
+      padding: compact ? "16px" : "18px",
+      borderRadius: "14px",
+      border: "1px solid rgba(255,255,255,0.05)",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: compact ? "stretch" : "flex-start",
+        gap: "10px",
+        flexDirection: compact ? "column" : "row",
+        marginBottom: compact ? "8px" : "10px",
+      }}
+    >
+      <div
+        style={{
+          color: WHITE,
+          fontSize: "var(--rotulo)",
+          fontWeight: 700,
+          letterSpacing: "var(--tracking-label)",
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+        }}
+      >
+        <div
+          style={{
+            width: "3px",
+            height: "10px",
+            background: accent,
+            borderRadius: "999px",
+          }}
+        />
+        Objetivo da Frente
+      </div>
+      {kpis.length > 0 ? (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "6px",
+            justifyContent: compact ? "flex-start" : "flex-end",
+            alignItems: "center",
+          }}
+        >
+          {kpis.map((kpi) => (
+            <DeckPill
+              key={kpi}
+              label={kpi}
+              compact={compact}
+              preset={deckPillPresets.tokenChip}
+              style={{ textTransform: "none" }}
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
+    <div
+      style={{
+        color: "rgba(255,255,255,0.68)",
+        fontSize: "var(--paragrafo)",
+        lineHeight: 1.5,
+        fontWeight: 300,
+      }}
+    >
+      {text}
+    </div>
+  </div>
+);
 
 export const mediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
@@ -472,6 +593,7 @@ const ExpandableMediaCard = ({
   return (
     <>
       <motion.article
+        data-ui="card-midia-expansivel"
         layout
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -480,6 +602,7 @@ const ExpandableMediaCard = ({
       >
         <div
           /* Edita Card de Midia Expansivel */
+          data-ui="card-midia-cabecalho"
           style={{
             padding: isCompact ? "16px 16px 0" : "18px 18px 0",
             display: "flex",
@@ -494,23 +617,50 @@ const ExpandableMediaCard = ({
               minWidth: 0,
               display: "flex",
               flexDirection: "column",
-              gap: "8px",
+              gap: "10px",
+              flex: "1 1 auto",
             }}
           >
             <div
               style={{
-                color: WHITE,
-                fontSize: "var(--text-body-lg)",
-                fontWeight: 700,
-                lineHeight: 1.24,
-                letterSpacing: "-0.01em",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: isCompact ? "stretch" : "flex-start",
+                gap: "12px",
+                flexDirection: isCompact ? "column" : "row",
               }}
             >
-              {item.title}
+              <div
+                style={{
+                  color: WHITE,
+                  fontSize: "var(--paragrafo-grande)",
+                  fontWeight: 700,
+                  lineHeight: 1.24,
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                {item.title}
+              </div>
+              <div style={{ alignSelf: isCompact ? "flex-start" : "auto" }}>
+                <DeckStatusPill status={item.status} />
+              </div>
             </div>
-          </div>
-          <div style={{ alignSelf: isCompact ? "flex-start" : "auto" }}>
-            <DeckStatusPill status={item.status} />
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "6px",
+                alignItems: "flex-start",
+              }}
+            >
+              {orderMediaTags(item.tags).map((tag) => (
+                <MediaTagPill
+                  key={`${item.title}-${tag}`}
+                  tag={tag}
+                  compact={isCompact}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -525,7 +675,7 @@ const ExpandableMediaCard = ({
         <div
           style={{
             position: "relative",
-            padding: isCompact ? "14px 16px 16px" : "16px 18px 18px",
+            padding: isCompact ? "14px 16px 16px" : "0 18px 16px",
           }}
         >
           {hasMedia ? (
@@ -556,12 +706,25 @@ const ExpandableMediaCard = ({
             frameRatio={frameRatio}
             ariaLabel={`Mídia do card ${item.title}`}
           />
+          <div
+            style={{
+              marginTop: isCompact ? "14px" : "16px",
+            }}
+          >
+            <ObjectiveBlock
+              text={item.description}
+              accent={item.accent}
+              kpis={item.objectiveKpis}
+              compact={isCompact}
+            />
+          </div>
         </div>
       </motion.article>
 
       <AnimatePresence>
         {isOpen ? (
           <motion.div
+            data-ui="midia-modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -580,6 +743,7 @@ const ExpandableMediaCard = ({
             }}
           >
             <motion.div
+              data-ui="midia-modal"
               initial={{ scale: 0.96, y: 16 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.96, y: 16 }}
@@ -589,8 +753,8 @@ const ExpandableMediaCard = ({
               style={{
                 width: "min(1200px, 100%)",
                 maxHeight: "92vh",
-                display: "grid",
-                gridTemplateRows: "auto 1fr auto",
+                display: "flex",
+                flexDirection: "column",
                 gap: isCompact ? "14px" : "18px",
                 background: "rgba(18,18,18,0.92)",
                 border: "1px solid rgba(255,255,255,0.1)",
@@ -600,19 +764,28 @@ const ExpandableMediaCard = ({
               }}
             >
               <div
+                data-ui="midia-modal-cabecalho"
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: isCompact ? "stretch" : "flex-start",
+                  alignItems: "flex-start",
                   gap: "16px",
-                  flexDirection: isCompact ? "column" : "row",
+                  flexDirection: "row",
                 }}
               >
-                <div style={{ minWidth: 0 }}>
+                <div
+                  style={{
+                    minWidth: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                    flex: "1 1 auto",
+                  }}
+                >
                   <div
                     style={{
                       color: WHITE,
-                      fontSize: "var(--text-section)",
+                      fontSize: "var(--titulo-secao)",
                       fontWeight: 700,
                       lineHeight: 1.2,
                       letterSpacing: "-0.02em",
@@ -620,10 +793,12 @@ const ExpandableMediaCard = ({
                   >
                     {item.title}
                   </div>
+                  <DeckStatusPill status={item.status} />
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
+                  data-ui="midia-modal-fechar"
                   style={{
                     width: isCompact ? "36px" : "40px",
                     height: isCompact ? "36px" : "40px",
@@ -660,18 +835,6 @@ const ExpandableMediaCard = ({
                 modalMaxHeightPx={isCompact ? 420 : 500}
                 ariaLabel={`Visualização ampliada do card ${item.title}`}
               />
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "16px",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                }}
-              >
-                <DeckStatusPill status={item.status} />
-              </div>
             </motion.div>
           </motion.div>
         ) : null}
@@ -692,7 +855,8 @@ export const MediaAcquisitionSection = ({
   const { isMobile, isCompact } = useDeckViewport();
 
   const itemsByColumn = useMemo(() => {
-    const totalColumns = isMobile ? 1 : isCompact ? 2 : 4;
+    const maxColumns = isMobile ? 1 : isCompact ? 2 : 4;
+    const totalColumns = Math.max(1, Math.min(items.length, maxColumns));
     const columns = Array.from(
       { length: totalColumns },
       () => [] as MediaAcquisitionItem[],
@@ -708,6 +872,7 @@ export const MediaAcquisitionSection = ({
   return (
     <motion.section
       /* Edita Secao de Midias Acquisition */
+      data-ui="secao-midias-aquisicao"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -729,6 +894,7 @@ export const MediaAcquisitionSection = ({
 
       <div
         /* Edita Grid de Cards de Midia */
+        data-ui="grid-cards-midia"
         style={{
           width: "100%",
           minWidth: 0,
@@ -750,7 +916,9 @@ export const MediaAcquisitionSection = ({
           >
             {columnItems.map((item) => (
               <div
-                key={item.title}
+                key={`${item.title}-${item.status}-${item.description}-${item.media
+                  .map((asset) => asset?.src ?? "missing")
+                  .join("|")}`}
                 style={{ minWidth: 0, height: "fit-content" }}
               >
                 <ExpandableMediaCard item={item} isCompact={isCompact} />
@@ -889,7 +1057,7 @@ const MediaCarouselViewport = ({
     border: "1px solid rgba(255,255,255,0.12)",
     background: "rgba(0,0,0,0.48)",
     color: WHITE,
-    fontSize: "var(--text-chip)",
+    fontSize: "var(--rotulo)",
     fontWeight: 700,
     letterSpacing: "0.08em",
     lineHeight: 1,
@@ -899,14 +1067,17 @@ const MediaCarouselViewport = ({
 
   return (
     <motion.div
+      data-ui="midia-viewport"
       layout
       style={{
         width:
           variant === "modal" && widthCap ? `min(100%, ${widthCap}px)` : "100%",
+        margin: variant === "modal" ? "0 auto" : undefined,
       }}
     >
       <AspectRatio ratio={frameRatio} style={{ width: "100%" }}>
         <div
+          data-ui="midia-viewport-frame"
           role="group"
           tabIndex={hasMultiple || Boolean(onActivate) ? 0 : -1}
           aria-label={ariaLabel}
@@ -995,7 +1166,7 @@ const MediaCarouselViewport = ({
               <div
                 style={{
                   color: WHITE,
-                  fontSize: "var(--text-body-lg)",
+                  fontSize: "var(--paragrafo-grande)",
                   fontWeight: 700,
                   lineHeight: 1.3,
                   textAlign: "center",

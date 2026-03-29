@@ -14,6 +14,7 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
 
   return didError ? (
     <div
+      data-ui="imagem-com-fallback"
       className={`inline-block bg-gray-100 text-center align-middle ${className ?? ''}`}
       style={style}
     >
@@ -22,6 +23,6 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
       </div>
     </div>
   ) : (
-    <img src={src} alt={alt} className={className} style={style} {...rest} onError={handleError} />
+    <img data-ui="imagem-com-fallback" src={src} alt={alt} className={className} style={style} {...rest} onError={handleError} />
   )
 }

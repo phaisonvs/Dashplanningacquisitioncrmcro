@@ -10,6 +10,7 @@ interface Props {
 export function ImageUploadPlaceholder({ title, subtitle, height = '180px' }: Props) {
   return (
     <div
+        data-ui="placeholder-upload"
         style={{
           background: CARD_BG,
           border: `1px dashed ${CARD_BORDER}`,
@@ -25,12 +26,13 @@ export function ImageUploadPlaceholder({ title, subtitle, height = '180px' }: Pr
         }}
       >
       <div
+        data-ui="placeholder-upload-rotulo"
         style={{
           position: 'absolute',
           top: '10px',
           left: '12px',
           color: YELLOW,
-          fontSize: 'var(--text-meta)',
+          fontSize: 'var(--rotulo)',
           fontWeight: 700,
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
@@ -39,12 +41,13 @@ export function ImageUploadPlaceholder({ title, subtitle, height = '180px' }: Pr
         {title}
       </div>
       <Upload size={20} color="#444" />
-      <div style={{ color: '#555', fontSize: 'var(--text-body)', textAlign: 'center', lineHeight: 1.45 }}>
+      <div data-ui="placeholder-upload-descricao" style={{ color: '#555', fontSize: 'var(--paragrafo)', textAlign: 'center', lineHeight: 1.45 }}>
         {subtitle || 'Dados a serem anexados'}
       </div>
       <div
+        data-ui="placeholder-upload-cta"
         style={{
-          fontSize: 'var(--text-chip)',
+          fontSize: 'var(--rotulo)',
           color: '#3A3A3A',
           border: '1px solid #2A2A2A',
           borderRadius: '999px',

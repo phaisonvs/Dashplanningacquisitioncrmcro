@@ -3,14 +3,14 @@ import { PieChart, CreditCard, Users, Repeat, Sparkles } from 'lucide-react';
 
 export function RevenueSlide() {
   return (
-    <div className="relative w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-950 to-green-950/20 overflow-hidden">
+    <div data-ui="legacy-receita-slide" className="relative w-full h-full bg-gradient-to-br from-neutral-900 via-neutral-950 to-green-950/20 overflow-hidden">
       {/* Background elements */}
       <div className="absolute bottom-0 right-0 w-1/3 h-1/2 bg-green-500/10 rounded-full blur-3xl" />
 
       {/* Content Container */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-16">
+      <div data-ui="legacy-receita-slide-conteudo" className="relative z-10 h-full flex flex-col justify-between p-16">
         {/* Header */}
-        <div className="space-y-2">
+        <div data-ui="legacy-receita-slide-cabecalho" className="space-y-2">
           <div className="flex items-center gap-3">
             <PieChart className="w-6 h-6 text-green-400" />
             <span className="text-green-400/90 text-sm tracking-wider uppercase">Revenue Model</span>
@@ -21,9 +21,9 @@ export function RevenueSlide() {
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-2 gap-12">
+        <div data-ui="legacy-receita-slide-principal" className="grid grid-cols-2 gap-12">
           {/* Revenue Streams */}
-          <div className="space-y-4">
+          <div data-ui="legacy-receita-slide-fluxos" className="space-y-4">
             {/* Stream 1 */}
             <div className="bg-gradient-to-r from-green-900/40 to-neutral-900/60 border border-green-500/30 rounded-xl p-6">
               <div className="flex items-start justify-between mb-4">
@@ -102,7 +102,7 @@ export function RevenueSlide() {
           </div>
 
           {/* Right Side - Projections */}
-          <div className="space-y-6">
+          <div data-ui="legacy-receita-slide-projecoes" className="space-y-6">
             <div className="bg-gradient-to-br from-neutral-800/80 to-neutral-900 border border-white/10 rounded-xl p-8">
               <p className="text-white/60 text-sm mb-6">5-Year Revenue Projection</p>
               
@@ -164,7 +164,7 @@ export function RevenueSlide() {
         </div>
 
         {/* Footer */}
-        <div className="text-white/50 text-sm">
+        <div data-ui="legacy-receita-slide-rodape" className="text-white/50 text-sm">
           Conservative projections based on current user growth trends
         </div>
       </div>
