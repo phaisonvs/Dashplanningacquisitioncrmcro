@@ -479,6 +479,7 @@ const ExpandableMediaCard = ({
         style={deckCardPresets.mediaCard(isCompact)}
       >
         <div
+          /* Edita Card de Midia Expansivel */
           style={{
             padding: isCompact ? "16px 16px 0" : "18px 18px 0",
             display: "flex",
@@ -565,6 +566,7 @@ const ExpandableMediaCard = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
+            /* Edita Overlay do Modal de Midia */
             style={{
               position: "fixed",
               inset: 0,
@@ -583,6 +585,7 @@ const ExpandableMediaCard = ({
               exit={{ scale: 0.96, y: 16 }}
               transition={{ duration: 0.18 }}
               onClick={(event) => event.stopPropagation()}
+              /* Edita Modal de Midia Ampliado */
               style={{
                 width: "min(1200px, 100%)",
                 maxHeight: "92vh",
@@ -704,6 +707,7 @@ export const MediaAcquisitionSection = ({
 
   return (
     <motion.section
+      /* Edita Secao de Midias Acquisition */
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -724,6 +728,7 @@ export const MediaAcquisitionSection = ({
       />
 
       <div
+        /* Edita Grid de Cards de Midia */
         style={{
           width: "100%",
           minWidth: 0,

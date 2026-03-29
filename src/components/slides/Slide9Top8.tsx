@@ -83,7 +83,7 @@ const summaryCards: SummaryCard[] = [
       'Aumentar eficiência de campanhas (ROAS)',
       'Reestruturar UX do e-commerce (catálogo + filtros)',
       'Evoluir Split de Entregas e análises de experiência',
-      'Mecânica de Whatsapp e E-mail Marketing',
+      'Mecânica de WhatsApp e E-mail Marketing',
     ],
   },
   {
@@ -107,6 +107,7 @@ const impacts: ImpactItem[] = [
 
 const ImpactRow = ({ item, isActive, index, compact = false }: { item: ImpactItem; isActive: boolean; index: number; compact?: boolean }) => (
   <div
+    /* Edita Linha de Impacto */
     style={{
       display: 'flex',
       alignItems: compact ? 'stretch' : 'flex-start',
@@ -273,6 +274,7 @@ export function Slide9Top8({ isActive }: Props) {
       </section>
 
       <div
+        /* Edita Rodape de Encerramento */
         style={{
           padding: isCompact ? '16px 18px' : '18px 22px',
           borderRadius: '14px',
@@ -289,4 +291,3 @@ export function Slide9Top8({ isActive }: Props) {
     </div>
   );
 }
-

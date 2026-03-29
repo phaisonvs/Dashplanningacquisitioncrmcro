@@ -192,6 +192,7 @@ export function DeckPill({
 
   return (
     <span
+      /* Edita Tag/Pill Base */
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -282,6 +283,7 @@ const createDeckCardStyle = (
 
 export const deckCardPresets = {
   section: (compact: boolean, variant: 'default' | 'wide' = 'default') =>
+    /* Edita Preset de Secao */
     createDeckCardStyle(compact, {
       background: 'rgba(255,255,255,0.02)',
       border: '1px solid rgba(255,255,255,0.05)',
@@ -292,6 +294,7 @@ export const deckCardPresets = {
       flexDirection: 'column',
     }),
   surface: (compact: boolean, tone: 'default' | 'subtle' = 'default') =>
+    /* Edita Preset de Superficie */
     createDeckCardStyle(compact, {
       background: tone === 'subtle' ? 'rgba(255,255,255,0.018)' : 'rgba(255,255,255,0.022)',
       border: '1px solid rgba(255,255,255,0.05)',
@@ -303,6 +306,7 @@ export const deckCardPresets = {
       overflow: 'hidden',
     }),
   metric: (compact: boolean, size: 'default' | 'tight' = 'default', tone: 'default' | 'subtle' = 'default') =>
+    /* Edita Preset de Card de Metrica */
     createDeckCardStyle(compact, {
       background: tone === 'subtle' ? 'rgba(255,255,255,0.018)' : 'rgba(255,255,255,0.02)',
       border: '1px solid rgba(255,255,255,0.05)',
@@ -318,6 +322,7 @@ export const deckCardPresets = {
     compact: boolean,
     surface: 'glass' | 'solid' = 'glass',
   ) =>
+    /* Edita Preset de Card de Acao */
     createDeckCardStyle(compact, {
       background:
         surface === 'solid'
@@ -344,6 +349,7 @@ export const deckCardPresets = {
             : 'inset 0 1px 0 rgba(255,255,255,0.03)',
     }),
   mediaCard: (compact: boolean) =>
+    /* Edita Preset de Card de Midia */
     createDeckCardStyle(compact, {
       background:
         'linear-gradient(180deg, rgba(255,255,255,0.032) 0%, rgba(255,255,255,0.018) 100%)',
@@ -426,7 +432,7 @@ export const MediaCarouselNavControls = ({
     </button>
     <button
       type="button"
-      aria-label={`${ariaLabelPrefix} prÃ³xima`}
+      aria-label={`${ariaLabelPrefix} próxima`}
       onClick={(event) => {
         event.stopPropagation();
         onNext();
@@ -477,6 +483,7 @@ export function SlideHeroHeader({
 
   return (
     <div
+      /* Edita Cabecalho de Secao */
       style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -522,6 +529,7 @@ export function SlideSectionHeader({ accentColor, title, subtitle, right }: Slid
 
   return (
     <div
+      /* Edita Cabecalho de Evidencia */
       style={{
         display: 'flex',
         justifyContent: 'space-between',

@@ -73,7 +73,7 @@ const topMetrics: MetricCard[] = [
       bullet('negative', 'Crescimento de tráfego ainda não converte na mesma proporção em pedido.'),
     ],
     previousActions: [action('CRO', 'feito', 'Reformulação completa da Hero Section com foco em hierarquia visual, sliders e CTAs.')],
-    weekActions: [action('CRM', 'pendente', 'Mecânica de Whatsapp e E-mail Marketing')],
+    weekActions: [action('CRM', 'pendente', 'Mecânica de WhatsApp e E-mail Marketing')],
   },
   {
     title: 'TAXA DE CONVERSÃO',
@@ -225,6 +225,7 @@ const StatusCounter = ({ status, count, isActive }: { status: Status; count: num
 
 const GoogleShoppingBadge = () => (
   <div
+    /* Edita Bloco de Objetivo */
     style={{
       display: 'inline-flex',
       alignItems: 'center',
@@ -313,9 +314,10 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
         const hasValue = Boolean(row.value);
 
         return (
-          <div
-            key={`${row.text}-${index}`}
-            style={{
+            <div
+              key={`${row.text}-${index}`}
+              /* Edita Linha de Comparacao */
+              style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: hasValue ? 'space-between' : 'flex-start',
@@ -411,6 +413,7 @@ const mediaEfficiencyCard = {
 
 const MediaEfficiencyCardView = ({ isActive, compact = false }: { isActive: boolean; compact?: boolean }) => (
   <motion.article
+    /* Edita Card de Evidencia */
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.45 }}
@@ -811,9 +814,6 @@ export function Slide5Ecommerce({ isActive }: Props) {
     </div>
   );
 }
-
-
-
 
 
 

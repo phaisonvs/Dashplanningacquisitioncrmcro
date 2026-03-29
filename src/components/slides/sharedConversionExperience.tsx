@@ -35,6 +35,7 @@ const orderEvidenceTags = (tags: ConversionExperienceItem['tags']) =>
 
 const ObjectiveBlock = ({ text, compact = false }: { text: string; compact?: boolean }) => (
   <div
+    /* Edita Bloco de Objetivo da Frente */
     style={{
       background: 'rgba(255,255,255,0.018)',
       padding: compact ? '16px' : '18px',
@@ -118,6 +119,7 @@ export function ConversionExperienceSection({
 
   return (
     <motion.section
+      /* Edita Secao de Experiencia de Conversao */
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

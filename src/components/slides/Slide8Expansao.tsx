@@ -238,6 +238,7 @@ const StatusCounter = ({
 
   return (
     <div
+      /* Edita Contador de Status */
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -304,6 +305,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
         return (
           <div
             key={`${row.text}-${index}`}
+            /* Edita Linha de Comparacao */
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -422,4 +424,3 @@ export function Slide8Expansao({ isActive }: Props) {
     </div>
   );
 }
-

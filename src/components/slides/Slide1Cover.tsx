@@ -91,11 +91,15 @@ export function Slide1Cover({ isActive }: Props) {
         />
       </div>
 
-      <div style={{ position: 'relative', zIndex: 10 }}>
+      <div
+        /* Edita Conteudo da Capa */
+        style={{ position: 'relative', zIndex: 10 }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
+          /* Edita Header "PLANNING SEMANAL" */
           style={{ display: 'flex', gap: '12px', marginBottom: isCompact ? '14px' : '18px', alignItems: 'center', flexWrap: 'wrap' }}
         >
           <div style={{ width: isCompact ? '24px' : '32px', height: '1px', background: 'rgba(255,255,255,0.4)' }} />
@@ -124,6 +128,7 @@ export function Slide1Cover({ isActive }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.6 }}
+          /* Edita Descricao da Capa */
           style={{
             color: 'rgba(255,255,255,0.5)',
             fontSize: 'var(--text-body-lg)',
@@ -140,6 +145,7 @@ export function Slide1Cover({ isActive }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.9 }}
+          /* Edita Rodape/Data da Capa */
           style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: isCompact ? '48px' : '80px' }}
         >
           <span

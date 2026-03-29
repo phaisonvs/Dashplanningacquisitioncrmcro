@@ -449,6 +449,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
         return (
           <div
             key={`${row.text}-${index}`}
+            /* Edita Linha de Comparacao */
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -797,4 +798,3 @@ export function Slide2VisaoLeads({ isActive }: Props) {
     </div>
   );
 }
-
