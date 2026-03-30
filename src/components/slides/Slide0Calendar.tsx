@@ -19,18 +19,18 @@ type WeekItem = {
 };
 
 const marchWeeksWeek13: WeekItem[] = [
-  { week: 'Semana 10', date: '02 Mar â€” 06 Mar', status: 'ConcluÃ­do', completed: true },
-  { week: 'Semana 11', date: '09 Mar â€” 13 Mar', status: 'ConcluÃ­do', completed: true },
-  { week: 'Semana 12', date: '16 Mar â€” 20 Mar', status: 'ConcluÃ­do', completed: true },
-  { week: 'Semana 13', date: '23 Mar â€” 27 Mar', status: 'Report Atual', active: true },
-  { week: 'Semana 14', date: '30 Mar â€” 03 Abr', status: 'Agendado' },
+  { week: 'Semana 10', date: '02 Mar — 06 Mar', status: 'Concluído', completed: true },
+  { week: 'Semana 11', date: '09 Mar — 13 Mar', status: 'Concluído', completed: true },
+  { week: 'Semana 12', date: '16 Mar — 20 Mar', status: 'Concluído', completed: true },
+  { week: 'Semana 13', date: '23 Mar — 27 Mar', status: 'Report Atual', active: true },
+  { week: 'Semana 14', date: '30 Mar — 03 Abr', status: 'Agendado' },
 ];
 
 const marchWeeksSnapshots = {
   week13: marchWeeksWeek13,
   week14: marchWeeksWeek13.map((week) => {
     if (week.week === 'Semana 13') {
-      return { ...week, status: 'ConcluÃ­do', completed: true, active: false };
+      return { ...week, status: 'Concluído', completed: true, active: false };
     }
 
     if (week.week === 'Semana 14') {
@@ -44,10 +44,10 @@ const marchWeeksSnapshots = {
 const marchWeeks: WeekItem[] = marchWeeksSnapshots[ACTIVE_REPORT_WEEK];
 
 const aprilWeeks: WeekItem[] = [
-  { week: 'Semana 15', date: '06 Abr â€” 10 Abr', status: 'Agendado' },
-  { week: 'Semana 16', date: '13 Abr â€” 17 Abr', status: 'Agendado' },
-  { week: 'Semana 17', date: '20 Abr â€” 24 Abr', status: 'Agendado' },
-  { week: 'Semana 18', date: '27 Abr â€” 01 Mai', status: 'Agendado' },
+  { week: 'Semana 15', date: '06 Abr — 10 Abr', status: 'Agendado' },
+  { week: 'Semana 16', date: '13 Abr — 17 Abr', status: 'Agendado' },
+  { week: 'Semana 17', date: '20 Abr — 24 Abr', status: 'Agendado' },
+  { week: 'Semana 18', date: '27 Abr — 01 Mai', status: 'Agendado' },
 ];
 
 const dashboardTags = [
@@ -324,7 +324,7 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
                 fontWeight: 300,
               }}
             >
-              VisÃ£o semanal do report, com foco em execuÃ§Ã£o, performance e prioridades.
+              Visão semanal do report, com foco em execução, performance e prioridades.
             </div>
           </motion.div>
         </section>
@@ -339,11 +339,10 @@ export function Slide0Calendar({ isActive, onNavigate }: Props) {
             alignItems: 'stretch',
           }}
         >
-          <WeekColumn title="MarÃ§o 2026" weeks={marchWeeks} onNavigate={onNavigate} compact={isCompact} />
+          <WeekColumn title="Março 2026" weeks={marchWeeks} onNavigate={onNavigate} compact={isCompact} />
           <WeekColumn title="Abril 2026" weeks={aprilWeeks} onNavigate={onNavigate} compact={isCompact} />
         </div>
       </div>
     </div>
   );
 }
-

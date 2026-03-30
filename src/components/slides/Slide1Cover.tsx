@@ -187,8 +187,7 @@ export function Slide1Cover({ isActive }: Props) {
             fontWeight: 300,
           }}
         >
-          RevisÃ£o executiva consolidada. Foco em performance, eficiÃªncia de
-          funil, saÃºde do e-commerce e prÃ³ximos passos estratÃ©gicos.
+          Revisão executiva consolidada. Foco em performance, eficiência de funil, saúde do e-commerce e próximos passos estratégicos.
         </motion.p>
 
         <motion.div
@@ -221,7 +220,4 @@ export function Slide1Cover({ isActive }: Props) {
     </div>
   );
 }
-
-
-
 

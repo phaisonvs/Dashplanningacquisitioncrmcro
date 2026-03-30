@@ -245,7 +245,8 @@ export function ConversionExperienceSection({
   subtitle = "Leitura visual das peças e frentes que alimentam conversão e experiência.",
 }: ConversionExperienceSectionProps) {
   const { isMobile, isCompact } = useDeckViewport();
-  const orderedItems = [...items].reverse();
+  // A ordem visual segue a ordem do array: novos cards devem entrar no início da lista.
+  const orderedItems = items;
 
   return (
     <motion.section
