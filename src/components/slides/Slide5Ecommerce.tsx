@@ -101,8 +101,16 @@ const topMetrics: MetricCard[] = [
       ),
     ],
     previousActions: [
-      action("ACQUISITION", "feito", "Campanhas de tráfego em Meta Ads com o objetivo de trazer tráfego qualificado"),
-      action("CRO", "feito", "Aumento das campanhas de Remarketing também em meta para manter o fluxo em todas as etapas do funil"),
+      action(
+        "ACQUISITION",
+        "feito",
+        "Campanhas de tráfego em Meta Ads com o objetivo de trazer tráfego qualificado",
+      ),
+      action(
+        "CRO",
+        "feito",
+        "Aumento das campanhas de Remarketing também em meta para manter o fluxo em todas as etapas do funil",
+      ),
     ],
     weekActions: [],
   },
@@ -125,13 +133,33 @@ const topMetrics: MetricCard[] = [
       ),
     ],
     previousActions: [
-      action("ACQUISITION", "feito", "LISTA DE PUBLICOS ALVO PARA CAMPANHAS GERAIS E DE CATEGORIA"),
-      action("CRO", "feito", "CONSTRUÇÃO DE AUDIÊNCIAS PERSONALIZADAS PARA O ECOMM"),
-      action("CRM", "feito", "INSLUSÃO DE SELOS CHANCE ÚNICA, LANÇAMENTOS, EXCLUSIVOS"),
-      action("CRM", "pendente", "DISPAROS DE E-MAIL MARKETING PROMOCIONAL E CARRINHO ABANDONADO"),
+      action(
+        "ACQUISITION",
+        "feito",
+        "LISTA DE PUBLICOS ALVO PARA CAMPANHAS GERAIS E DE CATEGORIA",
+      ),
+      action(
+        "CRO",
+        "feito",
+        "CONSTRUÇÃO DE AUDIÊNCIAS PERSONALIZADAS PARA O ECOMM",
+      ),
+      action(
+        "CRM",
+        "feito",
+        "INSLUSÃO DE SELOS CHANCE ÚNICA, LANÇAMENTOS, EXCLUSIVOS",
+      ),
+      action(
+        "CRM",
+        "pendente",
+        "DISPAROS DE E-MAIL MARKETING PROMOCIONAL E CARRINHO ABANDONADO",
+      ),
     ],
     weekActions: [
-      action("CRO", "pendente", "SPLIT DE PEDIDOS, REGIONALIZAÇÃO DE PREÇOS, EVOLUÇÃO DO BOT"),
+      action(
+        "CRO",
+        "pendente",
+        "SPLIT DE PEDIDOS, REGIONALIZAÇÃO DE PREÇOS, EVOLUÇÃO DO BOT",
+      ),
     ],
   },
   {
@@ -175,11 +203,23 @@ const bottomMetrics: MetricCard[] = [
     value: { target: 820.66, prefix: "R$", decimals: 2 },
     comparisons: [comparison("positive", "MoM", "R$1012,23")],
     bullets: [
-      bullet("positive", "Ticket médio aumento aproximadamente 15% em relação a última semana"),
-      bullet("negative", "Ticket abaixo da nossa média. Nosso canal ainda está dependente dos produtos que mais vendiam e que hoje não estão disponíveis mais"),
+      bullet(
+        "positive",
+        "Ticket médio aumento aproximadamente 15% em relação a última semana",
+      ),
+      bullet(
+        "negative",
+        "Ticket abaixo da nossa média. Nosso canal ainda está dependente dos produtos que mais vendiam e que hoje não estão disponíveis mais",
+      ),
     ],
     previousActions: [action("CRO", "feito", "Compre Junto cadastrados")],
-    weekActions: [action("CRO", "pendente", "Fazer estudo sobre outras opções de compre junto")],
+    weekActions: [
+      action(
+        "CRO",
+        "pendente",
+        "Fazer estudo sobre outras opções de compre junto",
+      ),
+    ],
   },
   {
     title: "PEDIDOS",
@@ -207,10 +247,10 @@ const ecommerceReportSnapshots = {
 const activeEcommerceReport = ecommerceReportSnapshots[ACTIVE_REPORT_WEEK];
 
 const statusCounts = collectStatusCounts(
-  [...activeEcommerceReport.topMetrics, ...activeEcommerceReport.bottomMetrics].flatMap((item) => [
-    ...item.previousActions,
-    ...item.weekActions,
-  ]),
+  [
+    ...activeEcommerceReport.topMetrics,
+    ...activeEcommerceReport.bottomMetrics,
+  ].flatMap((item) => [...item.previousActions, ...item.weekActions]),
 );
 
 const tokenPalette: Record<
@@ -422,11 +462,11 @@ const MetricCardView = ({
   compact?: boolean;
 }) => (
   <motion.article
-  data-ui="card-metrica-ecommerce"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.45 }}
-  style={deckCardPresets.metric(compact, "default", "subtle")}
+    data-ui="card-metrica-ecommerce"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.45 }}
+    style={deckCardPresets.metric(compact, "default", "subtle")}
   >
     <div
       data-ui="kpi-card-header"
@@ -492,7 +532,10 @@ const MetricCardView = ({
       </div>
     )}
 
-    <div data-ui="kpi-card-comparisons" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    <div
+      data-ui="kpi-card-comparisons"
+      style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+    >
       {item.comparisons.map((row, index) => {
         const activeColor = row.tone === "positive" ? GREEN : RED;
         const hasValue = Boolean(row.value);
@@ -622,13 +665,27 @@ const MetricCardView = ({
 
     {item.previousActions.length > 0 ? (
       <div data-ui="kpi-card-actions-previous">
-        <KpiActionGroup actions={item.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" surface="solid" actionGap={12} />
+        <KpiActionGroup
+          actions={item.previousActions}
+          compact={compact}
+          label="Ações da semana anterior"
+          variant="previous"
+          surface="solid"
+          actionGap={12}
+        />
       </div>
     ) : null}
 
     {item.weekActions.length > 0 ? (
       <div data-ui="kpi-card-actions-week">
-        <KpiActionGroup actions={item.weekActions} compact={compact} label="Ação na semana" variant="week" surface="solid" actionGap={12} />
+        <KpiActionGroup
+          actions={item.weekActions}
+          compact={compact}
+          label="Ação na semana"
+          variant="week"
+          surface="solid"
+          actionGap={12}
+        />
       </div>
     ) : null}
   </motion.article>
@@ -666,11 +723,11 @@ const MediaEfficiencyCardView = ({
 }) => (
   <motion.article
     /* Edita Card de Evidencia */
-  data-ui="card-eficiencia-ecommerce"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.45 }}
-  style={{
+    data-ui="card-eficiencia-ecommerce"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.45 }}
+    style={{
       ...deckCardPresets.metric(compact, "default", "subtle"),
       minHeight: undefined,
     }}
@@ -744,7 +801,10 @@ const MediaEfficiencyCardView = ({
       </div>
     )}
 
-    <div data-ui="kpi-card-comparisons" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    <div
+      data-ui="kpi-card-comparisons"
+      style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+    >
       {mediaEfficiencyCard.comparisons.map((row, index) => {
         const activeColor = row.tone === "positive" ? GREEN : RED;
         const hasValue = Boolean(row.value);
@@ -862,7 +922,14 @@ const MediaEfficiencyCardView = ({
     </div>
 
     <div data-ui="kpi-card-actions-week">
-      <KpiActionGroup actions={mediaEfficiencyCard.weekActions} compact={compact} label="Ação na semana" variant="week" surface="solid" actionGap={10} />
+      <KpiActionGroup
+        actions={mediaEfficiencyCard.weekActions}
+        compact={compact}
+        label="Ação na semana"
+        variant="week"
+        surface="solid"
+        actionGap={10}
+      />
     </div>
   </motion.article>
 );
@@ -875,7 +942,7 @@ const frontEvidenceItems: EvidenceItem[] = [
     tags: ["CRO", "E-COMMERCE"],
     status: "pendente",
     objective:
-      "Evolução do componente de cotação de frete com a opção de retirada na guide para mitigar abandono quando o custo de entrega for alto, oferecendo uma alternativa mais econômica e conveniente e, com isso, elevar a taxa de conversão do e-commerce, ampliar a retirada em loja e gerar mais oportunidade de lead e venda no ponto físico.",
+      "Evolução do componente de cotação de frete com a opção de retirada na guide, agregando inteligência com dados em tempo real da loja, como status de abertura, tempo restante para fechamento e informações de endereço, para mitigar abandono quando o custo de entrega for alto, oferecer uma alternativa mais econômica e conveniente, elevar a taxa de conversão do e-commerce, ampliar a retirada em loja e gerar mais oportunidade de lead e venda no ponto físico.",
     objectiveKpis: ["Taxa de conversão"],
     desktopImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/cotacao-retira-na-guide.jpg?v=202603301612",
@@ -1103,7 +1170,7 @@ const EvidenceCardView = ({
             desktopImageLink={desktopImageLink}
             mobileImageLink={mobileImageLink}
             alt={item.title}
-              height={item.imageHeight ?? 240}
+            height={item.imageHeight ?? 240}
             label={item.imageLabel}
             fullWidth={true}
           />
@@ -1143,7 +1210,7 @@ const ecommerceMediaAcquisitionItems: MediaAcquisitionItem[] = [
   },
   {
     title:
-      "Criativos \"Super Chance Única\" (e-commerce) + campanhas relâmpago Deca (oportunidade)",
+      'Criativos "Super Chance Única" (e-commerce) + campanhas relâmpago Deca (oportunidade)',
     description:
       "Pacote de criativos para Super Chance Única e campanhas relâmpago Deca com foco em oportunidade e aceleração de pedidos.",
     tags: ["ACQUISITION", "E-COMMERCE"],
@@ -1270,11 +1337,11 @@ export function Slide5Ecommerce({ isActive }: Props) {
             ))}
           </div>
 
-            <div
-              data-ui="ecommerce-metricas-secundarias"
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile
+          <div
+            data-ui="ecommerce-metricas-secundarias"
+            style={{
+              display: "grid",
+              gridTemplateColumns: isMobile
                 ? "1fr"
                 : isCompact
                   ? "repeat(2, minmax(0, 1fr))"
@@ -1304,5 +1371,3 @@ export function Slide5Ecommerce({ isActive }: Props) {
     </div>
   );
 }
-
-
