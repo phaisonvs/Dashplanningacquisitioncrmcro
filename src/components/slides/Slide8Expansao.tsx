@@ -4,6 +4,7 @@ import { CLUSTERS, BG, WHITE, GREEN, RED } from '../theme';
 import { ConversionExperienceSection } from './sharedConversionExperience';
 import {
   DeckPill,
+  KpiActionGroup,
   SlideHeroHeader,
   deckCardPresets,
   deckPillPresets,
@@ -240,12 +241,6 @@ const TokenTag = ({ label, compact = false }: { label: string; compact?: boolean
   return <DeckPill label={label} compact={compact} preset={deckPillPresets.tokenMeta} palette={palette} />;
 };
 
-const StatusPill = ({ status }: { status: Status }) => {
-  const palette = statusPalette[status];
-
-  return <DeckPill label={palette.label} palette={palette} compact preset={deckPillPresets.status} style={{ fontWeight: 800 }} />;
-};
-
 const StatusCounter = ({
   status,
   count,
@@ -284,18 +279,6 @@ const StatusCounter = ({
   );
 };
 
-const ActionCardView = ({ actionItem, variant = 'week', compact = false }: { actionItem: ActionCard; variant?: 'previous' | 'week'; compact?: boolean }) => (
-  <div data-ui="card-acao-expansao" style={deckCardPresets.action(variant, compact)}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px', marginBottom: compact ? '10px' : '12px', flexDirection: 'row', flexWrap: 'nowrap' }}>
-      <TokenTag label={actionItem.cluster} compact />
-      <StatusPill status={actionItem.status} />
-    </div>
-    <div style={{ color: variant === 'previous' ? 'rgba(255,255,255,0.74)' : 'rgba(255,255,255,0.88)', fontSize: 'var(--paragrafo)', lineHeight: 1.55, fontWeight: 500 }}>
-      {actionItem.text}
-    </div>
-  </div>
-);
-
 const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard; isActive: boolean; compact?: boolean }) => (
   <motion.article
     data-ui="card-metrica-expansao"
@@ -304,14 +287,16 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
     transition={{ duration: 0.45 }}
     style={deckCardPresets.metric(compact)}
   >
-    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
-      <div style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--paragrafo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
+    <div data-ui="kpi-card-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
+      <div data-ui="kpi-card-title" style={{ color: 'rgba(255,255,255,0.48)', fontSize: 'var(--paragrafo)', fontWeight: 700, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
         {item.title}
       </div>
-      <TokenTag label={item.dateTag} compact />
+      <div data-ui="kpi-card-date">
+        <TokenTag label={item.dateTag} compact />
+      </div>
     </div>
 
-    <div style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
+    <div data-ui="kpi-card-value" style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
       <AnimatedNumber
         target={item.value.target}
         prefix={item.value.prefix}
@@ -322,7 +307,7 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
       />
     </div>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div data-ui="kpi-card-comparisons" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {item.comparisons.map((row, index) => {
         const activeColor = row.tone === 'positive' ? GREEN : RED;
         const hasValue = Boolean(row.value);
@@ -345,12 +330,13 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
               flexWrap: 'nowrap',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--paragrafo)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
+            <div data-ui="kpi-card-comparison-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--paragrafo)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
               {row.text}
             </div>
             {hasValue && (
               <div
+                data-ui="kpi-card-comparison-value"
                 style={{
                   paddingLeft: compact ? 0 : '12px',
                   borderLeft: compact ? 'none' : `2px solid ${activeColor}`,
@@ -369,15 +355,15 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
       })}
     </div>
 
-    <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
+    <div data-ui="kpi-card-readings" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '18px' }}>
       <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginBottom: '10px' }}>
         Leituras
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {item.bullets.map((row, index) => (
-          <div key={`${row.text}-${index}`} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+          <div key={`${row.text}-${index}`} data-ui="kpi-card-reading" style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
             <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--paragrafo)', lineHeight: 1.45 }}>
+            <div data-ui="kpi-card-reading-text" style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--paragrafo)', lineHeight: 1.45 }}>
               {row.text}
             </div>
           </div>
@@ -385,27 +371,17 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
       </div>
     </div>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
-        Ações da semana anterior
+    {item.previousActions.length > 0 ? (
+      <div data-ui="kpi-card-actions-previous">
+        <KpiActionGroup actions={item.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" actionGap={12} />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {item.previousActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="previous" compact={compact} />
-        ))}
-      </div>
-    </div>
+    ) : null}
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
-        Ação na semana
+    {item.weekActions.length > 0 ? (
+      <div data-ui="kpi-card-actions-week">
+        <KpiActionGroup actions={item.weekActions} compact={compact} label="Ação na semana" variant="week" actionGap={12} />
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {item.weekActions.map((itemAction, index) => (
-          <ActionCardView key={`${itemAction.text}-${index}`} actionItem={itemAction} variant="week" compact={compact} />
-        ))}
-      </div>
-    </div>
+    ) : null}
   </motion.article>
 );
 

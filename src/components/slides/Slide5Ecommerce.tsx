@@ -21,6 +21,7 @@ import {
 } from "./sharedConversionExperience";
 import {
   DeckPill,
+  KpiActionGroup,
   SlideHeroHeader,
   deckCardPresets,
   deckPillPresets,
@@ -514,46 +515,6 @@ const GoogleShoppingBadge = () => (
   </div>
 );
 
-const ActionCardView = ({
-  actionItem,
-  variant = "week",
-  compact = false,
-}: {
-  actionItem: ActionCard;
-  variant?: "previous" | "week";
-  compact?: boolean;
-}) => (
-  <div style={deckCardPresets.action(variant, compact, "solid")}>
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: "10px",
-        marginBottom: compact ? "12px" : "14px",
-        flexDirection: "row",
-        flexWrap: "nowrap",
-      }}
-    >
-      <TokenTag label={actionItem.cluster} compact />
-      <StatusPill status={actionItem.status} />
-    </div>
-    <div
-      style={{
-        color:
-          variant === "previous"
-            ? "rgba(255,255,255,0.68)"
-            : "rgba(255,255,255,0.88)",
-        fontSize: "var(--paragrafo)",
-        lineHeight: 1.55,
-        fontWeight: 500,
-      }}
-    >
-      {actionItem.text}
-    </div>
-  </div>
-);
-
 const MetricCardView = ({
   item,
   isActive,
@@ -564,13 +525,14 @@ const MetricCardView = ({
   compact?: boolean;
 }) => (
   <motion.article
-    data-ui="card-metrica-ecommerce"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.45 }}
-    style={deckCardPresets.metric(compact, "default", "subtle")}
+  data-ui="card-metrica-ecommerce"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.45 }}
+  style={deckCardPresets.metric(compact, "default", "subtle")}
   >
     <div
+      data-ui="kpi-card-header"
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -580,6 +542,7 @@ const MetricCardView = ({
       }}
     >
       <div
+        data-ui="kpi-card-title"
         style={{
           color: "rgba(255,255,255,0.46)",
           fontSize: "var(--paragrafo)",
@@ -590,10 +553,13 @@ const MetricCardView = ({
       >
         {item.title}
       </div>
-      <TokenTag label="Mar/2026" compact />
+      <div data-ui="kpi-card-date">
+        <TokenTag label="Mar/2026" compact />
+      </div>
     </div>
 
     <div
+      data-ui="kpi-card-value"
       style={{
         fontSize: "var(--titulo-pagina)",
         lineHeight: 1,
@@ -615,6 +581,7 @@ const MetricCardView = ({
 
     {item.subtitle && (
       <div
+        data-ui="kpi-card-subtitle"
         style={{
           color: "rgba(255,255,255,0.56)",
           fontSize: "var(--paragrafo)",
@@ -626,7 +593,7 @@ const MetricCardView = ({
       </div>
     )}
 
-    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    <div data-ui="kpi-card-comparisons" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {item.comparisons.map((row, index) => {
         const activeColor = row.tone === "positive" ? GREEN : RED;
         const hasValue = Boolean(row.value);
@@ -653,6 +620,7 @@ const MetricCardView = ({
             }}
           >
             <div
+              data-ui="kpi-card-comparison-label"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -677,6 +645,7 @@ const MetricCardView = ({
             </div>
             {hasValue && (
               <div
+                data-ui="kpi-card-comparison-value"
                 style={{
                   paddingLeft: compact ? 0 : "12px",
                   borderLeft: compact ? "none" : `2px solid ${activeColor}`,
@@ -696,6 +665,7 @@ const MetricCardView = ({
     </div>
 
     <div
+      data-ui="kpi-card-readings"
       style={{
         borderTop: "1px solid rgba(255,255,255,0.05)",
         paddingTop: compact ? "18px" : "20px",
@@ -723,6 +693,7 @@ const MetricCardView = ({
         {item.bullets.map((row, index) => (
           <div
             key={`${row.text}-${index}`}
+            data-ui="kpi-card-reading"
             style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}
           >
             <span
@@ -736,6 +707,7 @@ const MetricCardView = ({
               }}
             />
             <div
+              data-ui="kpi-card-reading-text"
               style={{
                 color: "rgba(255,255,255,0.74)",
                 fontSize: "var(--paragrafo)",
@@ -749,57 +721,17 @@ const MetricCardView = ({
       </div>
     </div>
 
-    {item.previousActions.length > 0 && (
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <div
-          style={{
-            color: "rgba(255,255,255,0.42)",
-            fontSize: "var(--rotulo)",
-            fontWeight: 700,
-            letterSpacing: "var(--tracking-label)",
-            textTransform: "uppercase",
-          }}
-        >
-          Ações da semana anterior
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {item.previousActions.map((itemAction, index) => (
-            <ActionCardView
-              key={`${itemAction.text}-${index}`}
-              actionItem={itemAction}
-              variant="previous"
-              compact={compact}
-            />
-          ))}
-        </div>
+    {item.previousActions.length > 0 ? (
+      <div data-ui="kpi-card-actions-previous">
+        <KpiActionGroup actions={item.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" surface="solid" actionGap={12} />
       </div>
-    )}
+    ) : null}
 
-    {item.weekActions.length > 0 && (
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <div
-          style={{
-            color: "rgba(255,255,255,0.42)",
-            fontSize: "var(--rotulo)",
-            fontWeight: 700,
-            letterSpacing: "var(--tracking-label)",
-            textTransform: "uppercase",
-          }}
-        >
-          Ação na semana
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          {item.weekActions.map((itemAction, index) => (
-            <ActionCardView
-              key={`${itemAction.text}-${index}`}
-              actionItem={itemAction}
-              variant="week"
-              compact={compact}
-            />
-          ))}
-        </div>
+    {item.weekActions.length > 0 ? (
+      <div data-ui="kpi-card-actions-week">
+        <KpiActionGroup actions={item.weekActions} compact={compact} label="Ação na semana" variant="week" surface="solid" actionGap={12} />
       </div>
-    )}
+    ) : null}
   </motion.article>
 );
 
@@ -835,16 +767,17 @@ const MediaEfficiencyCardView = ({
 }) => (
   <motion.article
     /* Edita Card de Evidencia */
-    data-ui="card-eficiencia-ecommerce"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.45 }}
-    style={{
+  data-ui="card-eficiencia-ecommerce"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.45 }}
+  style={{
       ...deckCardPresets.metric(compact, "default", "subtle"),
       minHeight: undefined,
     }}
   >
     <div
+      data-ui="kpi-card-header"
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -855,6 +788,7 @@ const MediaEfficiencyCardView = ({
       }}
     >
       <div
+        data-ui="kpi-card-title"
         style={{
           color: "rgba(255,255,255,0.46)",
           fontSize: "var(--paragrafo)",
@@ -866,6 +800,7 @@ const MediaEfficiencyCardView = ({
         Eficiência de Mídia
       </div>
       <div
+        data-ui="kpi-card-date"
         style={{
           display: "flex",
           alignItems: "center",
@@ -880,6 +815,7 @@ const MediaEfficiencyCardView = ({
     </div>
 
     <div
+      data-ui="kpi-card-value"
       style={{
         fontSize: "var(--titulo-pagina)",
         lineHeight: 1,
@@ -897,6 +833,7 @@ const MediaEfficiencyCardView = ({
 
     {mediaEfficiencyCard.subtitle && (
       <div
+        data-ui="kpi-card-subtitle"
         style={{
           color: "rgba(255,255,255,0.56)",
           fontSize: "var(--paragrafo)",
@@ -908,7 +845,7 @@ const MediaEfficiencyCardView = ({
       </div>
     )}
 
-    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+    <div data-ui="kpi-card-comparisons" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
       {mediaEfficiencyCard.comparisons.map((row, index) => {
         const activeColor = row.tone === "positive" ? GREEN : RED;
         const hasValue = Boolean(row.value);
@@ -930,6 +867,7 @@ const MediaEfficiencyCardView = ({
             }}
           >
             <div
+              data-ui="kpi-card-comparison-label"
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -954,6 +892,7 @@ const MediaEfficiencyCardView = ({
             </div>
             {hasValue && (
               <div
+                data-ui="kpi-card-comparison-value"
                 style={{
                   paddingLeft: compact ? 0 : "12px",
                   borderLeft: compact ? "none" : `2px solid ${activeColor}`,
@@ -973,6 +912,7 @@ const MediaEfficiencyCardView = ({
     </div>
 
     <div
+      data-ui="kpi-card-readings"
       style={{
         borderTop: "1px solid rgba(255,255,255,0.05)",
         paddingTop: "18px",
@@ -994,6 +934,7 @@ const MediaEfficiencyCardView = ({
         {mediaEfficiencyCard.bullets.map((row, index) => (
           <div
             key={`${row.text}-${index}`}
+            data-ui="kpi-card-reading"
             style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}
           >
             <span
@@ -1007,6 +948,7 @@ const MediaEfficiencyCardView = ({
               }}
             />
             <div
+              data-ui="kpi-card-reading-text"
               style={{
                 color: "rgba(255,255,255,0.74)",
                 fontSize: "var(--paragrafo)",
@@ -1020,28 +962,8 @@ const MediaEfficiencyCardView = ({
       </div>
     </div>
 
-    <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <div
-        style={{
-          color: "rgba(255,255,255,0.42)",
-          fontSize: "var(--rotulo)",
-          fontWeight: 800,
-          letterSpacing: "var(--tracking-label)",
-          textTransform: "uppercase",
-        }}
-      >
-        Ação na semana
-      </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        {mediaEfficiencyCard.weekActions.map((itemAction, index) => (
-          <ActionCardView
-            key={`${itemAction.text}-${index}`}
-            actionItem={itemAction}
-            variant="week"
-            compact={compact}
-          />
-        ))}
-      </div>
+    <div data-ui="kpi-card-actions-week">
+      <KpiActionGroup actions={mediaEfficiencyCard.weekActions} compact={compact} label="Ação na semana" variant="week" surface="solid" actionGap={10} />
     </div>
   </motion.article>
 );

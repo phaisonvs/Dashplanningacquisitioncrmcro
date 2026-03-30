@@ -22,6 +22,13 @@
   - `cabecalho-evidencia`
   - `nav-carrossel-midia`
   - `placeholder-upload`
+- For reusable KPI cards, prefer the `kpi-card-*` family for metric internals and `kpi-action-*` for action groups and action cards:
+  - `kpi-card-header`
+  - `kpi-card-value`
+  - `kpi-card-comparisons`
+  - `kpi-action-group`
+  - `kpi-action-card`
+  - `kpi-action-group-toggle`
 - Reserve `id` for anchors or true DOM identity. Do not replace `data-slot` in the UI primitives.
 
 **Add your own guidelines here**

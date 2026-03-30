@@ -1,5 +1,13 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { Collapsible, CollapsibleTrigger } from "../ui/collapsible";
 import { CARD_BG, CARD_BORDER, CLUSTERS, WHITE } from "../theme";
 
 export const SLIDE_TITLE_WEIGHT = 700;
@@ -536,6 +544,272 @@ export const MediaCarouselNavControls = ({
     </button>
   </div>
 );
+
+export type KpiActionItem = {
+  cluster: string;
+  status: DeckStatus;
+  text: string;
+};
+
+type KpiActionGroupProps = {
+  actions: KpiActionItem[];
+  compact: boolean;
+  label: string;
+  variant: "previous" | "week";
+  surface?: "glass" | "solid";
+  actionGap?: number;
+};
+
+const getKpiActionGroupFadeMask = (
+  variant: "previous" | "week",
+  surface: "glass" | "solid",
+  compact: boolean,
+): CSSProperties => {
+  const fadeHeight =
+    compact
+      ? surface === "solid"
+        ? variant === "previous"
+          ? 82
+          : 92
+        : variant === "previous"
+          ? 86
+          : 96
+      : surface === "solid"
+        ? variant === "previous"
+          ? 96
+          : 108
+        : variant === "previous"
+          ? 100
+          : 112;
+
+  return {
+    WebkitMaskImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) calc(100% - ${fadeHeight}px), rgba(0,0,0,0) 100%)`,
+    maskImage: `linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) calc(100% - ${fadeHeight}px), rgba(0,0,0,0) 100%)`,
+    WebkitMaskRepeat: "no-repeat",
+    maskRepeat: "no-repeat",
+    WebkitMaskSize: "100% 100%",
+    maskSize: "100% 100%",
+  };
+};
+
+export function KpiActionGroup({
+  actions,
+  compact,
+  label,
+  variant,
+  surface = "glass",
+  actionGap = compact ? 12 : 12,
+}: KpiActionGroupProps) {
+  const [isOpen, setIsOpen] = useState(actions.length <= 1);
+  const [collapsedHeight, setCollapsedHeight] = useState<number | null>(null);
+  const [expandedHeight, setExpandedHeight] = useState<number | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  const isExpandable = actions.length > 1;
+
+  useLayoutEffect(() => {
+    if (!isExpandable) {
+      setIsOpen(true);
+      setCollapsedHeight(null);
+      setExpandedHeight(null);
+      return undefined;
+    }
+
+    const measure = () => {
+      const content = contentRef.current;
+      if (!content) {
+        return;
+      }
+
+      const nextExpanded = content.scrollHeight;
+      const firstHeight = itemRefs.current[0]?.offsetHeight ?? 0;
+      const secondHeight = itemRefs.current[1]?.offsetHeight ?? firstHeight;
+      const nextCollapsed = Math.ceil(firstHeight + actionGap + secondHeight / 2);
+
+      setCollapsedHeight(nextCollapsed);
+      setExpandedHeight(nextExpanded);
+    };
+
+    measure();
+
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [actionGap, actions.length, compact, isExpandable, surface, variant]);
+
+  useLayoutEffect(() => {
+    if (!isExpandable) {
+      return undefined;
+    }
+
+    if (isOpen && expandedHeight == null) {
+      const content = contentRef.current;
+      if (content) {
+        setExpandedHeight(content.scrollHeight);
+      }
+    }
+
+    return undefined;
+  }, [expandedHeight, isExpandable, isOpen]);
+
+  const currentMaxHeight = isExpandable
+    ? isOpen
+      ? expandedHeight ?? collapsedHeight ?? "none"
+      : collapsedHeight ?? "none"
+    : "none";
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <div
+        data-ui="kpi-action-group"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: compact ? "10px" : "12px",
+        }}
+      >
+        <div
+          data-ui="kpi-action-group-header"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "12px",
+          }}
+        >
+          <div
+            style={{
+              color: "rgba(255,255,255,0.42)",
+              fontSize: "var(--rotulo)",
+              fontWeight: 800,
+              letterSpacing: "var(--tracking-label)",
+              textTransform: "uppercase",
+            }}
+          >
+            {label}
+          </div>
+          {isExpandable ? (
+            <CollapsibleTrigger
+              type="button"
+              data-ui="kpi-action-group-toggle"
+              aria-label={`${isOpen ? "Ver menos" : "Ver mais"} ${label}`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: compact ? "7px 10px" : "8px 12px",
+                borderRadius: "999px",
+                border: "1px solid rgba(255,255,255,0.12)",
+                background: "rgba(255,255,255,0.035)",
+                color: WHITE,
+                fontSize: "var(--rotulo)",
+                fontWeight: 800,
+                letterSpacing: "var(--tracking-label)",
+                textTransform: "uppercase",
+                cursor: "pointer",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)",
+              }}
+            >
+              <span>{isOpen ? "Ver menos" : "Ver mais"}</span>
+              <ChevronDown
+                size={14}
+                style={{
+                  transition: "transform 180ms ease",
+                  transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                }}
+              />
+            </CollapsibleTrigger>
+          ) : null}
+        </div>
+
+        <div
+          data-ui="kpi-action-group-shell"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            maxHeight: currentMaxHeight === "none" ? undefined : currentMaxHeight,
+            transition: "max-height 240ms ease",
+            ...(isExpandable && !isOpen
+              ? getKpiActionGroupFadeMask(variant, surface, compact)
+              : {}),
+          }}
+        >
+          <div
+            ref={contentRef}
+            data-ui="kpi-action-group-content"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: `${actionGap}px`,
+            }}
+          >
+            {actions.map((action, index) => (
+              <div
+                key={`${action.cluster}-${action.status}-${action.text}-${index}`}
+                ref={(node) => {
+                  itemRefs.current[index] = node;
+                }}
+                data-ui="kpi-action-item"
+                style={{
+                  minWidth: 0,
+                  height: "fit-content",
+                }}
+              >
+                <div
+                  data-ui="kpi-action-card"
+                  style={deckCardPresets.action(variant, compact, surface)}
+                >
+                  <div
+                    data-ui="kpi-action-card-head"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: "8px",
+                      marginBottom: compact ? "10px" : "12px",
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                    }}
+                  >
+                    <div data-ui="kpi-action-card-cluster">
+                      <DeckPill
+                        label={action.cluster}
+                        compact
+                        preset={deckPillPresets.tokenMeta}
+                      />
+                    </div>
+                    <div data-ui="kpi-action-card-status">
+                      <DeckStatusPill
+                        status={action.status}
+                        preset={deckPillPresets.status}
+                        style={{ fontWeight: 800 }}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    data-ui="kpi-action-card-text"
+                    style={{
+                      color:
+                        variant === "previous"
+                          ? "rgba(255,255,255,0.74)"
+                          : "rgba(255,255,255,0.88)",
+                      fontSize: "var(--paragrafo)",
+                      lineHeight: 1.55,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {action.text}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </Collapsible>
+  );
+}
 
 type SlideHeroHeaderProps = {
   accentColor: string;
