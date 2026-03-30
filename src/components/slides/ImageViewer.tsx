@@ -309,6 +309,12 @@ export function ImageViewer({
     }
   }, [hasAnyImage, hasOnlyDesktopImage, hasOnlyMobileImage]);
 
+  useEffect(() => {
+    if (!isExpanded && scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [activeViewMode, currentImageLink, isExpanded]);
+
   if (!hasAnyImage) {
     return (
       <div
@@ -485,7 +491,7 @@ export function ImageViewer({
             background: 'rgba(0,0,0,0.4)',
             WebkitOverflowScrolling: 'touch',
             display: 'flex',
-            alignItems: activeViewMode === "mobile" ? "center" : "flex-start",
+            alignItems: "flex-start",
             justifyContent: 'center',
             padding: isCompact ? '14px' : activeViewMode === "mobile" ? '20px' : '0',
             cursor: "pointer",
