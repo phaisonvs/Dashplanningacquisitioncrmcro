@@ -18,12 +18,62 @@ interface ImageViewerProps {
 
 type ViewMode = "desktop" | "mobile";
 
+type ViewportSize = {
+  width: number;
+  height: number;
+};
+
 type PhoneFrameProps = {
   image: string;
   alt: string;
   compact: boolean;
   modal?: boolean;
   widthClassName?: string;
+  shellWidth?: string;
+};
+
+const PHONE_FRAME_ASPECT_RATIO = 9 / 19.5;
+const FALLBACK_VIEWPORT: ViewportSize = {
+  width: 1280,
+  height: 720,
+};
+
+const readViewportSize = (): ViewportSize => {
+  if (typeof window === "undefined") {
+    return FALLBACK_VIEWPORT;
+  }
+
+  const viewport = window.visualViewport;
+
+  return {
+    width: Math.round(viewport?.width ?? window.innerWidth),
+    height: Math.round(viewport?.height ?? window.innerHeight),
+  };
+};
+
+const useViewportSize = () => {
+  const [viewportSize, setViewportSize] = useState<ViewportSize>(() =>
+    readViewportSize(),
+  );
+
+  useEffect(() => {
+    const updateViewportSize = () => setViewportSize(readViewportSize());
+
+    updateViewportSize();
+    window.addEventListener("resize", updateViewportSize);
+    window.addEventListener("orientationchange", updateViewportSize);
+    window.visualViewport?.addEventListener("resize", updateViewportSize);
+    window.visualViewport?.addEventListener("scroll", updateViewportSize);
+
+    return () => {
+      window.removeEventListener("resize", updateViewportSize);
+      window.removeEventListener("orientationchange", updateViewportSize);
+      window.visualViewport?.removeEventListener("resize", updateViewportSize);
+      window.visualViewport?.removeEventListener("scroll", updateViewportSize);
+    };
+  }, []);
+
+  return viewportSize;
 };
 
 const PhoneFrame = ({
@@ -32,20 +82,21 @@ const PhoneFrame = ({
   compact,
   modal = false,
   widthClassName,
+  shellWidth,
 }: PhoneFrameProps) => {
-  const shellWidth = modal
+  const resolvedShellWidth = shellWidth ?? (modal
     ? compact
-      ? "clamp(290px, 90vw, 420px)"
-      : "clamp(320px, 34vw, 460px)"
+      ? "clamp(360px, 92vw, 520px)"
+      : "clamp(380px, 48vw, 620px)"
     : compact
       ? "clamp(248px, 84vw, 360px)"
-      : "clamp(224px, 28vw, 320px)";
+      : "clamp(224px, 28vw, 320px)");
 
   return (
     <div
       className={widthClassName}
       style={{
-        width: shellWidth,
+        width: resolvedShellWidth,
         maxWidth: "100%",
         margin: "0 auto",
         display: "flex",
@@ -57,6 +108,7 @@ const PhoneFrame = ({
           position: "relative",
           width: "100%",
           aspectRatio: "9 / 19.5",
+          boxSizing: "border-box",
           borderRadius: compact ? "34px" : "40px",
           padding: compact ? "12px" : "14px",
           background:
@@ -94,12 +146,12 @@ const PhoneFrame = ({
             position: "absolute",
             inset: compact ? "12px" : "14px",
             borderRadius: compact ? "24px" : "30px",
-            overflow: "hidden",
+            overflowY: "auto",
+            overflowX: "hidden",
             background: "#ffffff",
-            display: "flex",
-            alignItems: "stretch",
-            justifyContent: "stretch",
+            display: "block",
             zIndex: 1,
+            WebkitOverflowScrolling: "touch",
           }}
         >
           <img
@@ -108,10 +160,9 @@ const PhoneFrame = ({
             alt={alt}
             style={{
               width: "100%",
-              height: "100%",
+              height: "auto",
               display: "block",
-              objectFit: "contain",
-              objectPosition: "center top",
+              objectFit: "initial",
               background: "#ffffff",
             }}
           />
@@ -151,6 +202,7 @@ export function ImageViewer({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { isMobile, isCompact } = useDeckViewport();
+  const { width: viewportWidth, height: viewportHeight } = useViewportSize();
   const viewerUiId = id
     .toLowerCase()
     .normalize("NFD")
@@ -190,6 +242,24 @@ export function ImageViewer({
           ? `clamp(${Math.max(220, Math.round(height * 0.82))}px, 34vw, ${Math.max(height + 80, 420)}px)`
           : `${height}px`
     : `${height}px`;
+  const isMobileModal = isExpanded && activeViewMode === "mobile";
+  const mobileModalPaddingX = isCompact ? 16 : 24;
+  const mobileModalPaddingTop = isCompact ? 88 : 112;
+  const mobileModalPaddingBottom = isCompact ? 16 : 24;
+  const mobileModalAvailableWidth = Math.max(
+    0,
+    viewportWidth - mobileModalPaddingX * 2,
+  );
+  const mobileModalAvailableHeight = Math.max(
+    0,
+    viewportHeight - mobileModalPaddingTop - mobileModalPaddingBottom,
+  );
+  const mobileModalShellWidth = Math.min(
+    mobileModalAvailableWidth,
+    mobileModalAvailableHeight * PHONE_FRAME_ASPECT_RATIO,
+    isCompact ? 300 : 320,
+  );
+  const mobileModalShellWidthStyle = `${Math.max(0, Math.floor(mobileModalShellWidth))}px`;
 
   // Auto-reset scroll after 10 seconds of inactivity (only when not expanded)
   const handleScroll = () => {
@@ -425,7 +495,6 @@ export function ImageViewer({
           {activeViewMode === "mobile" ? (
             <PhoneFrame image={currentImageLink} alt={alt} compact={isCompact} />
           ) : (
-            // Desktop View
             <img
               data-ui="visualizador-imagem-desktop"
               src={currentImageLink}
@@ -434,7 +503,8 @@ export function ImageViewer({
                 width: '100%',
                 height: 'auto',
                 display: 'block',
-                objectFit: 'contain'
+                objectFit: 'contain',
+                objectPosition: 'center top',
               }}
             />
           )}
@@ -491,7 +561,8 @@ export function ImageViewer({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            padding: isCompact ? "14px" : "24px",
+            padding: isMobileModal ? 0 : isCompact ? "14px" : "24px",
+            overflow: "hidden",
             animation: "fadeIn 0.2s ease",
           }}
           onClick={() => setIsExpanded(false)}
@@ -645,33 +716,49 @@ export function ImageViewer({
                   {!hasMobileImage ? "Sem link imagem mobile." : null}
                 </div>
               )}
-            </div>
-          ) : null}
+              </div>
+            ) : null}
 
-          <div
-            data-ui="visualizador-imagem-modal"
-            onClick={(e) => e.stopPropagation()}
-            className="image-viewer-scroll image-viewer-modal-scroll"
-            style={{
-              width: "100%",
-              height: "100%",
-              overflowY: "auto",
-              overflowX: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              paddingTop: isCompact ? "72px" : "88px",
-            }}
-          >
-            {activeViewMode === "mobile" ? (
+          {isMobileModal ? (
+            <div
+              data-ui="visualizador-imagem-modal-mobile-stage"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: `${mobileModalPaddingTop}px ${mobileModalPaddingX}px ${mobileModalPaddingBottom}px`,
+                boxSizing: "border-box",
+                overflow: "hidden",
+              }}
+            >
               <PhoneFrame
                 image={currentImageLink}
                 alt={alt}
                 compact={isCompact}
                 modal
+                shellWidth={mobileModalShellWidthStyle}
                 widthClassName="image-viewer-modal-phone-frame"
               />
-            ) : (
+            </div>
+          ) : (
+            <div
+              data-ui="visualizador-imagem-modal"
+              onClick={(e) => e.stopPropagation()}
+              className="image-viewer-scroll image-viewer-modal-scroll"
+              style={{
+                width: "100%",
+                height: "100%",
+                overflowY: "auto",
+                overflowX: "hidden",
+                display: "flex",
+                alignItems: "flex-start",
+                justifyContent: "center",
+                paddingTop: isCompact ? "72px" : "88px",
+              }}
+            >
               <div
                 style={{
                   maxWidth: "1200px",
@@ -690,11 +777,13 @@ export function ImageViewer({
                     width: "100%",
                     height: "auto",
                     display: "block",
+                    objectFit: "contain",
+                    objectPosition: "center top",
                   }}
                 />
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
 

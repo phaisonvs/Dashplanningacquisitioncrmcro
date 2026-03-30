@@ -300,6 +300,7 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS', 'ACQUISITION'] as const,
     status: 'feito' as const,
     objective: 'Integramos o CTA "Falar com especialista" para capturar dados dos usuários usando o formulário de WhatsApp floating.',
+    objectiveKpis: ['Leads', 'ROAS'],
     desktopImageLink: lpSemanaConsumidorImg,
     mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
@@ -310,6 +311,7 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'Dados de usuários chegavam com valores indevidos devido aos erros de máscaras dos inputs: Nome aceitava números, E-mail aceitava fora do padrão @(provedor).com.br e Telefone aceitava letras.',
+    objectiveKpis: ['Leads', 'ConversÃ£o'],
     desktopImageLink: heroDesktopImg,
     mobileImageLink: heroMobileImg,
     imageLabel: 'Formulário',
@@ -320,6 +322,7 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'Ao considerarmos o custo alto para cotações de frete, ajustamos para que a jornada priorizasse contato assistido nas páginas de categoria de Pisos e Revestimentos.',
+    objectiveKpis: ['Leads', 'ConversÃ£o'],
     desktopImageLink: lpChanceUnicaImg,
     mobileImageLink: lpChanceUnicaMobileImg,
     imageLabel: 'Categoria',
@@ -330,6 +333,7 @@ const conversionExperienceItems = [
   tags: Array<'LEADS' | 'ACQUISITION' | 'CRO' | 'CRM'>;
   status: 'feito' | 'pendente' | 'bloqueado';
   objective: string;
+  objectiveKpis?: string[];
   desktopImageLink?: string;
   mobileImageLink?: string;
   desktopImage?: string;

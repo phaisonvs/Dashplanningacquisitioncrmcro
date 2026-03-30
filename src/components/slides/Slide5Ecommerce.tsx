@@ -409,10 +409,12 @@ const StatusCounter = ({
   status,
   count,
   isActive,
+  compact = false,
 }: {
   status: Status;
   count: number;
   isActive: boolean;
+  compact?: boolean;
 }) => {
   const palette = statusPalette[status];
 
@@ -422,8 +424,8 @@ const StatusCounter = ({
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: "10px",
-        padding: "7px 12px",
+        gap: compact ? "8px" : "10px",
+        padding: compact ? "6px 10px" : "7px 12px",
         borderRadius: "10px",
         background: "rgba(255,255,255,0.018)",
         border: `1px solid ${CARD_BORDER}`,
