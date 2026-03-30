@@ -875,8 +875,8 @@ const frontEvidenceItems: EvidenceItem[] = [
     tags: ["CRO", "E-COMMERCE"],
     status: "pendente",
     objective:
-      "Evolução com inteligência de dados da loja Friendly para ampliar a eficiência das cotações, gerar ganho de KPI para a loja e sustentar mais conversão no e-commerce com uma jornada mais simples e orientada por intenção.",
-    objectiveKpis: ["Loja + E-com"],
+      "Evolução do componente de cotação de frete com a opção de retirada na guide para mitigar abandono quando o custo de entrega for alto, oferecendo uma alternativa mais econômica e conveniente e, com isso, elevar a taxa de conversão do e-commerce, ampliar a retirada em loja e gerar mais oportunidade de lead e venda no ponto físico.",
+    objectiveKpis: ["Taxa de conversão"],
     desktopImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/cotacao-retira-na-guide.jpg?v=202603301612",
     imageLabel: "Cotações Retire na Guide",
