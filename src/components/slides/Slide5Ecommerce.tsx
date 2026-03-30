@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+﻿import { motion } from "motion/react";
 import { AnimatedNumber } from "../AnimatedNumber";
 import {
   CLUSTERS,
@@ -70,6 +70,7 @@ type MetricCard = {
   bullets: Bullet[];
   previousActions: ActionCard[];
   weekActions: ActionCard[];
+  hideValue?: boolean;
 };
 
 const action = (
@@ -87,221 +88,107 @@ const comparison = (tone: Tone, text: string, value?: string): Comparison => ({
 const topMetrics: MetricCard[] = [
   {
     title: "SESSÕES",
-    value: { target: 232, suffix: "K" },
+    value: { target: 294783 },
     subtitle: "Total de visitas no período",
-    comparisons: [comparison("positive", "vs 203K MoM")],
+    comparisons: [
+      comparison("positive", "MoM", "272.934 (+8%)"),
+      comparison("negative", "YoY", "346.203 (-15%)"),
+    ],
     bullets: [
       bullet(
         "positive",
-        "Volume de sessões mantém base de tráfego para acelerar ganho de conversão.",
-      ),
-      bullet("negative", "Comunicação promocional de baixa pregnância."),
-      bullet(
-        "negative",
-        "Crescimento de tráfego ainda não converte na mesma proporção em pedido.",
+        "Leve aumento de sessões em virtude de campanhas de tráfego. O Objetivo era trazer uma audiência diferente daquela que a gente vinha impactando seguidamente",
       ),
     ],
     previousActions: [
-      action(
-        "CRO",
-        "feito",
-        "Reformulação completa da Hero Section com foco em hierarquia visual, sliders e CTAs.",
-      ),
+      action("ACQUISITION", "feito", "Campanhas de tráfego em Meta Ads com o objetivo de trazer tráfego qualificado"),
+      action("CRO", "feito", "Aumento das campanhas de Remarketing também em meta para manter o fluxo em todas as etapas do funil"),
     ],
-    weekActions: [
-      action("CRM", "pendente", "Mecânica de WhatsApp e E-mail Marketing"),
-    ],
+    weekActions: [],
   },
   {
     title: "TAXA DE CONVERSÃO",
-    value: { target: 0.58, suffix: "%", decimals: 2 },
+    value: { target: 0.62, suffix: "%", decimals: 2 },
     subtitle: "Abaixo do benchmark esperado",
-    comparisons: [comparison("positive", "vs 0,56% MoM")],
+    comparisons: [
+      comparison("positive", "MoM", "0,56% (+0.06p.p)"),
+      comparison("negative", "YoY", "0,85% (-0.23p.p)"),
+    ],
     bullets: [
-      bullet("negative", "Instabilidades no checkout (Gateway Cielo)."),
+      bullet(
+        "positive",
+        "Leve aumento da Taxa de conversão frente ao último mês. LPs de Chance única, Semana do consumidor e outras estratégias de varejo ajudaram a aumentar este indicador",
+      ),
       bullet(
         "negative",
-        "Conversão ainda pressionada pelo valor percebido da oferta e etapas finais do funil.",
+        "Taxa de conversão baixa frente ao histórico do ecommerce. Precisamos aumentar a fiscalização sobre o frete",
       ),
     ],
     previousActions: [
-      action(
-        "CRO",
-        "feito",
-        "Mapeamento de fricções prioritárias do funil com foco em checkout e PDP.",
-      ),
-      action(
-        "CRO",
-        "feito",
-        "Ajustes de hero e componentes críticos para reduzir atrito na navegação inicial.",
-      ),
+      action("ACQUISITION", "feito", "LISTA DE PUBLICOS ALVO PARA CAMPANHAS GERAIS E DE CATEGORIA"),
+      action("CRO", "feito", "CONSTRUÇÃO DE AUDIÊNCIAS PERSONALIZADAS PARA O ECOMM"),
+      action("CRM", "feito", "INSLUSÃO DE SELOS CHANCE ÚNICA, LANÇAMENTOS, EXCLUSIVOS"),
+      action("CRM", "pendente", "DISPAROS DE E-MAIL MARKETING PROMOCIONAL E CARRINHO ABANDONADO"),
     ],
     weekActions: [
-      action(
-        "CRO",
-        "pendente",
-        "Reestruturar UX do e-commerce (catálogo + filtros)",
-      ),
-      action("CRO", "pendente", "Continuar testes A/B de ofertas promocionais"),
+      action("CRO", "pendente", "SPLIT DE PEDIDOS, REGIONALIZAÇÃO DE PREÇOS, EVOLUÇÃO DO BOT"),
     ],
   },
   {
     title: "RECEITA CAPTADA",
-    value: {
-      target: 1.13,
-      prefix: "R$",
-      suffix: "M",
-      decimals: 2,
-      decimalSeparator: ".",
-    },
-    subtitle: "R$876K faturada",
+    value: { target: 1.53, suffix: "M", decimals: 2 },
     comparisons: [
-      comparison("negative", "vs R$1.36M captado e 773K faturado MoM"),
+      comparison("positive", "MoM", "1,44M (+6%)"),
+      comparison("negative", "YoY", "2,25M (-32%)"),
     ],
-    bullets: [
-      bullet(
-        "negative",
-        "Captação de receita responde a ativações promocionais e base de tráfego atual.",
-      ),
-      bullet(
-        "positive",
-        "Queda frente à referência indica necessidade de elevar conversão e ticket simultaneamente.",
-      ),
-    ],
-    previousActions: [
-      action(
-        "CRO",
-        "feito",
-        'Subida de vitrine segmentada "Chance Única" para ampliar captação comercial.',
-      ),
-    ],
-    weekActions: [
-      action(
-        "CRO",
-        "pendente",
-        "Aprofundar análise de vendas em encomenda expressa para ampliar recuperação de faturamento.",
-      ),
-      action(
-        "CRM",
-        "pendente",
-        "Monitorar integração Salesforce do WhatsApp form",
-      ),
-    ],
+    bullets: [],
+    previousActions: [],
+    weekActions: [],
   },
   {
     title: "INVESTIMENTO",
-    value: { target: 102, prefix: "R$", suffix: "K" },
-    comparisons: [comparison("negative", "vs 121,5K", "−16% MoM")],
-    bullets: [
-      bullet(
-        "negative",
-        "Investimento menor limita escala em campanhas com potencial de recuperação.",
-      ),
-      bullet(
-        "positive",
-        "Ajuste de verba cria oportunidade para realocação mais eficiente por categoria.",
-      ),
+    value: { target: 109.1, suffix: "K", decimals: 1 },
+    comparisons: [
+      comparison("negative", "MoM", "121K (-10%)"),
+      comparison("negative", "YoY", "269K (-59,4%)"),
     ],
+    bullets: [],
     previousActions: [],
-    weekActions: [
-      action(
-        "ACQUISITION",
-        "pendente",
-        "Aumentar eficiência de campanhas (ROAS)",
-      ),
-    ],
+    weekActions: [],
   },
 ];
 
 const bottomMetrics: MetricCard[] = [
   {
     title: "ROAS",
-    value: { target: 11 },
-    comparisons: [comparison("negative", "vs 11,2 MoM")],
-    bullets: [
-      bullet(
-        "negative",
-        "ROAS realizado abaixo do potencial indica ineficiência na alocação e no mix.",
-      ),
-      bullet(
-        "positive",
-        "Há margem clara para otimização com ajustes de feed e priorização por campanha.",
-      ),
+    value: { target: 14.02, decimals: 2 },
+    comparisons: [
+      comparison("positive", "MoM", "11,9"),
+      comparison("positive", "YoY", "8,36"),
     ],
-    previousActions: [
-      action(
-        "ACQUISITION",
-        "feito",
-        "Congelamento da estrutura vencedora para evitar perda de eficiência por mudanças bruscas.",
-      ),
-    ],
-    weekActions: [
-      action(
-        "ACQUISITION",
-        "pendente",
-        "Manter público e orçamento base, testando só variações de copy e criativo na semana.",
-      ),
-    ],
+    bullets: [],
+    previousActions: [],
+    weekActions: [],
   },
   {
     title: "TICKET MÉDIO",
-    value: { target: 795, prefix: "R$" },
-    comparisons: [comparison("negative", "vs R$994,40", "−20% MoM")],
+    value: { target: 820.66, prefix: "R$", decimals: 2 },
+    comparisons: [comparison("positive", "MoM", "R$1012,23")],
     bullets: [
-      bullet(
-        "negative",
-        "Ticket segue comprimido e reduz margem de eficiência do canal.",
-      ),
-      bullet(
-        "positive",
-        "Mix e comunicação de valor precisam reforçar itens de maior retorno.",
-      ),
+      bullet("positive", "Ticket médio aumento aproximadamente 15% em relação a última semana"),
+      bullet("negative", "Ticket abaixo da nossa média. Nosso canal ainda está dependente dos produtos que mais vendiam e que hoje não estão disponíveis mais"),
     ],
-    previousActions: [
-      action(
-        "CRO",
-        "feito",
-        "Teste de oferta bundles vs frete grátis condicionado estruturado no front.",
-      ),
-    ],
-    weekActions: [
-      action(
-        "CRO",
-        "pendente",
-        "Executar testes com bundles e frete para elevar valor médio por pedido.",
-      ),
-    ],
+    previousActions: [action("CRO", "feito", "Compre Junto cadastrados")],
+    weekActions: [action("CRO", "pendente", "Fazer estudo sobre outras opções de compre junto")],
   },
   {
     title: "PEDIDOS",
-    value: { target: 1392 },
-    comparisons: [comparison("positive", "vs 1.375 MoM")],
-    bullets: [
-      bullet(
-        "positive",
-        "Volume de pedidos mostra tração e sustenta janela para ganho incremental rápido.",
-      ),
-      bullet("negative", "Fricção logística: impacto de frete na decisão."),
-      bullet(
-        "negative",
-        "Conversão ainda abaixo do ideal impede expansão mais forte de receita faturada.",
-      ),
-    ],
-    previousActions: [
-      action(
-        "CRO",
-        "feito",
-        "Implementação de venda apartada (split) para recuperar pedidos com mix de itens.",
-      ),
-    ],
-    weekActions: [
-      action(
-        "CRO",
-        "pendente",
-        "Evoluir Split de Entregas e análises de experiência",
-      ),
-      action("CRO", "pendente", "Implementar acordeom mobile em PDPs"),
-    ],
+    value: { target: 0 },
+    comparisons: [],
+    bullets: [],
+    previousActions: [],
+    weekActions: [],
+    hideValue: true,
   },
 ];
 
@@ -310,7 +197,7 @@ const ecommerceReportSnapshots = {
     topMetrics,
     bottomMetrics,
   },
-  // Editar esta cópia quando a semana ativa mudar.
+  // Editar esta cÃ³pia quando a semana ativa mudar.
   week14: {
     topMetrics: cloneReportSnapshot(topMetrics),
     bottomMetrics: cloneReportSnapshot(bottomMetrics),
@@ -568,26 +455,28 @@ const MetricCardView = ({
       </div>
     </div>
 
-    <div
-      data-ui="kpi-card-value"
-      style={{
-        fontSize: "var(--titulo-pagina)",
-        lineHeight: 1,
-        fontWeight: 800,
-        letterSpacing: "var(--tracking-display)",
-        color: WHITE,
-      }}
-    >
-      <AnimatedNumber
-        target={item.value.target}
-        prefix={item.value.prefix}
-        suffix={item.value.suffix}
-        decimals={item.value.decimals}
-        decimalSeparator={item.value.decimalSeparator}
-        isActive={isActive}
-        duration={3000}
-      />
-    </div>
+    {!item.hideValue && (
+      <div
+        data-ui="kpi-card-value"
+        style={{
+          fontSize: "var(--titulo-pagina)",
+          lineHeight: 1,
+          fontWeight: 800,
+          letterSpacing: "var(--tracking-display)",
+          color: WHITE,
+        }}
+      >
+        <AnimatedNumber
+          target={item.value.target}
+          prefix={item.value.prefix}
+          suffix={item.value.suffix}
+          decimals={item.value.decimals}
+          decimalSeparator={item.value.decimalSeparator}
+          isActive={isActive}
+          duration={3000}
+        />
+      </div>
+    )}
 
     {item.subtitle && (
       <div
@@ -733,35 +622,35 @@ const MetricCardView = ({
 
     {item.previousActions.length > 0 ? (
       <div data-ui="kpi-card-actions-previous">
-        <KpiActionGroup actions={item.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" surface="solid" actionGap={12} />
+        <KpiActionGroup actions={item.previousActions} compact={compact} label="AÃ§Ãµes da semana anterior" variant="previous" surface="solid" actionGap={12} />
       </div>
     ) : null}
 
     {item.weekActions.length > 0 ? (
       <div data-ui="kpi-card-actions-week">
-        <KpiActionGroup actions={item.weekActions} compact={compact} label="Ação na semana" variant="week" surface="solid" actionGap={12} />
+        <KpiActionGroup actions={item.weekActions} compact={compact} label="AÃ§Ã£o na semana" variant="week" surface="solid" actionGap={12} />
       </div>
     ) : null}
   </motion.article>
 );
 
 const mediaEfficiencyCard = {
-  comparisons: [comparison("negative", "vs 16.0 potencial", "−31%")],
+  comparisons: [comparison("negative", "vs 16.0 potencial", "âˆ’31%")],
   bullets: [
     bullet(
       "negative",
-      "Déficit de competitividade em categorias core no Google Shopping.",
+      "DÃ©ficit de competitividade em categorias core no Google Shopping.",
     ),
     bullet(
       "negative",
-      "Queda acentuada do Ticket Médio e instabilidade de mix de ofertas.",
+      "Queda acentuada do Ticket MÃ©dio e instabilidade de mix de ofertas.",
     ),
   ],
   weekActions: [
     action(
       "ACQUISITION",
       "pendente",
-      "Drill down por campanha e otimização do feed de Google Shopping para recuperar ROAS.",
+      "Drill down por campanha e otimizaÃ§Ã£o do feed de Google Shopping para recuperar ROAS.",
     ),
   ],
   value: { target: 11 },
@@ -807,7 +696,7 @@ const MediaEfficiencyCardView = ({
           textTransform: "uppercase",
         }}
       >
-        Eficiência de Mídia
+        EficiÃªncia de MÃ­dia
       </div>
       <div
         data-ui="kpi-card-date"
@@ -973,7 +862,7 @@ const MediaEfficiencyCardView = ({
     </div>
 
     <div data-ui="kpi-card-actions-week">
-      <KpiActionGroup actions={mediaEfficiencyCard.weekActions} compact={compact} label="Ação na semana" variant="week" surface="solid" actionGap={10} />
+      <KpiActionGroup actions={mediaEfficiencyCard.weekActions} compact={compact} label="AÃ§Ã£o na semana" variant="week" surface="solid" actionGap={10} />
     </div>
   </motion.article>
 );
@@ -986,8 +875,8 @@ const frontEvidenceItems: EvidenceItem[] = [
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Estruturar a LP para fortalecer a hierarquia de conversão, organizar a navegação por clusters, ampliar a exposição comercial das ofertas e incorporar novas vitrines, sustentando a estratégia de remarketing com Feed de Oferta Relâmpago, countdown e demais vieses de urgência, escassez e retomada de intenção de compra.",
-    objectiveKpis: ["Conversão"],
+      "Estruturar a LP para fortalecer a hierarquia de conversÃ£o, organizar a navegaÃ§Ã£o por clusters, ampliar a exposiÃ§Ã£o comercial das ofertas e incorporar novas vitrines, sustentando a estratÃ©gia de remarketing com Feed de Oferta RelÃ¢mpago, countdown e demais vieses de urgÃªncia, escassez e retomada de intenÃ§Ã£o de compra.",
+    objectiveKpis: ["ConversÃ£o"],
     desktopImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/semana-consumidor-desk.png?v=202603301522",
     mobileImageLink:
@@ -996,12 +885,12 @@ const frontEvidenceItems: EvidenceItem[] = [
     imageHeight: 300,
   },
   {
-    title: "LP Interna Chance Única",
+    title: "LP Interna Chance Ãšnica",
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Estruturar a LP para ampliar o senso de urgência comercial, destacar oferta e desconto, acelerar a entrada do usuário nas vitrines e produtos priorizados e incorporar novas vitrines, reforçando a estratégia de remarketing com Feed de Oferta Relâmpago, countdown e demais vieses de urgência, escassez e estímulo à conversão imediata.",
-    objectiveKpis: ["Conversão"],
+      "Estruturar a LP para ampliar o senso de urgÃªncia comercial, destacar oferta e desconto, acelerar a entrada do usuÃ¡rio nas vitrines e produtos priorizados e incorporar novas vitrines, reforÃ§ando a estratÃ©gia de remarketing com Feed de Oferta RelÃ¢mpago, countdown e demais vieses de urgÃªncia, escassez e estÃ­mulo Ã  conversÃ£o imediata.",
+    objectiveKpis: ["ConversÃ£o"],
     desktopImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/595fd04a2f57291355bfa3c39256501d943983aa.png?v=202603301517",
     mobileImageLink:
@@ -1010,12 +899,12 @@ const frontEvidenceItems: EvidenceItem[] = [
     imageHeight: 300,
   },
   {
-    title: "Reformulação Hero Section",
+    title: "ReformulaÃ§Ã£o Hero Section",
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Reformular a hero section para qualificar a entrada da homepage com melhor hierarquia visual, sliders, CTAs mais evidentes, responsividade mobile, evolução da busca com autocomplete, reforço da régua de vantagens no mobile, melhoria dos spots de produtos mobile e correção dos selos de campanha para estabilizar a exibição comercial e reduzir atrito na descoberta de produtos.",
-    objectiveKpis: ["Conversão"],
+      "Reformular a hero section para qualificar a entrada da homepage com melhor hierarquia visual, sliders, CTAs mais evidentes, responsividade mobile, evoluÃ§Ã£o da busca com autocomplete, reforÃ§o da rÃ©gua de vantagens no mobile, melhoria dos spots de produtos mobile e correÃ§Ã£o dos selos de campanha para estabilizar a exibiÃ§Ã£o comercial e reduzir atrito na descoberta de produtos.",
+    objectiveKpis: ["ConversÃ£o"],
     desktopImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png?v=202603301523",
     mobileImageLink:
@@ -1028,19 +917,19 @@ const frontEvidenceItems: EvidenceItem[] = [
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Melhorar a performance do componente de busca e do autocomplete para acelerar a localização de produtos, reduzir atrito na navegação e ampliar a entrada qualificada nas vitrines.",
-    objectiveKpis: ["Conversão"],
+      "Melhorar a performance do componente de busca e do autocomplete para acelerar a localizaÃ§Ã£o de produtos, reduzir atrito na navegaÃ§Ã£o e ampliar a entrada qualificada nas vitrines.",
+    objectiveKpis: ["ConversÃ£o"],
     desktopImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/perfoamance-busca.jpg?v=202603292204",
     imageLabel: "Busca e autocomplete",
     imageHeight: 300,
   },
   {
-    title: "Formulário WhatsApp Floating",
+    title: "FormulÃ¡rio WhatsApp Floating",
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Estruturar o fluxo do WhatsApp Floating em mobile com máscaras corretas, menor perda de preenchimento e integração do lead à Salesforce.",
+      "Estruturar o fluxo do WhatsApp Floating em mobile com mÃ¡scaras corretas, menor perda de preenchimento e integraÃ§Ã£o do lead Ã  Salesforce.",
     objectiveKpis: ["Leads"],
     mobileImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/formulario-bot.jpg?v=202603292204",
@@ -1048,12 +937,12 @@ const frontEvidenceItems: EvidenceItem[] = [
     imageHeight: 300,
   },
   {
-    title: "Evoluções de conversão e usabilidade para PDPs de Pisos",
+    title: "EvoluÃ§Ãµes de conversÃ£o e usabilidade para PDPs de Pisos",
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Consolidar melhorias de front nas PDPs de Pisos, com ajustes de UI na seção product__view, inserção do CTA Falar com especialista, inclusão de elementos complementares de conversão como badges Livelo e calculadora, além da correção do evento de clique e da leitura do pop-up de formas de pagamento, reduzindo fricção na jornada, qualificando a leitura do produto e reforçando apoio comercial na decisão de compra.",
-    objectiveKpis: ["Conversão"],
+      "Consolidar melhorias de front nas PDPs de Pisos, com ajustes de UI na seÃ§Ã£o product__view, inserÃ§Ã£o do CTA Falar com especialista, inclusÃ£o de elementos complementares de conversÃ£o como badges Livelo e calculadora, alÃ©m da correÃ§Ã£o do evento de clique e da leitura do pop-up de formas de pagamento, reduzindo fricÃ§Ã£o na jornada, qualificando a leitura do produto e reforÃ§ando apoio comercial na decisÃ£o de compra.",
+    objectiveKpis: ["ConversÃ£o"],
     desktopImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/pdp-piso-desk.jpg?v=202603301550",
     mobileImageLink:
@@ -1066,8 +955,8 @@ const frontEvidenceItems: EvidenceItem[] = [
     tags: ["CRO", "E-COMMERCE"],
     status: "pendente",
     objective:
-      "Exibir o split de entrega no minicart mobile para dar mais clareza sobre prazos e composição do pedido, reduzindo dúvida antes da finalização da compra.",
-    objectiveKpis: ["Conversão"],
+      "Exibir o split de entrega no minicart mobile para dar mais clareza sobre prazos e composiÃ§Ã£o do pedido, reduzindo dÃºvida antes da finalizaÃ§Ã£o da compra.",
+    objectiveKpis: ["ConversÃ£o"],
     mobileImageLink:
       "https://abcdaconstrucao.fbitsstatic.net/media/minicart2-split.png?v=202603292204",
     imageLabel: "Minicart",
@@ -1216,9 +1105,9 @@ const EvidenceCardView = ({
 
 const ecommerceMediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
-    title: "KVs do Mês do Consumidor + ativações em andamento até 31/03",
+    title: "KVs do MÃªs do Consumidor + ativaÃ§Ãµes em andamento atÃ© 31/03",
     description:
-      "KVs institucionais e ativações em andamento para sustentar a janela do Mês do Consumidor até 31/03.",
+      "KVs institucionais e ativaÃ§Ãµes em andamento para sustentar a janela do MÃªs do Consumidor atÃ© 31/03.",
     tags: ["ACQUISITION", "E-COMMERCE"],
     objectiveKpis: ["ROAS"],
     status: "feito",
@@ -1229,9 +1118,9 @@ const ecommerceMediaAcquisitionItems: MediaAcquisitionItem[] = [
   },
   {
     title:
-      "Atualização de criativos PMAX para pisos e paredes e chuveiros Lorenzetti",
+      "AtualizaÃ§Ã£o de criativos PMAX para pisos e paredes e chuveiros Lorenzetti",
     description:
-      "Atualização de criativos PMAX para reforçar cobertura de categoria e ampliar performance em pisos, paredes e chuveiros Lorenzetti.",
+      "AtualizaÃ§Ã£o de criativos PMAX para reforÃ§ar cobertura de categoria e ampliar performance em pisos, paredes e chuveiros Lorenzetti.",
     tags: ["ACQUISITION", "E-COMMERCE"],
     objectiveKpis: ["ROAS"],
     status: "feito",
@@ -1242,25 +1131,25 @@ const ecommerceMediaAcquisitionItems: MediaAcquisitionItem[] = [
   },
   {
     title:
-      "Criativos “Super Chance Única” (e-commerce) + campanhas relâmpago Deca (oportunidade)",
+      "Criativos â€œSuper Chance Ãšnicaâ€ (e-commerce) + campanhas relÃ¢mpago Deca (oportunidade)",
     description:
-      "Pacote de criativos para Super Chance Única e campanhas relâmpago Deca com foco em oportunidade e aceleração de pedidos.",
+      "Pacote de criativos para Super Chance Ãšnica e campanhas relÃ¢mpago Deca com foco em oportunidade e aceleraÃ§Ã£o de pedidos.",
     tags: ["ACQUISITION", "E-COMMERCE"],
     objectiveKpis: ["Receita"],
     status: "feito",
     media: mediaSlots(
       "https://abcdaconstrucao.fbitsstatic.net/media/abc_tanque_quadrado-1-(1).png?v=202603271517",
-      "https://abcdaconstrucao.fbitsstatic.net/media/abc_campanha-relâmpago-deca_quadrado-2.png?v=202603271517",
+      "https://abcdaconstrucao.fbitsstatic.net/media/abc_campanha-relÃ¢mpago-deca_quadrado-2.png?v=202603271517",
     ),
     accent: CLUSTERS.ACQUISITION,
   },
   {
     title:
-      "KVs diários para a Semana do Consumidor, incluindo campanha dedicada da Docol.",
+      "KVs diÃ¡rios para a Semana do Consumidor, incluindo campanha dedicada da Docol.",
     description:
-      "KVs diários da Semana do Consumidor e campanha dedicada da Docol para manter frequência e conversão ao longo da janela promocional.",
+      "KVs diÃ¡rios da Semana do Consumidor e campanha dedicada da Docol para manter frequÃªncia e conversÃ£o ao longo da janela promocional.",
     tags: ["ACQUISITION", "E-COMMERCE"],
-    objectiveKpis: ["Conversão"],
+    objectiveKpis: ["ConversÃ£o"],
     status: "feito",
     media: mediaSlots(
       "https://abcdaconstrucao.fbitsstatic.net/media/[abc]-campanha-docol_retrato-4.png?v=202603271510",
@@ -1299,7 +1188,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
         >
           <SlideHeroHeader
             accentColor={clusterColor}
-            title="Visão de Funil — E-commerce"
+            title="VisÃ£o de Funil â€” E-commerce"
             right={
               <div
                 style={{
@@ -1404,4 +1293,5 @@ export function Slide5Ecommerce({ isActive }: Props) {
     </div>
   );
 }
+
 
