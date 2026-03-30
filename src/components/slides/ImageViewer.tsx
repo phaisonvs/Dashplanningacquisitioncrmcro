@@ -23,6 +23,11 @@ type ViewportSize = {
   height: number;
 };
 
+type ImageDimensions = {
+  width: number;
+  height: number;
+};
+
 type PhoneFrameProps = {
   image: string;
   alt: string;
@@ -30,6 +35,7 @@ type PhoneFrameProps = {
   modal?: boolean;
   widthClassName?: string;
   shellWidth?: string;
+  shellHeight?: string;
 };
 
 const PHONE_FRAME_ASPECT_RATIO = 9 / 19.5;
@@ -83,6 +89,7 @@ const PhoneFrame = ({
   modal = false,
   widthClassName,
   shellWidth,
+  shellHeight,
 }: PhoneFrameProps) => {
   const resolvedShellWidth = shellWidth ?? (modal
     ? compact
@@ -91,12 +98,15 @@ const PhoneFrame = ({
     : compact
       ? "clamp(248px, 84vw, 360px)"
       : "clamp(224px, 28vw, 320px)");
+  const resolvedShellHeight = shellHeight ?? undefined;
 
   return (
     <div
       className={widthClassName}
       style={{
         width: resolvedShellWidth,
+        height: resolvedShellHeight,
+        aspectRatio: resolvedShellHeight ? "auto" : "9 / 19.5",
         maxWidth: "100%",
         margin: "0 auto",
         display: "flex",
@@ -199,6 +209,8 @@ export function ImageViewer({
 }: ImageViewerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("desktop");
+  const [mobileImageDimensions, setMobileImageDimensions] =
+    useState<ImageDimensions | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { isMobile, isCompact } = useDeckViewport();
@@ -228,6 +240,8 @@ export function ImageViewer({
     activeViewMode === "desktop"
       ? resolvedDesktopImageLink || resolvedMobileImageLink
       : resolvedMobileImageLink || resolvedDesktopImageLink;
+  const modalFrameInset = isCompact ? 12 : 14;
+  const modalChrome = modalFrameInset * 4;
   const containerWidth = fullWidth ? "100%" : isCompact ? "100%" : `${width}px`;
   const containerHeight = fullWidth
     ? hasOnlyMobileImage
@@ -260,6 +274,21 @@ export function ImageViewer({
     isCompact ? 300 : 320,
   );
   const mobileModalShellWidthStyle = `${Math.max(0, Math.floor(mobileModalShellWidth))}px`;
+  const mobileModalDefaultShellHeight = mobileModalShellWidth / PHONE_FRAME_ASPECT_RATIO;
+  const mobileModalAutoFitShellHeight =
+    mobileImageDimensions && mobileImageDimensions.width > 0
+      ? ((mobileModalShellWidth - modalChrome) *
+          (mobileImageDimensions.height / mobileImageDimensions.width)) +
+        modalChrome
+      : null;
+  const mobileModalResolvedShellHeight = Math.max(
+    0,
+    Math.floor(
+      mobileModalAutoFitShellHeight
+        ? Math.min(mobileModalDefaultShellHeight, mobileModalAutoFitShellHeight)
+        : mobileModalDefaultShellHeight,
+    ),
+  );
 
   // Auto-reset scroll after 10 seconds of inactivity (only when not expanded)
   const handleScroll = () => {
@@ -314,6 +343,46 @@ export function ImageViewer({
       scrollContainerRef.current.scrollTop = 0;
     }
   }, [activeViewMode, currentImageLink, isExpanded]);
+
+  useEffect(() => {
+    if (!isMobileModal || !currentImageLink) {
+      setMobileImageDimensions(null);
+      return;
+    }
+
+    let isCancelled = false;
+    const image = new Image();
+
+    image.onload = () => {
+      if (isCancelled) {
+        return;
+      }
+
+      setMobileImageDimensions({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      });
+    };
+
+    image.onerror = () => {
+      if (!isCancelled) {
+        setMobileImageDimensions(null);
+      }
+    };
+
+    image.src = currentImageLink;
+
+    if (image.complete && image.naturalWidth > 0 && !isCancelled) {
+      setMobileImageDimensions({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      });
+    }
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [currentImageLink, isMobileModal]);
 
   if (!hasAnyImage) {
     return (
@@ -746,6 +815,7 @@ export function ImageViewer({
                 compact={isCompact}
                 modal
                 shellWidth={mobileModalShellWidthStyle}
+                shellHeight={`${mobileModalResolvedShellHeight}px`}
                 widthClassName="image-viewer-modal-phone-frame"
               />
             </div>

@@ -12,8 +12,13 @@ import {
 import {
   MediaAcquisitionSection,
   collectStatusCounts,
+  mediaSlots,
+  type MediaAcquisitionItem,
 } from "./sharedMediaAcquisition";
-import { ConversionExperienceSection } from "./sharedConversionExperience";
+import {
+  ConversionExperienceSection,
+  type ConversionExperienceItem,
+} from "./sharedConversionExperience";
 import {
   DeckPill,
   SlideHeroHeader,
@@ -1041,26 +1046,16 @@ const MediaEfficiencyCardView = ({
   </motion.article>
 );
 
-type EvidenceItem = {
-  title: string;
-  tags: ClusterTag[];
-  status: Status;
-  objective: string;
-  desktopImageLink?: string;
-  mobileImageLink?: string;
-  desktopImage?: string;
-  mobileImage?: string;
-  imageLabel: string;
-  imageHeight?: number;
-};
+type EvidenceItem = ConversionExperienceItem;
 
 const frontEvidenceItems: EvidenceItem[] = [
   {
     title: "LP Interna Semana do Consumidor",
-    tags: ["LEADS", "CRO", "E-COMMERCE"],
+    tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Realizamos a subida da LP Interna Semana do Consumidor, reforçando a hierarquia de conversão, a organização por clusters e a visibilidade orgânica.",
+      "Estruturar a LP para fortalecer a hierarquia de conversão, organizar a navegação por clusters, ampliar a exposição comercial das ofertas e incorporar novas vitrines, sustentando a estratégia de remarketing com Feed de Oferta Relâmpago, countdown e demais vieses de urgência, escassez e retomada de intenção de compra.",
+    objectiveKpis: ["Conversão"],
     desktopImage: lpSemanaConsumidorImg,
     mobileImage: lpSemanaConsumidorMobileImg,
     imageLabel: "Landing Page",
@@ -1068,171 +1063,77 @@ const frontEvidenceItems: EvidenceItem[] = [
   },
   {
     title: "LP Interna Chance Única",
-    tags: ["LEADS", "CRO", "E-COMMERCE"],
-    status: "pendente",
+    tags: ["CRO", "E-COMMERCE"],
+    status: "feito",
     objective:
-      "Reforçamos a captação com urgência comercial na LP Interna Chance Única, destacando oferta, desconto e janela de oportunidade.",
+      "Estruturar a LP para ampliar o senso de urgência comercial, destacar oferta e desconto, acelerar a entrada do usuário nas vitrines e produtos priorizados e incorporar novas vitrines, reforçando a estratégia de remarketing com Feed de Oferta Relâmpago, countdown e demais vieses de urgência, escassez e estímulo à conversão imediata.",
+    objectiveKpis: ["Conversão"],
     desktopImage: lpChanceUnicaImg,
     mobileImage: lpChanceUnicaMobileImg,
     imageLabel: "Landing Page",
     imageHeight: 300,
   },
   {
-    title: "Reformulação Completa da Hero Section",
-    tags: ["LEADS", "CRO", "E-COMMERCE"],
+    title: "Reformulação Hero Section",
+    tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Realizamos a reformulação completa da hero section, com sliders, hierarquia visual mais clara, CTAs mais evidentes e responsividade mobile aprimorada.",
+      "Reformular a hero section para qualificar a entrada da homepage com melhor hierarquia visual, sliders, CTAs mais evidentes, responsividade mobile, evolução da busca com autocomplete, reforço da régua de vantagens no mobile, melhoria dos spots de produtos mobile e correção dos selos de campanha para estabilizar a exibição comercial e reduzir atrito na descoberta de produtos.",
+    objectiveKpis: ["Conversão"],
     desktopImage: heroDesktopImg,
     mobileImage: heroMobileImg,
     imageLabel: "Hero Section",
     imageHeight: 300,
   },
   {
-    title: "Componente de pesquisa mobile + autocomplete",
-    tags: ["LEADS", "CRO", "E-COMMERCE"],
+    title: "Performance da busca e autocomplete",
+    tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Realizamos ajustes no componente de busca mobile, corrigimos o autocomplete e reduzimos atrito na descoberta de produtos.",
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Régua de vantagens mobile",
-    tags: ["LEADS", "CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Reforçamos a régua de vantagens no mobile para acelerar a entrada em LPs como Chance Única, Mês do Consumidor e Lançamentos.",
-    desktopImage: lpChanceUnicaImg,
-    mobileImage: lpChanceUnicaMobileImg,
-    imageLabel: "Landing Page",
+      "Melhorar a performance do componente de busca e do autocomplete para acelerar a localização de produtos, reduzir atrito na navegação e ampliar a entrada qualificada nas vitrines.",
+    objectiveKpis: ["Conversão"],
+    desktopImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/perfoamance-busca.jpg?v=202603292204",
+    imageLabel: "Busca e autocomplete",
     imageHeight: 300,
   },
   {
     title: "Formulário WhatsApp Floating",
-    tags: ["LEADS", "CRO", "E-COMMERCE"],
-    status: "pendente",
-    objective:
-      "Realizamos correções de máscaras dos inputs e estruturamos o fluxo do WhatsApp Floating para integrar o lead à Salesforce sem perda de conversão.",
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Inserção de novas vitrines nas LPs",
-    tags: ["LEADS", "CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Realizamos a inserção de novas vitrines nas LPs, setorizando categorias e ampliando a superfície de navegação.",
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Spots de produtos mobile",
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Realizamos ajustes nos spots de produtos mobile para melhorar leitura, usabilidade e clareza na navegação.",
+      "Estruturar o fluxo do WhatsApp Floating em mobile com máscaras corretas, menor perda de preenchimento e integração do lead à Salesforce.",
+    objectiveKpis: ["Leads"],
+    mobileImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/formulario-bot.jpg?v=202603292204",
+    imageLabel: "WhatsApp Floating",
+    imageHeight: 300,
+  },
+  {
+    title: "Evoluções de conversão e usabilidade para PDPs",
+    tags: ["CRO", "E-COMMERCE"],
+    status: "feito",
+    objective:
+      "Consolidar melhorias de front por categoria nas PDPs, com adaptações para Pisos, Revestimentos e demais categorias, ajustes de UI na seção product__view, inserção do CTA Falar com especialista, inclusão de elementos complementares de conversão como badges Livelo e calculadora, além da correção do evento de clique e da leitura do pop-up de formas de pagamento, reduzindo fricção na jornada, qualificando a leitura do produto e reforçando apoio comercial na decisão de compra.",
+    objectiveKpis: ["Conversão"],
     desktopImage: lpChanceUnicaImg,
     mobileImage: lpChanceUnicaMobileImg,
     imageLabel: "Landing Page",
     imageHeight: 300,
   },
   {
-    title: "Bug fix: selos de campanha",
-    tags: ["CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Corrigimos o vínculo duplicado de selos de campanha e estabilizamos a exibição comercial nas LPs.",
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Melhorias de front — Variantes por Categoria",
-    tags: ["CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Realizamos melhorias de front por categoria nas PDPs, adaptando a experiência para Pisos e Revestimentos e demais categorias.",
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Ajustes de UI na seção product__view",
-    tags: ["CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Realizamos ajustes de UI na seção product__view para reduzir fricção na leitura de produto em desktop e mobile.",
-    desktopImage: lpChanceUnicaImg,
-    mobileImage: lpChanceUnicaMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: 'Botão "Falar com especialista"',
-    tags: ["CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Inserimos o CTA Falar com especialista nas PDPs, reforçando contato assistido e prova social.",
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Elementos complementares de conversão",
-    tags: ["CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Reforçamos a decisão com badges Livelo, calculadora e recursos complementares de conversão.",
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Revisão API de cotação de frete",
+    title: "Split de entrega no minicart",
     tags: ["CRO", "E-COMMERCE"],
     status: "pendente",
     objective:
-      "Revisamos a API de cotação de frete para melhorar o retorno da Frete Rápido e reduzir incerteza logística.",
-    desktopImage: lpChanceUnicaImg,
-    mobileImage: lpChanceUnicaMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Próxima evolução mobile",
-    tags: ["CRO", "E-COMMERCE"],
-    status: "pendente",
-    objective:
-      "Estruturamos a próxima evolução mobile com acordeom para ficha técnica e leitura mais fluida.",
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
-    imageLabel: "Landing Page",
-    imageHeight: 300,
-  },
-  {
-    title: "Correção: Formas de Pagamento",
-    tags: ["CRO", "E-COMMERCE"],
-    status: "feito",
-    objective:
-      "Realizamos a correção do evento de clique e da leitura do pop-up de formas de pagamento.",
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
-    imageLabel: "Landing Page",
+      "Exibir o split de entrega no minicart mobile para dar mais clareza sobre prazos e composição do pedido, reduzindo dúvida antes da finalização da compra.",
+    objectiveKpis: ["Conversão"],
+    mobileImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/minicart2-split.png?v=202603292204",
+    imageLabel: "Minicart",
     imageHeight: 300,
   },
 ];
-
 const ObjectiveBlock = ({
   text,
   compact = false,
@@ -1370,6 +1271,62 @@ const EvidenceCardView = ({
   );
 };
 
+const ecommerceMediaAcquisitionItems: MediaAcquisitionItem[] = [
+  {
+    title: "KVs do Mês do Consumidor + ativações em andamento até 31/03",
+    description:
+      "KVs institucionais e ativações em andamento para sustentar a janela do Mês do Consumidor até 31/03.",
+    tags: ["ACQUISITION", "E-COMMERCE"],
+    objectiveKpis: ["ROAS"],
+    status: "feito",
+    media: mediaSlots(
+      "https://abcdaconstrucao.fbitsstatic.net/media/abc_mc_institucional_horizontal-5.png?v=202603271517",
+    ),
+    accent: CLUSTERS.ACQUISITION,
+  },
+  {
+    title:
+      "Atualização de criativos PMAX para pisos e paredes e chuveiros Lorenzetti",
+    description:
+      "Atualização de criativos PMAX para reforçar cobertura de categoria e ampliar performance em pisos, paredes e chuveiros Lorenzetti.",
+    tags: ["ACQUISITION", "E-COMMERCE"],
+    objectiveKpis: ["ROAS"],
+    status: "feito",
+    media: mediaSlots(
+      "https://abcdaconstrucao.fbitsstatic.net/media/abc_pmax-pisos-e-paredes_quadrado-3.png?v=202603271517",
+    ),
+    accent: CLUSTERS.ACQUISITION,
+  },
+  {
+    title:
+      "Criativos “Super Chance Única” (e-commerce) + campanhas relâmpago Deca (oportunidade)",
+    description:
+      "Pacote de criativos para Super Chance Única e campanhas relâmpago Deca com foco em oportunidade e aceleração de pedidos.",
+    tags: ["ACQUISITION", "E-COMMERCE"],
+    objectiveKpis: ["Receita"],
+    status: "feito",
+    media: mediaSlots(
+      "https://abcdaconstrucao.fbitsstatic.net/media/abc_tanque_quadrado-1-(1).png?v=202603271517",
+      "https://abcdaconstrucao.fbitsstatic.net/media/abc_campanha-relâmpago-deca_quadrado-2.png?v=202603271517",
+    ),
+    accent: CLUSTERS.ACQUISITION,
+  },
+  {
+    title:
+      "KVs diários para a Semana do Consumidor, incluindo campanha dedicada da Docol.",
+    description:
+      "KVs diários da Semana do Consumidor e campanha dedicada da Docol para manter frequência e conversão ao longo da janela promocional.",
+    tags: ["ACQUISITION", "E-COMMERCE"],
+    objectiveKpis: ["Conversão"],
+    status: "feito",
+    media: mediaSlots(
+      "https://abcdaconstrucao.fbitsstatic.net/media/[abc]-campanha-docol_retrato-4.png?v=202603271510",
+      "https://abcdaconstrucao.fbitsstatic.net/media/abc_mc_produtos-foco_retrato-4-1.png?v=202603271517",
+    ),
+    accent: CLUSTERS.ACQUISITION,
+  },
+];
+
 export function Slide5Ecommerce({ isActive }: Props) {
   const clusterColor = CLUSTERS.ECOMMERCE;
   const { isMobile, isCompact } = useDeckViewport();
@@ -1499,8 +1456,9 @@ export function Slide5Ecommerce({ isActive }: Props) {
       </div>
 
       <div data-ui="ecommerce-secao-midias">
-        <MediaAcquisitionSection />
+        <MediaAcquisitionSection items={ecommerceMediaAcquisitionItems} />
       </div>
     </div>
   );
 }
+

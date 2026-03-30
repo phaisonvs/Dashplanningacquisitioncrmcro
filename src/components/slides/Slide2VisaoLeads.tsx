@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+﻿import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, RED, CLUSTERS } from '../theme';
@@ -300,7 +300,7 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS', 'ACQUISITION'] as const,
     status: 'feito' as const,
     objective: 'Integramos o CTA "Falar com especialista" para capturar dados dos usuários usando o formulário de WhatsApp floating.',
-    objectiveKpis: ['Leads', 'ROAS'],
+    objectiveKpis: ['Leads'],
     desktopImageLink: lpSemanaConsumidorImg,
     mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
@@ -311,7 +311,7 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'Dados de usuários chegavam com valores indevidos devido aos erros de máscaras dos inputs: Nome aceitava números, E-mail aceitava fora do padrão @(provedor).com.br e Telefone aceitava letras.',
-    objectiveKpis: ['Leads', 'ConversÃ£o'],
+    objectiveKpis: ['Leads'],
     desktopImageLink: heroDesktopImg,
     mobileImageLink: heroMobileImg,
     imageLabel: 'Formulário',
@@ -322,7 +322,7 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'Ao considerarmos o custo alto para cotações de frete, ajustamos para que a jornada priorizasse contato assistido nas páginas de categoria de Pisos e Revestimentos.',
-    objectiveKpis: ['Leads', 'ConversÃ£o'],
+    objectiveKpis: ['Leads'],
     desktopImageLink: lpChanceUnicaImg,
     mobileImageLink: lpChanceUnicaMobileImg,
     imageLabel: 'Categoria',
@@ -670,7 +670,7 @@ const leadMediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
     title: 'KVs de aquisição de leads',
     description: 'Validar a leitura inicial dos KVs de aquisição com foco em volume qualificado de leads.',
-    objectiveKpis: ['Leads', 'ROAS'],
+    objectiveKpis: ['Leads'],
     tags: ['LEADS', 'ACQUISITION', 'CRO'],
     status: 'feito',
     accent: CLUSTERS.ACQUISITION,
@@ -682,7 +682,7 @@ const leadMediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
     title: 'KVs de aquisição de leads',
     description: 'Testar uma variação de KV com reforço de oferta e clareza de conversão.',
-    objectiveKpis: ['Receita', 'Pedidos'],
+    objectiveKpis: ['Receita'],
     tags: ['LEADS', 'ACQUISITION', 'CRO'],
     status: 'feito',
     accent: CLUSTERS.ACQUISITION,
@@ -694,7 +694,7 @@ const leadMediaAcquisitionItems: MediaAcquisitionItem[] = [
   {
     title: 'KVs de aquisição de leads',
     description: 'Comparar uma terceira leitura de KV priorizando escala e eficiência na captação.',
-    objectiveKpis: ['Investimento', 'Conversão'],
+    objectiveKpis: ['Investimento'],
     tags: ['LEADS', 'ACQUISITION', 'CRO'],
     status: 'feito',
     accent: CLUSTERS.ACQUISITION,
@@ -784,4 +784,5 @@ export function Slide2VisaoLeads({ isActive }: Props) {
     </div>
   );
 }
+
 

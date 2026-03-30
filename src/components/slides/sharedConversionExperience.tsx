@@ -91,7 +91,7 @@ const ObjectiveBlock = ({
         />
         Objetivo da Frente
       </div>
-      {kpis.length > 0 ? (
+      {kpis[0] ? (
         <div
           style={{
             display: "flex",
@@ -101,15 +101,13 @@ const ObjectiveBlock = ({
             alignItems: "center",
           }}
         >
-          {kpis.map((kpi) => (
-            <DeckPill
-              key={kpi}
-              label={kpi}
-              compact={compact}
-              preset={deckPillPresets.tokenChip}
-              style={{ textTransform: "none" }}
-            />
-          ))}
+          <DeckPill
+            key={kpis[0]}
+            label={kpis[0]}
+            compact={compact}
+            preset={deckPillPresets.tokenChip}
+            style={{ textTransform: "none" }}
+          />
         </div>
       ) : null}
     </div>
