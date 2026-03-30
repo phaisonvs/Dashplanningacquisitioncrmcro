@@ -845,12 +845,15 @@ export const MediaAcquisitionSection = ({
   title = "Mídias Acquisition",
   subtitle = "Leitura visual das peças e frentes que alimentam aquisição e qualidade de lead.",
   items = mediaAcquisitionItems,
+  singleCardMaxWidth,
 }: {
   title?: string;
   subtitle?: string;
   items?: MediaAcquisitionItem[];
+  singleCardMaxWidth?: number;
 }) => {
   const { isMobile, isCompact } = useDeckViewport();
+  const isSingleCard = items.length === 1 && typeof singleCardMaxWidth === "number";
 
   const itemsByColumn = useMemo(() => {
     const maxColumns = isMobile ? 1 : isCompact ? 2 : 4;
@@ -894,9 +897,10 @@ export const MediaAcquisitionSection = ({
         /* Edita Grid de Cards de Midia */
         data-ui="grid-cards-midia"
         style={{
-          width: "100%",
+          width: isSingleCard ? `min(100%, ${singleCardMaxWidth}px)` : "100%",
           minWidth: 0,
-          alignSelf: "stretch",
+          margin: isSingleCard ? "0" : undefined,
+          alignSelf: isSingleCard ? "flex-start" : "stretch",
           display: "grid",
           gridTemplateColumns: `repeat(${itemsByColumn.length}, minmax(0, 1fr))`,
           gap: "14px",

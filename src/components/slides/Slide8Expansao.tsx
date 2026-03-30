@@ -9,7 +9,12 @@ import {
   deckPillPresets,
   useDeckViewport,
 } from './sharedDeckTypography';
-import { MediaAcquisitionSection, collectStatusCounts } from './sharedMediaAcquisition';
+import {
+  MediaAcquisitionSection,
+  collectStatusCounts,
+  mediaSlots,
+  type MediaAcquisitionItem,
+} from './sharedMediaAcquisition';
 import heroDesktopImg from 'figma:asset/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png';
 import heroMobileImg from 'figma:asset/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png';
 import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
@@ -191,6 +196,22 @@ const conversionExperienceItems = [
   imageLabel: string;
   imageHeight?: number;
 }>;
+
+const expansionMediaAcquisitionItems: MediaAcquisitionItem[] = [
+  {
+    title: 'KVs de EXP focado em geolocalização (cidades que queremos entrar e grandes cidades)',
+    description:
+      'Peças de expansão com geolocalização para reforçar praças prioritárias, ampliar relevância regional e captar demanda qualificada.',
+    objectiveKpis: ['Leads'],
+    tags: ['LEADS', 'ACQUISITION', 'CRO'],
+    status: 'feito',
+    media: mediaSlots(
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_expansão_quadrado-1-c1-(10).png?v=202603271510',
+      'https://abcdaconstrucao.fbitsstatic.net/media/abc_expansão_quadrado-1-c1-(2).png?v=202603271510',
+    ),
+    accent: CLUSTERS.ACQUISITION,
+  },
+];
 
 const statusCounts = collectStatusCounts(
   ...expansionMetrics.map((item) => [...item.previousActions, ...item.weekActions]),
@@ -428,7 +449,10 @@ export function Slide8Expansao({ isActive }: Props) {
       </div>
 
       <div data-ui="expansao-secao-midias">
-        <MediaAcquisitionSection />
+        <MediaAcquisitionSection
+          items={expansionMediaAcquisitionItems}
+          singleCardMaxWidth={420}
+        />
       </div>
     </div>
   );

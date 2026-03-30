@@ -541,16 +541,16 @@ export default function App() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                      style={{
-                        position: "absolute",
-                        top: "calc(100% + 8px)",
-                        left: 0,
-                        right: "auto",
-                        transformOrigin: "top left",
-                        background: "rgba(20, 20, 20, 0.95)",
-                        backdropFilter: "blur(20px)",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: "8px",
+                        style={{
+                          position: "absolute",
+                          top: "calc(100% + 8px)",
+                          left: "-183px",
+                          right: "auto",
+                          transformOrigin: "top left",
+                          background: "rgba(20, 20, 20, 0.95)",
+                          backdropFilter: "blur(20px)",
+                          border: "1px solid rgba(255,255,255,0.1)",
+                          borderRadius: "8px",
                           padding: "8px",
                           minWidth: isCompact ? "180px" : "220px",
                           maxWidth: isCompact ? "calc(100vw - 32px)" : "none",
