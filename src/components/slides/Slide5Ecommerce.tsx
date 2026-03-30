@@ -1266,7 +1266,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
                 ? "1fr"
                 : isCompact
                   ? "repeat(2, minmax(0, 1fr))"
-                  : "repeat(4, minmax(0, 1fr))",
+                  : "repeat(3, minmax(0, 1fr))",
               gap: isCompact ? "14px" : "18px",
             }}
           >
@@ -1278,7 +1278,6 @@ export function Slide5Ecommerce({ isActive }: Props) {
                 compact={isCompact}
               />
             ))}
-            <MediaEfficiencyCardView isActive={isActive} compact={isCompact} />
           </div>
         </div>
       </section>
