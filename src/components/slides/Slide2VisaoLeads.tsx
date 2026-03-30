@@ -1,5 +1,7 @@
 ﻿import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import { AnimatedNumber } from '../AnimatedNumber';
 import { BG, WHITE, GREEN, RED, CLUSTERS } from '../theme';
 import { ConversionExperienceSection } from './sharedConversionExperience';
@@ -12,12 +14,6 @@ import {
   useDeckViewport,
 } from './sharedDeckTypography';
 import { MediaAcquisitionSection, collectStatusCounts, mediaSlots, type MediaAcquisitionItem } from './sharedMediaAcquisition';
-import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
-import lpChanceUnicaImg from 'figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png';
-import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
-import lpChanceUnicaMobileImg from 'figma:asset/63f4568abbe03cbb8b0834a2bb70e3613df7a874.png';
-import heroDesktopImg from 'figma:asset/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png';
-import heroMobileImg from 'figma:asset/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png';
 
 interface Props {
   isActive: boolean;
@@ -297,13 +293,25 @@ const funnelStages: FunnelStage[] = [
 
 const conversionExperienceItems = [
   {
+    title: 'Evolução de integração Popup Primeira Compra',
+    tags: ['LEADS', 'CRO', 'E-COMMERCE'] as const,
+    status: 'pendente' as const,
+    objective:
+      'A evolução busca aumentar o preenchimento do formulário com novos gatilhos de interação com o usuário. Se o usuário fechar o popup sem preencher, ele continua disponível em toda a jornada do site, preso na lateral esquerda, enquanto evoluímos a integração dele e dos leads de localpages para dentro do core do SalesForce.',
+    objectiveKpis: ['Leads'],
+    desktopImageLink:
+      'https://abcdaconstrucao.fbitsstatic.net/media/primeira-compra-opup.jpg?v=202603301612',
+    mobileImageLink:
+      'https://abcdaconstrucao.fbitsstatic.net/media/primeira-compra-mob.jpg?v=202603301612',
+    imageLabel: 'Popup Primeira Compra',
+    imageHeight: 240,
+  },
+  {
     title: 'Adição do CTA "Falar com especialista" nas Landing Pages "Mês do Consumidor" e "Chance Única"',
     tags: ['CRO', 'LEADS', 'ACQUISITION'] as const,
     status: 'feito' as const,
     objective: 'Integramos o CTA "Falar com especialista" para capturar dados dos usuários usando o formulário de WhatsApp floating.',
     objectiveKpis: ['Leads'],
-    desktopImageLink: lpSemanaConsumidorImg,
-    mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
     imageHeight: 240,
   },
@@ -313,19 +321,21 @@ const conversionExperienceItems = [
     status: 'feito' as const,
     objective: 'Dados de usuários chegavam com valores indevidos devido aos erros de máscaras dos inputs: Nome aceitava números, E-mail aceitava fora do padrão @(provedor).com.br e Telefone aceitava letras.',
     objectiveKpis: ['Leads'],
-    desktopImageLink: heroDesktopImg,
-    mobileImageLink: heroMobileImg,
+    mobileImageLink:
+      'https://abcdaconstrucao.fbitsstatic.net/media/formulario-bot.jpg?v=202603301550',
     imageLabel: 'Formulário',
     imageHeight: 240,
   },
   {
-    title: 'Adição do CTA "Falar com especialista" nas Páginas que assumem cluster por categoria "Pisos e Revestimentos"',
+    title: 'Adição do CTA e pop-up "Falar com especialista" nas Páginas que assumem cluster por categoria "Pisos e Revestimentos".',
     tags: ['CRO', 'LEADS'] as const,
-    status: 'feito' as const,
-    objective: 'Ao considerarmos o custo alto para cotações de frete, ajustamos para que a jornada priorizasse contato assistido nas páginas de categoria de Pisos e Revestimentos.',
+    status: 'pendente' as const,
+    objective: 'Fazer o usuário se cadastrar e iniciar o atendimento pelo bot de WhatsApp, reduzindo atrito no contato assistido das páginas de categoria de Pisos e Revestimentos.',
     objectiveKpis: ['Leads'],
-    desktopImageLink: lpChanceUnicaImg,
-    mobileImageLink: lpChanceUnicaMobileImg,
+    desktopImageLink:
+      'https://abcdaconstrucao.fbitsstatic.net/media/popup-especialista-piso-desk.jpg?v=202603301545',
+    mobileImageLink:
+      'https://abcdaconstrucao.fbitsstatic.net/media/popup-especialista-piso-mob.jpg?v=202603301546',
     imageLabel: 'Categoria',
     imageHeight: 240,
   },
@@ -512,104 +522,191 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
   </motion.article>
 );
 
-const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelStage; isActive: boolean; compact?: boolean }) => (
-  <motion.article
-    data-ui="card-funil-leads"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.45 }}
-    style={{ ...deckCardPresets.metric(compact, 'tight'), minHeight: undefined }}
-  >
-    <div data-ui="kpi-card-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
-      <div data-ui="kpi-card-headline">
-        <div data-ui="kpi-card-title" style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
-          {stage.title}
+const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelStage; isActive: boolean; compact?: boolean }) => {
+  const isMaskedStage = stage.title === 'ETAPA 3' && stage.label === 'ORÇAMENTO (GARGALO)';
+  const [isRevealed, setIsRevealed] = useState(() => !isMaskedStage);
+  const shouldMask = isMaskedStage && !isRevealed;
+
+  return (
+    <motion.article
+      data-ui="card-funil-leads"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45 }}
+      style={{
+        ...deckCardPresets.metric(compact, 'tight'),
+        minHeight: undefined,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <div
+        data-ui="kpi-card-funil-content"
+        aria-hidden={shouldMask}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: compact ? '14px' : '16px',
+          filter: shouldMask ? 'blur(10px) saturate(0.72)' : 'none',
+          opacity: shouldMask ? 0.2 : 1,
+          pointerEvents: shouldMask ? 'none' : 'auto',
+          userSelect: shouldMask ? 'none' : 'auto',
+          transition: 'filter 180ms ease, opacity 180ms ease',
+        }}
+      >
+        <div data-ui="kpi-card-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: compact ? 'stretch' : 'flex-start', flexDirection: compact ? 'column' : 'row' }}>
+          <div data-ui="kpi-card-headline">
+            <div data-ui="kpi-card-title" style={{ color: 'rgba(255,255,255,0.42)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase' }}>
+              {stage.title}
+            </div>
+            <div data-ui="kpi-card-label" style={{ color: WHITE, fontSize: 'var(--paragrafo-grande)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginTop: '5px' }}>
+              {stage.label}
+            </div>
+          </div>
+          <div data-ui="kpi-card-date">
+            <TokenTag label={stage.dateTag} compact />
+          </div>
         </div>
-        <div data-ui="kpi-card-label" style={{ color: WHITE, fontSize: 'var(--paragrafo-grande)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginTop: '5px' }}>
-          {stage.label}
+
+        <div data-ui="kpi-card-value" style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
+          <AnimatedNumber
+            target={stage.value.target}
+            prefix={stage.value.prefix}
+            suffix={stage.value.suffix}
+            decimals={stage.value.decimals}
+            isActive={isActive}
+            duration={3000}
+          />
         </div>
+
+        <div data-ui="kpi-card-comparisons" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {stage.comparisons.map((row, index) => {
+            const activeColor = row.tone === 'positive' ? GREEN : RED;
+            const hasValue = Boolean(row.value);
+
+            return (
+              <div
+                key={`${row.text}-${index}`}
+                data-ui="linha-comparacao-funil-leads"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: hasValue ? 'space-between' : 'flex-start',
+                  gap: '12px',
+                  padding: compact ? '9px 12px' : '10px 14px',
+                  borderRadius: '8px',
+                  background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
+                  border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
+                  flexDirection: 'row',
+                  flexWrap: 'nowrap',
+                }}
+              >
+                <div data-ui="kpi-card-comparison-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--paragrafo)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
+                  {row.text}
+                </div>
+                {hasValue && (
+                  <div data-ui="kpi-card-comparison-value" style={{ color: activeColor, fontSize: 'var(--paragrafo)', fontWeight: 800, whiteSpace: 'nowrap', flex: '0 0 auto' }}>
+                    {row.value}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div data-ui="kpi-card-readings" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+          <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginBottom: '10px' }}>
+            Leituras
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {stage.bullets.map((row, index) => (
+              <div key={`${row.text}-${index}`} data-ui="kpi-card-reading" style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
+                <div data-ui="kpi-card-reading-text" style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--paragrafo)', lineHeight: 1.45 }}>
+                  {row.text}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {stage.previousActions.length > 0 ? (
+          <div data-ui="kpi-card-actions-previous">
+            <KpiActionGroup actions={stage.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" actionGap={10} />
+          </div>
+        ) : null}
+
+        {stage.weekActions.length > 0 ? (
+          <div data-ui="kpi-card-actions-week">
+            <KpiActionGroup actions={stage.weekActions} compact={compact} label="Ação na semana" variant="week" actionGap={10} />
+          </div>
+        ) : null}
       </div>
-      <div data-ui="kpi-card-date">
-        <TokenTag label={stage.dateTag} compact />
-      </div>
-    </div>
 
-    <div data-ui="kpi-card-value" style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
-      <AnimatedNumber
-        target={stage.value.target}
-        prefix={stage.value.prefix}
-        suffix={stage.value.suffix}
-        decimals={stage.value.decimals}
-        isActive={isActive}
-        duration={3000}
-      />
-    </div>
-
-    <div data-ui="kpi-card-comparisons" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {stage.comparisons.map((row, index) => {
-        const activeColor = row.tone === 'positive' ? GREEN : RED;
-        const hasValue = Boolean(row.value);
-
-        return (
+      {isMaskedStage ? (
+        <div
+          data-ui="leads-funil-mask-layer"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 2,
+            borderRadius: 'inherit',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none',
+          }}
+        >
           <div
-            key={`${row.text}-${index}`}
-            data-ui="linha-comparacao-funil-leads"
             style={{
-              display: 'flex',
+              position: 'absolute',
+              inset: 0,
+              borderRadius: 'inherit',
+              background: shouldMask
+                ? 'linear-gradient(180deg, rgba(2, 6, 23, 0.56), rgba(2, 6, 23, 0.82))'
+                : 'transparent',
+              backdropFilter: shouldMask ? 'blur(10px)' : 'blur(0px)',
+              opacity: shouldMask ? 1 : 0,
+              transition: 'opacity 180ms ease, backdrop-filter 180ms ease, background 180ms ease',
+            }}
+          />
+
+          <button
+            type="button"
+            data-ui="leads-funil-mask-toggle"
+            aria-label={shouldMask ? 'Visualizar etapa 3' : 'Ocultar etapa 3'}
+            aria-pressed={isRevealed}
+            title={shouldMask ? 'Visualizar etapa 3' : 'Ocultar etapa 3'}
+            onClick={() => setIsRevealed((current) => !current)}
+            style={{
+              pointerEvents: 'auto',
+              position: 'relative',
+              zIndex: 1,
+              display: 'inline-flex',
               alignItems: 'center',
-              justifyContent: hasValue ? 'space-between' : 'flex-start',
-              gap: '12px',
-              padding: compact ? '9px 12px' : '10px 14px',
-              borderRadius: '8px',
-              background: row.tone === 'positive' ? 'rgba(34, 197, 94, 0.08)' : 'rgba(255, 82, 82, 0.10)',
-              border: `1px solid ${row.tone === 'positive' ? 'rgba(34, 197, 94, 0.24)' : 'rgba(255, 82, 82, 0.24)'}`,
-              flexDirection: 'row',
-              flexWrap: 'nowrap',
+              justifyContent: 'center',
+              width: compact ? '54px' : '62px',
+              height: compact ? '54px' : '62px',
+              borderRadius: '999px',
+              border: '1px solid rgba(255,255,255,0.16)',
+              background: shouldMask ? 'rgba(17, 24, 39, 0.82)' : 'rgba(255,255,255,0.08)',
+              color: WHITE,
+              boxShadow: shouldMask
+                ? '0 18px 44px rgba(0,0,0,0.36), inset 0 1px 0 rgba(255,255,255,0.04)'
+                : '0 12px 30px rgba(0,0,0,0.18)',
+              backdropFilter: 'blur(10px)',
+              cursor: 'pointer',
+              transition: 'transform 160ms ease, background 160ms ease, box-shadow 160ms ease',
             }}
           >
-            <div data-ui="kpi-card-comparison-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'rgba(255,255,255,0.84)', fontSize: 'var(--paragrafo)', lineHeight: 1.35, minWidth: 0, flex: '1 1 auto' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '999px', background: activeColor, flexShrink: 0 }} />
-              {row.text}
-            </div>
-            {hasValue && (
-              <div data-ui="kpi-card-comparison-value" style={{ color: activeColor, fontSize: 'var(--paragrafo)', fontWeight: 800, whiteSpace: 'nowrap', flex: '0 0 auto' }}>
-                {row.value}
-              </div>
-            )}
-          </div>
-        );
-      })}
-    </div>
-
-    <div data-ui="kpi-card-readings" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
-      <div style={{ color: 'rgba(255,255,255,0.50)', fontSize: 'var(--rotulo)', fontWeight: 800, letterSpacing: 'var(--tracking-label)', textTransform: 'uppercase', marginBottom: '10px' }}>
-        Leituras
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {stage.bullets.map((row, index) => (
-          <div key={`${row.text}-${index}`} data-ui="kpi-card-reading" style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-            <span style={{ marginTop: '7px', width: '6px', height: '6px', borderRadius: '999px', background: row.tone === 'positive' ? GREEN : RED, flexShrink: 0 }} />
-            <div data-ui="kpi-card-reading-text" style={{ color: 'rgba(255,255,255,0.74)', fontSize: 'var(--paragrafo)', lineHeight: 1.45 }}>
-              {row.text}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {stage.previousActions.length > 0 ? (
-      <div data-ui="kpi-card-actions-previous">
-        <KpiActionGroup actions={stage.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" actionGap={10} />
-      </div>
-    ) : null}
-
-    {stage.weekActions.length > 0 ? (
-      <div data-ui="kpi-card-actions-week">
-        <KpiActionGroup actions={stage.weekActions} compact={compact} label="Ação na semana" variant="week" actionGap={10} />
-      </div>
-    ) : null}
-  </motion.article>
-);
+            {shouldMask ? <Eye size={22} /> : <EyeOff size={22} />}
+          </button>
+        </div>
+      ) : null}
+    </motion.article>
+  );
+};
 
 const SectionTitle = ({ title, subtitle, right }: { title: string; subtitle?: string; right?: ReactNode }) => {
   const { isCompact } = useDeckViewport();

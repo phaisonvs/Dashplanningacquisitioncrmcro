@@ -28,12 +28,6 @@ import {
   useDeckViewport,
 } from "./sharedDeckTypography";
 import { ImageViewer } from "./ImageViewer";
-import lpSemanaConsumidorImg from "figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png";
-import lpChanceUnicaImg from "figma:asset/595fd04a2f57291355bfa3c39256501d943983aa.png";
-import lpSemanaConsumidorMobileImg from "figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png";
-import lpChanceUnicaMobileImg from "figma:asset/63f4568abbe03cbb8b0834a2bb70e3613df7a874.png";
-import heroDesktopImg from "figma:asset/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png";
-import heroMobileImg from "figma:asset/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png";
 
 interface Props {
   isActive: boolean;
@@ -978,8 +972,10 @@ const frontEvidenceItems: EvidenceItem[] = [
     objective:
       "Estruturar a LP para fortalecer a hierarquia de conversão, organizar a navegação por clusters, ampliar a exposição comercial das ofertas e incorporar novas vitrines, sustentando a estratégia de remarketing com Feed de Oferta Relâmpago, countdown e demais vieses de urgência, escassez e retomada de intenção de compra.",
     objectiveKpis: ["Conversão"],
-    desktopImage: lpSemanaConsumidorImg,
-    mobileImage: lpSemanaConsumidorMobileImg,
+    desktopImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/semana-consumidor-desk.png?v=202603301522",
+    mobileImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/mes-consumidor-mobile.png?v=202603301523",
     imageLabel: "Landing Page",
     imageHeight: 300,
   },
@@ -990,8 +986,10 @@ const frontEvidenceItems: EvidenceItem[] = [
     objective:
       "Estruturar a LP para ampliar o senso de urgência comercial, destacar oferta e desconto, acelerar a entrada do usuário nas vitrines e produtos priorizados e incorporar novas vitrines, reforçando a estratégia de remarketing com Feed de Oferta Relâmpago, countdown e demais vieses de urgência, escassez e estímulo à conversão imediata.",
     objectiveKpis: ["Conversão"],
-    desktopImage: lpChanceUnicaImg,
-    mobileImage: lpChanceUnicaMobileImg,
+    desktopImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/595fd04a2f57291355bfa3c39256501d943983aa.png?v=202603301517",
+    mobileImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/63f4568abbe03cbb8b0834a2bb70e3613df7a874.png?v=202603301517",
     imageLabel: "Landing Page",
     imageHeight: 300,
   },
@@ -1002,8 +1000,10 @@ const frontEvidenceItems: EvidenceItem[] = [
     objective:
       "Reformular a hero section para qualificar a entrada da homepage com melhor hierarquia visual, sliders, CTAs mais evidentes, responsividade mobile, evolução da busca com autocomplete, reforço da régua de vantagens no mobile, melhoria dos spots de produtos mobile e correção dos selos de campanha para estabilizar a exibição comercial e reduzir atrito na descoberta de produtos.",
     objectiveKpis: ["Conversão"],
-    desktopImage: heroDesktopImg,
-    mobileImage: heroMobileImg,
+    desktopImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png?v=202603301523",
+    mobileImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png?v=202603301526",
     imageLabel: "Hero Section",
     imageHeight: 300,
   },
@@ -1032,14 +1032,16 @@ const frontEvidenceItems: EvidenceItem[] = [
     imageHeight: 300,
   },
   {
-    title: "Evoluções de conversão e usabilidade para PDPs",
+    title: "Evoluções de conversão e usabilidade para PDPs de Pisos",
     tags: ["CRO", "E-COMMERCE"],
     status: "feito",
     objective:
-      "Consolidar melhorias de front por categoria nas PDPs, com adaptações para Pisos, Revestimentos e demais categorias, ajustes de UI na seção product__view, inserção do CTA Falar com especialista, inclusão de elementos complementares de conversão como badges Livelo e calculadora, além da correção do evento de clique e da leitura do pop-up de formas de pagamento, reduzindo fricção na jornada, qualificando a leitura do produto e reforçando apoio comercial na decisão de compra.",
+      "Consolidar melhorias de front nas PDPs de Pisos, com ajustes de UI na seção product__view, inserção do CTA Falar com especialista, inclusão de elementos complementares de conversão como badges Livelo e calculadora, além da correção do evento de clique e da leitura do pop-up de formas de pagamento, reduzindo fricção na jornada, qualificando a leitura do produto e reforçando apoio comercial na decisão de compra.",
     objectiveKpis: ["Conversão"],
-    desktopImage: lpChanceUnicaImg,
-    mobileImage: lpChanceUnicaMobileImg,
+    desktopImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/pdp-piso-desk.jpg?v=202603301550",
+    mobileImageLink:
+      "https://abcdaconstrucao.fbitsstatic.net/media/pdp-piso-mobi.png?v=202603301550",
     imageLabel: "Landing Page",
     imageHeight: 300,
   },
@@ -1116,6 +1118,7 @@ const EvidenceCardView = ({
 }) => {
   const desktopImageLink = item.desktopImageLink ?? item.desktopImage;
   const mobileImageLink = item.mobileImageLink ?? item.mobileImage;
+  const hasAnyImage = Boolean(desktopImageLink || mobileImageLink);
   const visibleTags = item.tags.filter(
     (tag) => tag === "CRO" || tag === "ACQUISITION" || tag === "CRM",
   );
@@ -1177,15 +1180,17 @@ const EvidenceCardView = ({
           </div>
         </div>
 
-        <ImageViewer
-          id={item.title}
-          desktopImageLink={desktopImageLink}
-          mobileImageLink={mobileImageLink}
-          alt={item.title}
-          height={item.imageHeight ?? 240}
-          label={item.imageLabel}
-          fullWidth={true}
-        />
+        {hasAnyImage ? (
+          <ImageViewer
+            id={item.title}
+            desktopImageLink={desktopImageLink}
+            mobileImageLink={mobileImageLink}
+            alt={item.title}
+            height={item.imageHeight ?? 240}
+            label={item.imageLabel}
+            fullWidth={true}
+          />
+        ) : null}
 
         <ObjectiveBlock text={item.objective} compact={compact} />
       </div>

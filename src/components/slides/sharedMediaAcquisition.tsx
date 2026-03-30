@@ -854,21 +854,22 @@ export const MediaAcquisitionSection = ({
 }) => {
   const { isMobile, isCompact } = useDeckViewport();
   const isSingleCard = items.length === 1 && typeof singleCardMaxWidth === "number";
+  const orderedItems = useMemo(() => [...items].reverse(), [items]);
 
   const itemsByColumn = useMemo(() => {
     const maxColumns = isMobile ? 1 : isCompact ? 2 : 4;
-    const totalColumns = Math.max(1, Math.min(items.length, maxColumns));
+    const totalColumns = Math.max(1, Math.min(orderedItems.length, maxColumns));
     const columns = Array.from(
       { length: totalColumns },
       () => [] as MediaAcquisitionItem[],
     );
 
-    items.forEach((item, index) => {
+    orderedItems.forEach((item, index) => {
       columns[index % totalColumns].push(item);
     });
 
     return columns;
-  }, [items, isCompact, isMobile]);
+  }, [isCompact, isMobile, orderedItems]);
 
   return (
     <motion.section

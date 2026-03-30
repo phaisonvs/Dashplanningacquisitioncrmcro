@@ -16,10 +16,6 @@ import {
   mediaSlots,
   type MediaAcquisitionItem,
 } from './sharedMediaAcquisition';
-import heroDesktopImg from 'figma:asset/5c0b20dfc3a6d5cd113cf55d3ab6cbf463897ef3.png';
-import heroMobileImg from 'figma:asset/81706ef0c74f11093e5858f0fd0a0c0b84c2c931.png';
-import lpSemanaConsumidorImg from 'figma:asset/6840fdb8c3bbc3a826a9e5bec2992dbca763ee8d.png';
-import lpSemanaConsumidorMobileImg from 'figma:asset/f00f311871e56776499aaf7c626a94ff267ec921.png';
 
 interface Props {
   isActive: boolean;
@@ -150,8 +146,6 @@ const conversionExperienceItems = [
     tags: ['ACQUISITION', 'LEADS', 'CRM'] as const,
     status: 'feito' as const,
     objective: 'A frente combina sinal de escassez territorial com qualificação comercial para gerar pipeline mais profundo e previsível.',
-    desktopImageLink: lpSemanaConsumidorImg,
-    mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
     imageHeight: 240,
   },
@@ -160,8 +154,6 @@ const conversionExperienceItems = [
     tags: ['ACQUISITION', 'CRO'] as const,
     status: 'pendente' as const,
     objective: 'A ativação de B2B precisa aumentar a densidade do topo com segmentação mais precisa e mensagem executiva.',
-    desktopImageLink: heroDesktopImg,
-    mobileImageLink: heroMobileImg,
     imageLabel: 'Creative',
     imageHeight: 240,
   },
@@ -170,8 +162,6 @@ const conversionExperienceItems = [
     tags: ['CRM', 'LEADS'] as const,
     status: 'feito' as const,
     objective: 'A régua comercial em janelas curtas mantém o lead aquecido e reduz perda entre intenção e oportunidade.',
-    desktopImageLink: heroDesktopImg,
-    mobileImageLink: heroMobileImg,
     imageLabel: 'Journey',
     imageHeight: 240,
   },
@@ -180,8 +170,6 @@ const conversionExperienceItems = [
     tags: ['CRO', 'LEADS', 'ACQUISITION'] as const,
     status: 'pendente' as const,
     objective: 'A LP precisa concentrar a proposta de valor da expansão e acelerar leitura de qualificação para a próxima conversa.',
-    desktopImageLink: lpSemanaConsumidorImg,
-    mobileImageLink: lpSemanaConsumidorMobileImg,
     imageLabel: 'Landing Page',
     imageHeight: 240,
   },

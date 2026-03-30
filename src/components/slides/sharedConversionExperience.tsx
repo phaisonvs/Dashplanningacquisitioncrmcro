@@ -127,6 +127,7 @@ const ObjectiveBlock = ({
 const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
   const desktopImageLink = item.desktopImageLink ?? item.desktopImage;
   const mobileImageLink = item.mobileImageLink ?? item.mobileImage;
+  const hasAnyImage = Boolean(desktopImageLink || mobileImageLink);
   const { isCompact } = useDeckViewport();
 
   return (
@@ -202,22 +203,24 @@ const EvidenceCard = ({ item }: { item: ConversionExperienceItem }) => {
           </div>
         </div>
 
-        <div
-          style={{
-            position: "relative",
-            padding: isCompact ? "14px 16px 16px" : "0 18px 16px",
-          }}
-        >
-          <ImageViewer
-            id={item.title}
-            desktopImageLink={desktopImageLink}
-            mobileImageLink={mobileImageLink}
-            alt={item.title}
-            height={item.imageHeight ?? 240}
-            label={item.imageLabel}
-            fullWidth
-          />
-        </div>
+        {hasAnyImage ? (
+          <div
+            style={{
+              position: "relative",
+              padding: isCompact ? "14px 16px 16px" : "0 18px 16px",
+            }}
+          >
+            <ImageViewer
+              id={item.title}
+              desktopImageLink={desktopImageLink}
+              mobileImageLink={mobileImageLink}
+              alt={item.title}
+              height={item.imageHeight ?? 240}
+              label={item.imageLabel}
+              fullWidth
+            />
+          </div>
+        ) : null}
 
         <div
           style={{
@@ -242,6 +245,7 @@ export function ConversionExperienceSection({
   subtitle = "Leitura visual das peças e frentes que alimentam conversão e experiência.",
 }: ConversionExperienceSectionProps) {
   const { isMobile, isCompact } = useDeckViewport();
+  const orderedItems = [...items].reverse();
 
   return (
     <motion.section
@@ -282,7 +286,7 @@ export function ConversionExperienceSection({
           gap: isCompact ? "16px" : "22px",
         }}
       >
-        {items.map((item) => (
+        {orderedItems.map((item) => (
           <EvidenceCard key={item.title} item={item} />
         ))}
       </div>

@@ -387,30 +387,67 @@ export function ImageViewer({
   if (!hasAnyImage) {
     return (
       <div
-        data-ui="visualizador-imagem-vazio"
+        data-ui={viewerUiId ? `visualizador-imagem-${viewerUiId}` : "visualizador-imagem"}
         style={{
+          position: "relative",
           width: containerWidth,
-          minWidth: containerWidth,
-          height: containerHeight,
-          background: "rgba(255,255,255,0.02)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: "12px",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
           flexDirection: "column",
+          minWidth: containerWidth,
+          flex: fullWidth ? 1 : undefined,
           gap: "8px",
-          fontSize: "var(--rotulo)",
-          color: "rgba(255,255,255,0.38)",
-          textAlign: "center",
-          padding: "12px",
         }}
       >
-        <div style={{ color: WHITE, fontSize: "var(--paragrafo-grande)", fontWeight: 700, lineHeight: 1.3 }}>
-          {label}
-        </div>
-        <div style={{ maxWidth: "240px", lineHeight: 1.45 }}>
-          Adicione um link imagem desktop ou um link imagem mobile.
+        <div
+          data-ui="visualizador-imagem-viewport"
+          style={{
+            width: "100%",
+            height: containerHeight,
+            overflow: "hidden",
+            borderRadius: "12px",
+            border: "2px solid rgba(255,255,255,0.1)",
+            position: "relative",
+            transition: "all 0.3s ease",
+            background: "rgba(0,0,0,0.4)",
+            WebkitOverflowScrolling: "touch",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: isCompact ? "14px" : "18px",
+            cursor: "default",
+          }}
+          className="image-viewer-scroll image-viewer-container"
+        >
+          <div
+            data-ui="visualizador-imagem-vazio"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              color: "rgba(255,255,255,0.45)",
+              fontSize: "var(--rotulo)",
+              lineHeight: 1.45,
+            }}
+          >
+            <div
+              style={{
+                color: WHITE,
+                fontSize: "var(--paragrafo-grande)",
+                fontWeight: 700,
+                lineHeight: 1.3,
+              }}
+            >
+              {label}
+            </div>
+            <div style={{ maxWidth: "280px" }}>
+              {!hasDesktopImage ? "Sem link imagem desktop." : null}
+              {!hasDesktopImage && !hasMobileImage ? " " : null}
+              {!hasMobileImage ? "Sem link imagem mobile." : null}
+            </div>
+          </div>
         </div>
       </div>
     );
