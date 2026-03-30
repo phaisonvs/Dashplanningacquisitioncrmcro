@@ -1188,7 +1188,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
         >
           <SlideHeroHeader
             accentColor={clusterColor}
-            title="VisÃ£o de Funil â€” E-commerce"
+            title="Visão de Funil — E-commerce"
             right={
               <div
                 style={{
