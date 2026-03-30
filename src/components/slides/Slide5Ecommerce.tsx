@@ -23,8 +23,10 @@ import {
   DeckPill,
   KpiActionGroup,
   SlideHeroHeader,
+  ACTIVE_REPORT_WEEK,
   deckCardPresets,
   deckPillPresets,
+  cloneReportSnapshot,
   useDeckViewport,
 } from "./sharedDeckTypography";
 import { ImageViewer } from "./ImageViewer";
@@ -303,8 +305,22 @@ const bottomMetrics: MetricCard[] = [
   },
 ];
 
+const ecommerceReportSnapshots = {
+  week13: {
+    topMetrics,
+    bottomMetrics,
+  },
+  // Editar esta cópia quando a semana ativa mudar.
+  week14: {
+    topMetrics: cloneReportSnapshot(topMetrics),
+    bottomMetrics: cloneReportSnapshot(bottomMetrics),
+  },
+} as const;
+
+const activeEcommerceReport = ecommerceReportSnapshots[ACTIVE_REPORT_WEEK];
+
 const statusCounts = collectStatusCounts(
-  [...topMetrics, ...bottomMetrics].flatMap((item) => [
+  [...activeEcommerceReport.topMetrics, ...activeEcommerceReport.bottomMetrics].flatMap((item) => [
     ...item.previousActions,
     ...item.weekActions,
   ]),
@@ -1343,7 +1359,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
               gap: isCompact ? "14px" : "18px",
             }}
           >
-            {topMetrics.map((item) => (
+            {activeEcommerceReport.topMetrics.map((item) => (
               <MetricCardView
                 key={item.title}
                 item={item}
@@ -1365,7 +1381,7 @@ export function Slide5Ecommerce({ isActive }: Props) {
               gap: isCompact ? "14px" : "18px",
             }}
           >
-            {bottomMetrics.map((item) => (
+            {activeEcommerceReport.bottomMetrics.map((item) => (
               <MetricCardView
                 key={item.title}
                 item={item}

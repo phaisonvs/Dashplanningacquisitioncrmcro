@@ -9,8 +9,10 @@ import {
   DeckPill,
   KpiActionGroup,
   SlideHeroHeader,
+  ACTIVE_REPORT_WEEK,
   deckCardPresets,
   deckPillPresets,
+  cloneReportSnapshot,
   useDeckViewport,
 } from './sharedDeckTypography';
 import { MediaAcquisitionSection, collectStatusCounts, mediaSlots, type MediaAcquisitionItem } from './sharedMediaAcquisition';
@@ -53,6 +55,7 @@ type MetricCard = {
   bullets: Bullet[];
   previousActions: ActionCard[];
   weekActions: ActionCard[];
+  hideValue?: boolean;
 };
 
 type FunnelStage = MetricCard & {
@@ -209,7 +212,7 @@ const secondaryMetrics: MetricCard[] = [
 const funnelStages: FunnelStage[] = [
   {
     title: 'ETAPA 1',
-    label: 'LEADS (BASE ÍNDICE)',
+    label: 'Taxa de cadastro',
     dateTag: 'Mar/2026 · Funil',
     value: { target: 100 },
     comparisons: [comparison('positive', 'vs base índice do funil', '100')],
@@ -353,7 +356,178 @@ const conversionExperienceItems = [
   imageHeight?: number;
 }>;
 
-const allActions = [...primaryMetrics, ...secondaryMetrics, ...funnelStages].flatMap((item) => [...item.previousActions, ...item.weekActions]);
+const week14PrimaryMetrics = cloneReportSnapshot(primaryMetrics);
+
+week14PrimaryMetrics[0] = {
+  ...week14PrimaryMetrics[0],
+  value: { target: 5998 },
+  comparisons: [
+    comparison('positive', 'vs 4.379 em Fev', '+37% MoM'),
+    comparison('positive', 'vs 5.654 em Mar', '+6% YoY'),
+  ],
+  bullets: [
+    bullet('positive', 'Apenas 6 praças sem entradas nos últimos 30 dias. Crescimento de volume absoluto em função das otimizações de leads para WhatsApp (+20%).'),
+    bullet('positive', 'Campanhas focadas em praças do Sul e Vitória da Conquista trouxeram leads mais baratos (36%) em relação aos leads do Encarte.'),
+  ],
+  previousActions: [
+    action('ACQUISITION', 'feito', 'Campanhas de WhatsApp praças do Sul + Vitória da Conquista'),
+    action('CRO', 'pendente', 'Header fixo para gerar leads em todo Ecommerce durante a jornada'),
+    action('CRM', 'bloqueado', 'Entender o grande volume de leads sem loja atribuída'),
+  ],
+  weekActions: [
+    action('CRO', 'feito', 'Alterações das CTAS e popups para falar com especialista sem sair de casa'),
+    action('ACQUISITION', 'feito', 'Campanhas de leads para LPs Semana do Consumidor e Super Chance Única'),
+    action('CRO', 'pendente', 'Estratégia de leads focada nas páginas de pisos e revestimentos'),
+  ],
+};
+
+week14PrimaryMetrics[1] = {
+  ...week14PrimaryMetrics[1],
+  value: { target: 1.37, prefix: 'R$', suffix: 'M', decimals: 2 },
+  comparisons: [
+    comparison('positive', 'vs 1,09M', '+25% MoM'),
+    comparison('negative', 'vs 2,5M', '-45% YoY'),
+  ],
+  bullets: [
+    bullet('positive', 'O maior volume refletiu em um aumento de 25% de valor de pedidos com relação ao mês passado.'),
+    bullet('negative', 'Os leads de encarte ainda são os leads que mais geram orçamentos e pedidos (21% e 13,6%, respectivamente).'),
+  ],
+  previousActions: [
+    action('CRM', 'pendente', 'Entender se os leads de WhatsApp ainda não foram cadastrados no sistema para medir a sua eficiência como estratégia'),
+  ],
+  weekActions: [],
+};
+
+week14PrimaryMetrics[2] = {
+  ...week14PrimaryMetrics[2],
+  value: { target: 14365.05, prefix: 'R$ ' , decimals: 2 },
+  comparisons: [
+    comparison('negative', 'vs R$15.438,94', '-7% MoM'),
+    comparison('negative', 'vs R$40.887,17', '-65% YoY'),
+  ],
+  bullets: [],
+  previousActions: [],
+  weekActions: [],
+};
+
+week14PrimaryMetrics[3] = {
+  ...week14PrimaryMetrics[3],
+  value: { target: 374 },
+  comparisons: [
+    comparison('negative', 'vs 381', '-1% MoM'),
+    comparison('negative', 'vs 675', '-44,6% YoY'),
+  ],
+  bullets: [],
+  previousActions: [],
+  weekActions: [],
+};
+
+const week14SecondaryMetrics = cloneReportSnapshot(secondaryMetrics);
+
+week14SecondaryMetrics[0] = {
+  ...week14SecondaryMetrics[0],
+  value: { target: 95 },
+  comparisons: [
+    comparison('positive', 'vs 70', '+35% MoM'),
+    comparison('positive', 'vs 61', '+55% YoY'),
+  ],
+  bullets: [
+    bullet('positive', 'As estratégias de captação de leads se mostraram efetivas não só para gerar volume, mas também para atrair mais eficiência com relação ao valor investido.'),
+    bullet('negative', 'Mesmo com a evolução no ROAS, ainda estamos distantes de manter o mesmo valor de todos os pedidos no YoY'),
+  ],
+  previousActions: [],
+  weekActions: [],
+};
+
+week14SecondaryMetrics[1] = {
+  ...week14SecondaryMetrics[1],
+  value: { target: 4.887, prefix: 'R$', suffix: 'M', decimals: 3 },
+  comparisons: [],
+  bullets: [],
+  previousActions: [],
+  weekActions: [],
+};
+
+week14SecondaryMetrics[2] = {
+  ...week14SecondaryMetrics[2],
+  value: { target: 3672, prefix: 'R$', decimals: 0 },
+  comparisons: [
+    comparison('positive', 'vs R$2.932', '+25% MoM'),
+    comparison('negative', 'vs R$4.194', '-12% YoY'),
+  ],
+  bullets: [],
+  previousActions: [],
+  weekActions: [],
+};
+
+const week14FunnelStages = cloneReportSnapshot(funnelStages);
+
+week14FunnelStages[0] = {
+  ...week14FunnelStages[0],
+  value: { target: 31.4, decimals: 1, suffix: '%' },
+  comparisons: [
+    comparison('positive', 'MoM', '17,7%'),
+    comparison('positive', 'YoY', '52%'),
+  ],
+  bullets: [
+    bullet('negative', 'Baixo aproveitamento de cadastro dos leads, prejudicando a jornada de obra'),
+    bullet('negative', 'Precisamos estimular a rede a evoluir a taxa de cadastro para maior aproveitamento dos leads que chegam na via digital'),
+  ],
+  previousActions: [],
+  weekActions: [],
+};
+
+week14FunnelStages[1] = {
+  ...week14FunnelStages[1],
+  value: { target: 9.6, decimals: 1, suffix: '%' },
+  comparisons: [],
+  bullets: [],
+  previousActions: [],
+  weekActions: [],
+};
+
+week14FunnelStages[2] = {
+  ...week14FunnelStages[2],
+  value: { target: 0, decimals: 0 },
+  comparisons: [],
+  bullets: [],
+  previousActions: [],
+  weekActions: [],
+  hideValue: true,
+};
+
+week14FunnelStages[3] = {
+  ...week14FunnelStages[3],
+  value: { target: 6.2, decimals: 1, suffix: '%' },
+  comparisons: [
+    comparison('negative', 'vs 12% em Fev', '-50% MoM'),
+    comparison('negative', 'vs 12% em Mar', '-50% YoY'),
+  ],
+  bullets: [
+    bullet('negative', 'O Indicador está baixo por conta do baixo volume de cadastros com relação aos demais meses.'),
+  ],
+  previousActions: [],
+  weekActions: [],
+};
+
+const leadReportSnapshots = {
+  week13: {
+    primaryMetrics,
+    secondaryMetrics,
+    funnelStages,
+    conversionExperienceItems,
+  },
+  week14: {
+    primaryMetrics: week14PrimaryMetrics,
+    secondaryMetrics: week14SecondaryMetrics,
+    funnelStages: week14FunnelStages,
+    conversionExperienceItems: cloneReportSnapshot(conversionExperienceItems),
+  },
+} as const;
+
+const activeLeadReport = leadReportSnapshots[ACTIVE_REPORT_WEEK];
+
+const allActions = [...activeLeadReport.primaryMetrics, ...activeLeadReport.secondaryMetrics, ...activeLeadReport.funnelStages].flatMap((item) => [...item.previousActions, ...item.weekActions]);
 const statusCounts = collectStatusCounts(allActions);
 
 const tokenPalette: Record<string, { color: string; background: string; border: string }> = {
@@ -433,16 +607,18 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
       </div>
     </div>
 
-    <div data-ui="kpi-card-value" style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
-      <AnimatedNumber
-        target={item.value.target}
-        prefix={item.value.prefix}
-        suffix={item.value.suffix}
-        decimals={item.value.decimals}
-        isActive={isActive}
-        duration={3000}
-      />
-    </div>
+    {item.hideValue ? null : (
+      <div data-ui="kpi-card-value" style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
+        <AnimatedNumber
+          target={item.value.target}
+          prefix={item.value.prefix}
+          suffix={item.value.suffix}
+          decimals={item.value.decimals}
+          isActive={isActive}
+          duration={3000}
+        />
+      </div>
+    )}
 
     <div data-ui="kpi-card-comparisons" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
       {item.comparisons.map((row, index) => {
@@ -508,17 +684,13 @@ const MetricCardView = ({ item, isActive, compact = false }: { item: MetricCard;
       </div>
     </div>
 
-    {item.previousActions.length > 0 ? (
-      <div data-ui="kpi-card-actions-previous">
-        <KpiActionGroup actions={item.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" actionGap={12} />
-      </div>
-    ) : null}
+    <div data-ui="kpi-card-actions-previous">
+      <KpiActionGroup actions={item.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" actionGap={12} />
+    </div>
 
-    {item.weekActions.length > 0 ? (
-      <div data-ui="kpi-card-actions-week">
-        <KpiActionGroup actions={item.weekActions} compact={compact} label="Ação na semana" variant="week" actionGap={12} />
-      </div>
-    ) : null}
+    <div data-ui="kpi-card-actions-week">
+      <KpiActionGroup actions={item.weekActions} compact={compact} label="Ação na semana" variant="week" actionGap={12} />
+    </div>
   </motion.article>
 );
 
@@ -568,16 +740,18 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
           </div>
         </div>
 
-        <div data-ui="kpi-card-value" style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
-          <AnimatedNumber
-            target={stage.value.target}
-            prefix={stage.value.prefix}
-            suffix={stage.value.suffix}
-            decimals={stage.value.decimals}
-            isActive={isActive}
-            duration={3000}
-          />
-        </div>
+        {stage.hideValue ? null : (
+          <div data-ui="kpi-card-value" style={{ fontSize: 'var(--titulo-pagina)', lineHeight: 1, fontWeight: 800, letterSpacing: 'var(--tracking-display)', color: WHITE }}>
+            <AnimatedNumber
+              target={stage.value.target}
+              prefix={stage.value.prefix}
+              suffix={stage.value.suffix}
+              decimals={stage.value.decimals}
+              isActive={isActive}
+              duration={3000}
+            />
+          </div>
+        )}
 
         <div data-ui="kpi-card-comparisons" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {stage.comparisons.map((row, index) => {
@@ -631,17 +805,13 @@ const FunnelCardView = ({ stage, isActive, compact = false }: { stage: FunnelSta
           </div>
         </div>
 
-        {stage.previousActions.length > 0 ? (
-          <div data-ui="kpi-card-actions-previous">
-            <KpiActionGroup actions={stage.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" actionGap={10} />
-          </div>
-        ) : null}
+        <div data-ui="kpi-card-actions-previous">
+          <KpiActionGroup actions={stage.previousActions} compact={compact} label="Ações da semana anterior" variant="previous" actionGap={10} />
+        </div>
 
-        {stage.weekActions.length > 0 ? (
-          <div data-ui="kpi-card-actions-week">
-            <KpiActionGroup actions={stage.weekActions} compact={compact} label="Ação na semana" variant="week" actionGap={10} />
-          </div>
-        ) : null}
+        <div data-ui="kpi-card-actions-week">
+          <KpiActionGroup actions={stage.weekActions} compact={compact} label="Ação na semana" variant="week" actionGap={10} />
+        </div>
       </div>
 
       {isMaskedStage ? (
@@ -809,13 +979,13 @@ export function Slide2VisaoLeads({ isActive }: Props) {
       </section>
 
       <section data-ui="leads-metricas-principais" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
-        {primaryMetrics.map((item) => (
+        {activeLeadReport.primaryMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
       <section data-ui="leads-metricas-secundarias" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
-        {secondaryMetrics.map((item) => (
+        {activeLeadReport.secondaryMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
@@ -833,14 +1003,14 @@ export function Slide2VisaoLeads({ isActive }: Props) {
         />
 
         <div data-ui="leads-grid-funil" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '18px' }}>
-          {funnelStages.map((stage) => (
+          {activeLeadReport.funnelStages.map((stage) => (
             <FunnelCardView key={stage.label} stage={stage} isActive={isActive} compact={isCompact} />
           ))}
         </div>
       </section>
 
       <div data-ui="leads-secao-evidencias">
-        <ConversionExperienceSection items={conversionExperienceItems} />
+        <ConversionExperienceSection items={activeLeadReport.conversionExperienceItems} />
       </div>
 
       <div data-ui="leads-secao-midias">

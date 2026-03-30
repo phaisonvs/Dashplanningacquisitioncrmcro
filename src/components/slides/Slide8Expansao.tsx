@@ -6,8 +6,10 @@ import {
   DeckPill,
   KpiActionGroup,
   SlideHeroHeader,
+  ACTIVE_REPORT_WEEK,
   deckCardPresets,
   deckPillPresets,
+  cloneReportSnapshot,
   useDeckViewport,
 } from './sharedDeckTypography';
 import {
@@ -202,8 +204,22 @@ const expansionMediaAcquisitionItems: MediaAcquisitionItem[] = [
   },
 ];
 
+const expansionReportSnapshots = {
+  week13: {
+    expansionMetrics,
+    conversionExperienceItems,
+  },
+  // Editar esta cópia quando a semana ativa mudar.
+  week14: {
+    expansionMetrics: cloneReportSnapshot(expansionMetrics),
+    conversionExperienceItems: cloneReportSnapshot(conversionExperienceItems),
+  },
+} as const;
+
+const activeExpansionReport = expansionReportSnapshots[ACTIVE_REPORT_WEEK];
+
 const statusCounts = collectStatusCounts(
-  ...expansionMetrics.map((item) => [...item.previousActions, ...item.weekActions]),
+  ...activeExpansionReport.expansionMetrics.map((item) => [...item.previousActions, ...item.weekActions]),
 );
 
 const tokenPalette: Record<ClusterTag, { color: string; background: string; border: string }> = {
@@ -403,13 +419,13 @@ export function Slide8Expansao({ isActive }: Props) {
       </section>
 
       <section data-ui="expansao-metricas" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isCompact ? 'repeat(2, minmax(0, 1fr))' : 'repeat(4, minmax(0, 1fr))', gap: isCompact ? '14px' : '20px' }}>
-        {expansionMetrics.map((item) => (
+        {activeExpansionReport.expansionMetrics.map((item) => (
           <MetricCardView key={item.title} item={item} isActive={isActive} compact={isCompact} />
         ))}
       </section>
 
       <div data-ui="expansao-secao-evidencias">
-        <ConversionExperienceSection items={conversionExperienceItems} />
+        <ConversionExperienceSection items={activeExpansionReport.conversionExperienceItems} />
       </div>
 
       <div data-ui="expansao-secao-midias">

@@ -37,6 +37,13 @@ export function useDeckViewport() {
   return { width, isMobile, isTablet, isCompact };
 }
 
+export type ReportWeek = "week13" | "week14";
+
+export const ACTIVE_REPORT_WEEK: ReportWeek = "week14";
+
+export const cloneReportSnapshot = <T,>(value: T): T =>
+  JSON.parse(JSON.stringify(value)) as T;
+
 type ResponsiveValue = string | { compact: string; regular: string };
 
 const resolveResponsiveValue = (value: ResponsiveValue, isCompact: boolean) =>

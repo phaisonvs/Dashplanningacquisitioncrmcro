@@ -41,7 +41,12 @@ export function AnimatedNumber({
 
   const display =
     decimals > 0
-      ? value.toFixed(decimals).replace('.', decimalSeparator)
+      ? value
+          .toLocaleString('pt-BR', {
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals,
+          })
+          .replace(/,([^,]*)$/, `${decimalSeparator}$1`)
       : Math.round(value).toLocaleString('pt-BR');
 
   return (

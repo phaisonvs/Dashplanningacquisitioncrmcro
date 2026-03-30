@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { BG, CLUSTERS } from "../theme";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
-import { useDeckViewport } from "./sharedDeckTypography";
+import { ACTIVE_REPORT_WEEK, useDeckViewport } from "./sharedDeckTypography";
 import coverBg from "figma:asset/d372e1a58f8718b3849de8fc442cde0f366adde8.png";
 
 interface Props {
@@ -13,6 +13,11 @@ const coverTokens = [
   { label: "CRO", color: CLUSTERS.CRO },
   { label: "CRM", color: CLUSTERS.CRM },
 ];
+
+const coverWeekSnapshots = {
+  week13: "Semana 13 · 23 Mar — 27 Mar 2026",
+  week14: "Semana 14 · 30 Mar — 03 Abr 2026",
+} as const;
 
 const TokenPill = ({
   label,
@@ -182,8 +187,8 @@ export function Slide1Cover({ isActive }: Props) {
             fontWeight: 300,
           }}
         >
-          Revisão executiva consolidada. Foco em performance, eficiência de
-          funil, saúde do e-commerce e próximos passos estratégicos.
+          RevisÃ£o executiva consolidada. Foco em performance, eficiÃªncia de
+          funil, saÃºde do e-commerce e prÃ³ximos passos estratÃ©gicos.
         </motion.p>
 
         <motion.div
@@ -209,10 +214,14 @@ export function Slide1Cover({ isActive }: Props) {
               fontWeight: 500,
             }}
           >
-            Semana 13 · 23 Mar — 27 Mar 2026
+            {coverWeekSnapshots[ACTIVE_REPORT_WEEK]}
           </span>
         </motion.div>
       </div>
     </div>
   );
 }
+
+
+
+
